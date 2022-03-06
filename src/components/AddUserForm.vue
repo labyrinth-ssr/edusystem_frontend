@@ -1,0 +1,92 @@
+<template>
+  <div>
+      hello userform.
+    <!-- <i class="el-icon-circle-plus-outline"  @click="dialogFormVisible = true"></i> -->
+    <el-dialog
+      title="添加用户"
+      :visible.sync="dialogFormVisible"
+      @close="clear">
+      <el-form v-model="form" style="text-align: left" ref="dataForm">
+        <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
+          <el-input v-model="form.role" autocomplete="off" ></el-input>
+        </el-form-item>
+        <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
+          <el-input v-model="form.user_id" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
+          <el-input v-model="form.id_number" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone_number">
+          <el-input v-model="form.phone_number" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
+          <el-input v-model="form.email" autocomplete="off" ></el-input>
+        </el-form-item>
+        <el-form-item prop="id" style="height: 0">
+          <el-input type="hidden" v-model="form.id" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'AddUserForm',
+    data () {
+      return {
+        dialogFormVisible: true,
+        form: {
+          id: '',
+          role: '',
+          user_id: '',
+          id_number: '',
+          phone_number: '',
+          email: ''
+        },
+        formLabelWidth: '120px'
+      }
+    },
+    methods: {
+      clear () {
+        this.form = {
+          id: '',
+          role: '',
+          user_id: '',
+          id_number: '',
+          phone_number: '',
+          email: ''
+        }
+      },
+      onSubmit () {
+        // this.$axios
+        //   .post('/books', {
+        //     id: this.form.id,
+        //     email: this.form.email,
+        //     role: this.form.role,
+        //     user_id: this.form.user_id,
+        //     id_number: this.form.id_number,
+        //     phone_number: this.form.phone_number
+        //   }).then(resp => {
+        //   if (resp && resp.status === 200) {
+            this.dialogFormVisible = false
+            this.$emit('onSubmit')
+        //   }
+        // })
+      }
+    }
+  }
+</script>
+
+<style scoped>
+  .el-icon-circle-plus-outline {
+    margin: 50px 0 0 20px;
+    font-size: 100px;
+    float: left;
+    cursor: pointer;
+  }
+</style>

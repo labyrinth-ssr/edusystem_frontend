@@ -18,9 +18,12 @@
       ></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" style="width: 100%;
-    background: #69a1da;
-    border: none" v-on:click="login">登录</el-button>
+      <el-button
+        type="primary"
+        style="width: 100%; background: #69a1da; border: none"
+        v-on:click="login"
+        >登录</el-button
+      >
     </el-form-item>
   </el-form>
 </template>
@@ -39,47 +42,50 @@ export default {
   },
   methods: {
     login() {
-      this.$axios
-        .get(
-          "/users/hello" /* , {
-            username: this.loginForm.username,
-            password: this.loginForm.password
-          } */
-        )
-        .then((successResponse) => {
-          console.log(successResponse.data);
-          if (1) {
-            //访问路由实例,替换当前位置，实现跳转
-            this.$router.replace({ path: "/index" });
-          }
+      var _this = this;
+      console.log(this.$store.state);
+/*       this.$axios
+        .post("/login", {
+          username: this.loginForm.username,
+          password: this.loginForm.password,
         })
-        .catch((failResponse) => {});
+        .then((successResponse) => { */
+        var success_login=true
+          if (success_login) {
+            _this.$store.commit("login", _this.loginForm);
+            var path = this.$route.query.redirect;
+            this.$router.replace({
+              path: path === "/" || path === undefined ? "/index" : "/index",
+              // 没有路径就保持原页面，这边待定
+            });
+          }
+/*         })
+        .catch((failResponse) => {}); */
     },
   },
 };
 </script>
 
 <style scope>
-  .login-container {
-    border-radius: 15px;
-    background-clip: padding-box;
-    margin: 90px auto;
-    width: 350px;
-    padding: 35px 35px 15px 35px;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
-  }
-  
-  .login_title {
-    margin: 0px auto 40px auto;
-    text-align: center;
-    color: #505458;
-  }
-  el-button{
-    width: 100%;
-    background: #69a1da;
-    border: none
-  }
+.login-container {
+  border-radius: 15px;
+  background-clip: padding-box;
+  margin: 90px auto;
+  width: 350px;
+  padding: 35px 35px 15px 35px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 0 25px #cac6c6;
+}
 
+.login_title {
+  margin: 0px auto 40px auto;
+  text-align: center;
+  color: #505458;
+}
+el-button {
+  width: 100%;
+  background: #69a1da;
+  border: none;
+}
 </style>
