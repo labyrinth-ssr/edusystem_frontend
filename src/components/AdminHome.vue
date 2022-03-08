@@ -9,7 +9,7 @@
       background-color="#409EFF"
       active-text-color="#ffd04b">
     <el-menu-item index="1">处理中心</el-menu-item>
-    <el-submenu index="2" text-color="#000">
+    <el-submenu index="2" text-color="#ffd04b" >
       <template slot="title"><i class="el-icon-circle-plus-outline"/>增加信息</template>
       <el-menu-item index="2-1" v-on:click="addUsers">学生/老师</el-menu-item>
 <!--      <el-menu-item index="2-2">教师</el-menu-item>-->
@@ -55,4 +55,10 @@ export default {
 
 <style scoped>
 
+</style>
+<style >
+body{
+  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+  background-size: 100% 100vh;
+}
 </style>

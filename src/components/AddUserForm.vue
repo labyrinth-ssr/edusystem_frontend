@@ -1,6 +1,5 @@
-<template>
-  <div>
-      hello userform.
+<template xmlns:background-image="http://www.w3.org/1999/xhtml">
+  <div >
     <!-- <i class="el-icon-circle-plus-outline"  @click="dialogFormVisible = true"></i> -->
     <el-dialog
       title="添加用户"
@@ -44,6 +43,7 @@
         <el-button type="primary" @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>
+    <footer></footer>
   </div>
 </template>
 
@@ -112,4 +112,11 @@
     float: left;
     cursor: pointer;
   }
+
+</style>
+<style >
+body{
+  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+  background-size: 100% 100vh;
+}
 </style>

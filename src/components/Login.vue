@@ -101,3 +101,9 @@ export default {
 
 }
 </style>
+<style >
+body{
+  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+  background-size: 100% 100vh;
+}
+</style>
