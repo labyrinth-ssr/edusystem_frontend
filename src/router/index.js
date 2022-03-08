@@ -4,6 +4,7 @@ import Login from '@/components/Login'
 import AppIndex from '@/components/home/AppIndex'
 import Home from '@/components/Home'
 import AddUserForm from '@/components/AddUserForm'
+import AdminHome from "@/components/AdminHome";
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: '/admin',
+    name: 'AdminHome',
+    component: AdminHome
   }
 ]
 

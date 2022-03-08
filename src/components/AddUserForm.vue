@@ -8,19 +8,32 @@
       @close="clear">
       <el-form v-model="form" style="text-align: left" ref="dataForm">
         <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
-          <el-input v-model="form.role" autocomplete="off" ></el-input>
+            <el-select v-model="form.role" placeholder="请选择" style="width: 20%">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
         </el-form-item>
         <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
-          <el-input v-model="form.user_id" autocomplete="off"></el-input>
+          <el-date-picker
+              v-model="form.user_id_suffix"
+              style="width: 20%"
+              type="year"
+              placeholder="选择年">
+          </el-date-picker><el-input v-model="form.user_id_append" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
-          <el-input v-model="form.id_number" autocomplete="off"></el-input>
+          <el-input v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone_number">
-          <el-input v-model="form.phone_number" autocomplete="off"></el-input>
+        <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone_number" >
+          <el-input v-model="form.phone_number" autocomplete="off" maxlength="11" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-          <el-input v-model="form.email" autocomplete="off" ></el-input>
+          <el-input v-model="form.email" autocomplete="off" >
+          </el-input>
         </el-form-item>
         <el-form-item prop="id" style="height: 0">
           <el-input type="hidden" v-model="form.id" autocomplete="off"></el-input>
@@ -39,14 +52,24 @@
     name: 'AddUserForm',
     data () {
       return {
-        dialogFormVisible: true,
+        options: [{
+          value: '1',
+          label: '老师'
+        }, {
+          value: '2',
+          label: '学生'
+        }],
+          dialogFormVisible: true,
+          Input2:"",
         form: {
           id: '',
           role: '',
+          user_id_suffix :'',
+          user_id_append :'',
           user_id: '',
           id_number: '',
           phone_number: '',
-          email: ''
+          email: '',
         },
         formLabelWidth: '120px'
       }
