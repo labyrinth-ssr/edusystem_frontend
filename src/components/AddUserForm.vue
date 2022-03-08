@@ -7,7 +7,7 @@
       @close="clear">
       <el-form v-model="form" style="text-align: left" ref="dataForm">
         <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
-            <el-select v-model="form.role" placeholder="请选择" style="width: 20%">
+            <el-select v-model="form.role" placeholder="请选择" style="width: 40%">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -19,7 +19,7 @@
         <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
           <el-date-picker
               v-model="form.user_id_suffix"
-              style="width: 20%"
+              style="width: 40%"
               type="year"
               placeholder="选择年">
           </el-date-picker><el-input v-model="form.user_id_append" autocomplete="off"></el-input>
