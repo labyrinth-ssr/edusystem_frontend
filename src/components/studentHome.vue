@@ -18,14 +18,13 @@
       <el-menu-item index="3" text-color="#ffd04b" >消息中心</el-menu-item>
     </el-menu>
     <el-button type="text" @click="dialogVisible = true">修改密码 Dialog</el-button>
-
     <el-dialog
         title="提示"
         :visible.sync="dialogVisible"
         width="60%"
         :before-close="handleClose">
       <span>
-        <el-form v-model="changePasswd" style="text-align: left" ref="dataForm">
+        <el-form v-model="changePasswd" style="text-align: left" ref="dataForm" :rules="rules">
           <el-form-item label="请输入旧密码" prop="oldPassword">
             <el-input
                 id = 'old'
@@ -56,7 +55,6 @@
                 auto-complete="off"
                 placeholder="再次输入"
                 style="width: 100%"
-                onkeyup="validate_1()"
             ></el-input>
 
           </el-form-item>
@@ -76,7 +74,29 @@
 <script>
 export default {
   name: "studentHome",
+ 
   data() {
+     var validatePass = (rule, value, callback) => {
+        if (this.changePasswd.newPassword === '') {
+                callback(new Error('请输入密码'));
+        } else {
+          // if (this.changePasswd.confirmPassword !== '') {
+          //     this.$refs.dataForm.validateField('confirmPassword');
+          // }
+          callback();}
+      };
+      var validatePass2 = (rule, value, callback) => {
+         if (this.changePasswd.confirmPassword === '') {
+              callback(new Error('请再次输入密码'));
+          }
+          if (this.changePasswd.confirmPassword !== this.changePasswd.newPassword) {
+            console.log(this.changePasswd.newPassword)
+
+              callback(new Error('两次输入密码不一致!'));
+          } else {
+              callback();
+          }
+      };
     return {
       activeIndex: '1',
       activeIndex2: '1',
@@ -84,10 +104,22 @@ export default {
       changePasswd: {
         oldPassword: '',
         newPassword: '',
-        confirmPassword:''
+        confirmPassword:''},
+        rules: {
+          newPassword: [
+            // { required: true, message: '请输入', trigger: 'blur' },
+            { validator: validatePass, trigger: 'blur', required: true}
+          ],
+          confirmPassword:[
+            // { required: true, message: '请确认密码', trigger: 'blur' },
+            //这里不知道为啥不能用rules判断，value没有值，只能自定义函数了
+            { validator: validatePass2, trigger: 'blur', required: true }
+          ]
+        }
 
-      }
-    };
+      
+    }
+
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -100,16 +132,6 @@ export default {
           }
       ).catch(_=>{});
     },
-    validate_1() {
-      const pwd1 = document.getElementById('new').value;
-      const pwd2 = document.getElementById('conf').value;
-
-      if (pwd1 === pwd2) {
-        document.getElementById("tips").innerHTML = "<span style='accent-color: green' >两次密码相同</span>";
-      } else {
-        document.getElementById("tips").innerHTML = "<span style='accent-color: red' >两次密码不同</span>";
-      }
-    }
   }
 }
 </script>
