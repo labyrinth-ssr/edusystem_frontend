@@ -1,38 +1,28 @@
 <template xmlns:background-image="http://www.w3.org/1999/xhtml">
-  <div >
-    <!-- <i class="el-icon-circle-plus-outline"  @click="dialogFormVisible = true"></i> -->
-    <el-dialog
-      title="添加用户"
-      :visible.sync="dialogFormVisible"
-      @close="clear">
-      <el-form v-model="form" style="text-align: left" ref="dataForm">
+  <div>
+    <el-dialog title="添加用户" :visible.sync="dialogFormVisible" @close="clear">
+      <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
         <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
-            <el-select v-model="form.role" placeholder="请选择" style="width: 40%">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+          <el-select v-model="form.role" placeholder="请选择" style="width: 40%">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
-          <el-date-picker
-              v-model="form.user_id_suffix"
-              style="width: 40%"
-              type="year"
-              placeholder="选择年">
-          </el-date-picker><el-input v-model="form.user_id_append" autocomplete="off"></el-input>
+
+          <el-input v-model="form.user_id" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" :label-width="formLabelWidth" prop="username">
+          <el-input v-model="form.username" autocomplete="off" maxlength="18" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
           <el-input v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone_number" >
+        <el-form-item label="手机号（选填）" :label-width="formLabelWidth" prop="phone_number">
           <el-input v-model="form.phone_number" autocomplete="off" maxlength="11" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-          <el-input v-model="form.email" autocomplete="off" >
-          </el-input>
+        <el-form-item label="邮箱（选填）" :label-width="formLabelWidth" prop="email">
+          <el-input v-model="form.email" autocomplete="off"> </el-input>
         </el-form-item>
         <el-form-item prop="id" style="height: 0">
           <el-input type="hidden" v-model="form.id" autocomplete="off"></el-input>
@@ -46,76 +36,164 @@
     <footer></footer>
   </div>
 </template>
-
+validate-event
 <script>
-  export default {
-    name: 'AddUserForm',
-    data () {
-      return {
-        options: [{
-          value: '1',
-          label: '老师'
-        }, {
-          value: '2',
-          label: '学生'
-        }],
-          dialogFormVisible: true,
-          Input2:"",
-        form: {
-          id: '',
-          role: '',
-          user_id_suffix :'',
-          user_id_append :'',
-          user_id: '',
-          id_number: '',
-          phone_number: '',
-          email: '',
-        },
-        formLabelWidth: '120px'
-      }
-    },
-    methods: {
-      clear () {
-        this.form = {
-          id: '',
-          role: '',
-          user_id: '',
-          id_number: '',
-          phone_number: '',
-          email: ''
-        }
+export default {
+  name: "AddUserForm",
+  data() {
+    // const validateIdNumber = (rule, value, callback) => {
+    //   this.$depot.get({
+    //     url: "/register",
+    //     config: {
+    //       params: {
+    //         taskName: 1,
+    //         userId: 1,
+    //       },
+    //     },
+    //     cb: (res) => {
+    //       this.nameOK = res.data == 1 ? true : false;
+    //     },
+    //   });
+    //   if (this.nameOK != false) {
+    //     callback();
+    //   } else {
+    //     callback(new Error("经验证，该项目已存在于数据库中"));
+    //   }
+    // };
+
+    return {
+      rules: {
+        role: [
+          {
+            required: true,
+            message: "请输入用户角色",
+            trigger: "change",
+          }
+        ],
+        //callback：判断role（可能需要validatefiled，）之后对返回值判断。
+        user_id: [
+          {
+            required: true,
+            message: "请输入学号/工号",
+            trigger: "blur",
+          },
+          {
+            // validator:
+          },
+        ],
+        username: [
+          { required: true, message: "请输入姓名", trigger: "blur" },
+          {
+            min: 2,
+            max: 10,
+            message: "长度在 2 到 10 个字符",
+            trigger: "blur",
+          },
+          {
+            required: true,
+            pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/,
+            message: "姓名不支持特殊字符",
+            trigger: "blur",
+          },
+        ],
+        id_number: [
+          {
+            required: true,
+            message: "请输入身份证号",
+            trigger: "blur",
+          },
+          {
+            // validator: validateIdNumber,
+          },
+        ],
+        phone_number: [
+          {
+            pattern: /^((0\d{2,3}-\d{7,8})|(1[3584]\d{9}))$/,
+            message: "请输入合法手机号",
+            trigger: "blur",
+          },
+        ],
+        email: [
+          {
+            type: "email",
+            message: "请输入正确的e-mail",
+            trigger: "blur",
+          },
+        ],
       },
-      onSubmit () {
-        // this.$axios
-        //   .post('/books', {
-        //     id: this.form.id,
-        //     email: this.form.email,
-        //     role: this.form.role,
-        //     user_id: this.form.user_id,
-        //     id_number: this.form.id_number,
-        //     phone_number: this.form.phone_number
-        //   }).then(resp => {
-        //   if (resp && resp.status === 200) {
-            this.dialogFormVisible = false
-            this.$emit('onSubmit')
-        //   }
-        // })
-      }
-    }
-  }
+      options: [
+        {
+          value: "1",
+          label: "老师",
+        },
+        {
+          value: "2",
+          label: "学生",
+        },
+      ],
+      dialogFormVisible: true,
+      Input2: "",
+      form: {
+        id: "",
+        role: "",
+        user_id_suffix: "",
+        user_id_append: "",
+        user_id: "",
+        id_number: "",
+        phone_number: "",
+        email: "",
+      },
+      formLabelWidth: "120px",
+    };
+  },
+  methods: {
+    clear() {
+      this.form = {
+        id: "",
+        role: "",
+        user_id: "",
+        id_number: "",
+        phone_number: "",
+        email: "",
+      };
+    },
+    onSubmit() {
+      console.log(this.form);
+      let data = new FormData();
+      data.append("username", "wang");
+      data.append("user_id", "123");
+      data.append("id_number", "41052620001210383x");
+      data.append("email", "");
+      data.append("role", this.form.role);
+      data.append("phone_number", "15026714258");
+      this.$axios
+        .post("/register", data, {
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+          },
+        })
+        .then((resp) => {
+          console.log(resp);
+          //   if (resp && resp.status === 200) {
+          this.dialogFormVisible = false;
+          this.$emit("onSubmit");
+          //   }
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .el-icon-circle-plus-outline {
-    margin: 50px 0 0 20px;
-    font-size: 100px;
-    float: left;
-    cursor: pointer;
-  }
-
+.el-icon-circle-plus-outline {
+  margin: 50px 0 0 20px;
+  font-size: 100px;
+  float: left;
+  cursor: pointer;
+}
 </style>
 <style >
-body{
+body {
   background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
   background-size: 100% 100vh;
 }

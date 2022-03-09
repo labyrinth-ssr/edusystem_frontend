@@ -21,3 +21,6 @@
 - vuex
 ![](https://v3.vuex.vuejs.org/vuex.png)
 - 版本依赖：vuex3对应vue2
+
+---
+
