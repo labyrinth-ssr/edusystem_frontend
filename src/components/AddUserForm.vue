@@ -4,12 +4,11 @@
       <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
         <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
           <el-select v-model="form.role" placeholder="请选择" style="width: 40%">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
-
           <el-input v-model="form.user_id" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth" prop="username">
@@ -123,11 +122,13 @@ export default {
       },
       options: [
         {
-          value: "1",
+          key:'1',
+          value: "teacher",
           label: "老师",
         },
         {
-          value: "2",
+          key:'2',
+          value: "student",
           label: "学生",
         },
       ],
@@ -158,19 +159,14 @@ export default {
       };
     },
     onSubmit() {
-      console.log(this.form);
-      let data = new FormData();
-      data.append("username", "wang");
-      data.append("user_id", "123");
-      data.append("id_number", "41052620001210383x");
-      data.append("email", "");
-      data.append("role", this.form.role);
-      data.append("phone_number", "15026714258");
       this.$axios
-        .post("/register", data, {
-          headers: {
-            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-          },
+        .post("/register", {
+      username: this.form.id,
+      user_id: this.form.user_id,
+      id_number: this.form.id_number,
+      email: this.form.email,
+      role: this.form.role,
+      phone_number: this.form.phone_number
         })
         .then((resp) => {
           console.log(resp);

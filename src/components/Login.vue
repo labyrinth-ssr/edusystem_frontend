@@ -4,14 +4,14 @@
     <el-form-item>
       <el-input
         type="text"
-        v-model="loginForm.username"
+        v-model="loginForm.user_id"
         auto-complete="off"
         placeholder="账号"
         class="grid-content"
         style="width: 100%"
       ></el-input>
     </el-form-item>
-    <br>
+    <br />
     <el-form-item>
       <el-input
         type="password"
@@ -21,18 +21,18 @@
         style="width: 100%"
       ></el-input>
     </el-form-item>
-    <br>
+    <br />
     <el-form-item STYLE="width: 100%">
       <el-button
         type="primary"
         style="width: 50%; background: #505458; border: none"
         round
         v-on:click="login"
-        class="Typography "
-        >登录</el-button>
+        class="Typography"
+        >登录</el-button
+      >
     </el-form-item>
   </el-form>
-
 </template>
 
 <script>
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       loginForm: {
-        username: "",
+        user_id: "",
         password: "",
       },
       responseResult: [],
@@ -51,27 +51,32 @@ export default {
     login() {
       var _this = this;
       console.log(this.$store.state);
-/*       this.$axios
+      this.$axios
         .post("/login", {
-          username: this.loginForm.username,
-          password: this.loginForm.password,
+          visitor_id: this.loginForm.user_id,
+          passwd: this.loginForm.password,
+          login_url:'127.0.0.1',
+          role:this.loginForm.user_id.length==8?'teacher':'student'
+          //简单判断，不容错
         })
-        .then((successResponse) => { */
-        var success_login=true
-          if (success_login) {
-            _this.$store.commit("login", _this.loginForm);
-            var path = this.$route.query.redirect;
-            this.$router.replace({
-              path: path === "/" || path === undefined ? "/admin" : "/admin",
-              // 没有路径就保持原页面，这边待定
-              //修改了一下做测试
-            });
-          }
+        .then((successResponse) => {
+          console.log(successResponse)
+        // var success_login=true
+        //   if (success_login) {
+        //     _this.$store.commit("login", _this.loginForm);
+        //     var path = this.$route.query.redirect;
+        //     this.$router.replace({
+        //       path: path === "/" || path === undefined ? "/admin" : "/admin",
+        //       // 没有路径就保持原页面，这边待定
+        //       //修改了一下做测试
+        //     });
+        //   }
 /*         })
         .catch((failResponse) => {}); */
-    },
-  },
-};
+    })
+  }
+
+}}
 </script>
 
 <style>
@@ -95,14 +100,12 @@ export default {
   border-radius: 4px;
   min-height: 36px;
 }
-.Typography{
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+.Typography {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   color: white;
-
 }
-</style>
-<style >
-body{
+body {
   background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
   background-size: 100% 100vh;
 }
