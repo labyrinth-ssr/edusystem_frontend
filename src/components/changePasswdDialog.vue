@@ -1,30 +1,11 @@
 <template>
-  <div >
-    <div class="line"></div>
-    <el-menu
-        :default-active="activeIndex2"
-        class="el-menu-demo"
-        mode="horizontal"
-        @select="handleSelect"
-        background-color="#409EFF"
-        active-text-color="#ffd04b">
-      <el-menu-item index="1">查看信息</el-menu-item>
-      <el-submenu index="2" text-color="#ffd04b" >
-        <template slot="title"><i class="el-icon-circle-plus-outline"/>选课</template>
-        <el-menu-item index="2-1" >学生/老师</el-menu-item>
-        <!--      <el-menu-item index="2-2">教师</el-menu-item>-->
-        <el-menu-item index="2-3">课程</el-menu-item>
-      </el-submenu>
-      <el-menu-item index="3" text-color="#ffd04b" >消息中心</el-menu-item>
-    </el-menu>
-    <el-button type="text" @click="dialogVisible = true">修改密码 Dialog</el-button>
-    <el-dialog
+        <el-dialog
         title="提示"
-        :visible.sync="dialogVisible"
+        :visible.sync="visible"
         width="60%"
-        :before-close="handleClose">
+        >
       <span>
-        <el-form v-model="changePasswd" style="text-align: left" ref="dataForm" :rules="rules">
+        <el-form :model="changePasswd" style="text-align: left" ref="changePasswd" :rules="rules">
           <el-form-item label="请输入旧密码" prop="oldPassword">
             <el-input
                 id = 'old'
@@ -64,22 +45,18 @@
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button id="button" type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button id="button" type="primary" @click="onSubmit" >确 定</el-button>
       </span>
     </el-dialog>
-  </div>
-
 </template>
 
 <script>
 export default {
-  name: "studentHome",
-  created(){
-    bus.$on('reset_passwd_need',(val)=>{
-      this.dialogVisible=true
-    })
+  name: "changePasswdDialog",
+  props:['visible','user_id'],
+  beforeUpdate(){
+    this.dialogVisible=this.visible
   },
- 
   data() {
      var validatePass = (rule, value, callback) => {
         if (this.changePasswd.newPassword === '') {
@@ -103,10 +80,9 @@ export default {
           }
       };
     return {
-      activeIndex: '1',
-      activeIndex2: '1',
-      dialogVisible: false,
+      dialogVisible: this.visible,
       changePasswd: {
+        user_id:this.user_id,
         oldPassword: '',
         newPassword: '',
         confirmPassword:''},
@@ -121,22 +97,38 @@ export default {
             { validator: validatePass2, trigger: 'blur', required: true }
           ]
         }
-
-      
     }
-
   },
   methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(done) {
-      this.$confirm('确认更改？')
-      .then(_=>{
-            done();
-          }
-      ).catch(_=>{});
-    },
+    onSubmit() {
+      let data = new FormData();
+//       String visitor_id;//user_id
+// String old_passwd;
+// String new_passwd;
+console.log(this.changePasswd,this.user_id)
+      data.append('visitor_id',this.user_id)
+      data.append('old_passwd',this.changePasswd.oldPassword)
+      data.append('new_passwd',this.changePasswd.newPassword)
+      this.$axios
+        .post("/change_passwd", data,{
+          headers: {
+ 	            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+ 	          }
+        })
+        .then((resp) => {
+          console.log(resp);
+          //   if (resp && resp.status === 200) {
+          this.dialogVisible = false;
+          //   }
+        });
+    }
+    // handleClose(done) {
+    //   this.$confirm('确认更改？')
+    //   .then(_=>{
+    //         done();
+    //       }
+    //   ).catch(_=>{});
+    // },
   }
 }
 </script>

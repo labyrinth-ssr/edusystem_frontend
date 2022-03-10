@@ -62,6 +62,11 @@ export default {
 
     return {
       rules: {
+        id_number:[
+          {
+            
+          }
+        ],
         role: [
           {
             required: true,

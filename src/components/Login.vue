@@ -1,4 +1,5 @@
 <template>
+<div>
   <el-form class="login-container" label-position="left" label-width="0px">
     <h3 class="login_title">系统登录</h3>
     <el-form-item>
@@ -33,10 +34,15 @@
       >
     </el-form-item>
   </el-form>
+  <change-passwd-dialog :visible="reset_passwd_needed" :user_id="loginForm.user_id"></change-passwd-dialog>
+    <!-- :visible="reset_passwd_needed" -->
+</div>
 </template>
 
 <script>
+import changePasswdDialog from './changePasswdDialog.vue';
 export default {
+  components: { changePasswdDialog },
   name: "Login",
   data() {
     return {
@@ -45,35 +51,50 @@ export default {
         password: "",
       },
       responseResult: [],
+      reset_passwd_needed:false
     };
   },
   methods: {
     login() {
-      var _this = this;
-      console.log(this.$store.state);
+      // var _this = this;
+      // console.log(this.$store.state);
+      let data = new FormData();
+      data.append("visitor_id", this.loginForm.user_id);
+      data.append("passwd",this.loginForm.password);
+      data.append("login_url",'127.0.0.1')
+      data.append("role",'student')
       this.$axios
-        .post("/login", {
-          visitor_id: this.loginForm.user_id,
-          passwd: this.loginForm.password,
-          login_url:'127.0.0.1',
-          role:this.loginForm.user_id.length==8?'teacher':'student'
+        .post("/login", data,{
+          headers: {
+ 	            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+ 	          }
+          // visitor_id: this.loginForm.user_id,
+          // passwd: this.loginForm.password,
+          // login_url:'127.0.0.1',
+          // role:this.loginForm.user_id.length==8?'teacher':'student'
           //简单判断，不容错
         })
-        .then((successResponse) => {
-          console.log(successResponse)
-        // var success_login=true
-        //   if (success_login) {
+        .then((response) => {
+          console.log(response)
+        const success_login=response.data.login_approved
+          if (success_login) {
         //     _this.$store.commit("login", _this.loginForm);
-        //     var path = this.$route.query.redirect;
-        //     this.$router.replace({
-        //       path: path === "/" || path === undefined ? "/admin" : "/admin",
-        //       // 没有路径就保持原页面，这边待定
-        //       //修改了一下做测试
-        //     });
-        //   }
+            var path = this.$route.query.redirect;
+            this.$router.replace({
+              path: path === "/" || path === undefined ? "/index" : path,
+            });
+          }
+          else if(response.data.find_id&&response.data.passwd_correct){
+            this.reset_passwd_needed=true
+
+            // this.$router.replace({
+            //   path: "/stu"
+            // });
+          }
 /*         })
         .catch((failResponse) => {}); */
     })
+    .catch((failResponse) => {console.log(failResponse)}); 
   }
 
 }}
