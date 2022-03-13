@@ -1,6 +1,6 @@
 <template>
         <el-dialog
-        title="提示"
+        title="重设密码"
         :visible.sync="visible"
         width="60%"
         >
@@ -17,7 +17,7 @@
             ></el-input>
           </el-form-item>
           <br>
-          <el-form-item label="请新输入新密码" prop="newPassword">
+          <el-form-item label="请输入新密码" prop="newPassword">
             <el-input
                 id = 'new'
                 type="password"
@@ -58,27 +58,34 @@ export default {
     this.dialogVisible=this.visible
   },
   data() {
-     var validatePass = (rule, value, callback) => {
-        if (this.changePasswd.newPassword === '') {
-                callback(new Error('请输入密码'));
-        } else {
-          // if (this.changePasswd.confirmPassword !== '') {
-          //     this.$refs.dataForm.validateField('confirmPassword');
-          // }
-          callback();}
-      };
+      var vallidatePass=(rule,value,callback)=>{
+        const data=this.formatData()
+        this.$axios
+        .post("/change_passwd", data,{
+          headers: {
+ 	            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+ 	          }
+        })
+        .then((resp)=>{
+          if(!resp.data.old_passwd_correct){
+              callback(new Error('旧密码错误'));
+            }
+            else{
+              callback()
+            }
+        })
+      }
       var validatePass2 = (rule, value, callback) => {
          if (this.changePasswd.confirmPassword === '') {
               callback(new Error('请再次输入密码'));
           }
           if (this.changePasswd.confirmPassword !== this.changePasswd.newPassword) {
-            console.log(this.changePasswd.newPassword)
-
-              callback(new Error('两次输入密码不一致!'));
+              callback(new Error('两次输入密码不一致'));
           } else {
               callback();
           }
       };
+      
     return {
       dialogVisible: this.visible,
       changePasswd: {
@@ -87,28 +94,33 @@ export default {
         newPassword: '',
         confirmPassword:''},
         rules: {
+          oldPassword:[{
+            required:true,message:'旧密码为必填项',trigger:'blur'
+          },{
+            validator:vallidatePass,trigger:'blur'
+          }],
           newPassword: [
-            // { required: true, message: '请输入', trigger: 'blur' },
-            { validator: validatePass, trigger: 'blur', required: true}
+            { required: true, message: '新密码为必填项', trigger: 'blur' },
+            { min: 6, max: 32, message: '长度在 6 到 32 个', trigger: 'blur' },
+            {pattern: /^(?![\d]+$)(?![a-zA-Z]+$)(?![-_]+$)[\da-zA-Z-_]{6,32}$/,message:'字母，数字或者特殊字符（-_）至少包含两种',trigger:'blur'}
           ],
           confirmPassword:[
-            // { required: true, message: '请确认密码', trigger: 'blur' },
-            //这里不知道为啥不能用rules判断，value没有值，只能自定义函数了
-            { validator: validatePass2, trigger: 'blur', required: true }
+            { required: true, message: '请确认密码', trigger: 'blur' },
+            { validator: validatePass2, trigger: 'blur'}
           ]
         }
     }
   },
   methods: {
-    onSubmit() {
+    formatData(){
       let data = new FormData();
-//       String visitor_id;//user_id
-// String old_passwd;
-// String new_passwd;
-console.log(this.changePasswd,this.user_id)
       data.append('visitor_id',this.user_id)
       data.append('old_passwd',this.changePasswd.oldPassword)
       data.append('new_passwd',this.changePasswd.newPassword)
+      return data
+    },
+    onSubmit() {
+      const data=this.formatData()
       this.$axios
         .post("/change_passwd", data,{
           headers: {
@@ -117,18 +129,28 @@ console.log(this.changePasswd,this.user_id)
         })
         .then((resp) => {
           console.log(resp);
-          //   if (resp && resp.status === 200) {
-          this.dialogVisible = false;
-          //   }
+            if (resp.data.change_approved) {
+              this.visible=false;
+              this.$router.replace("/index"
+            );
+            }
+            else if(!resp.data.old_passwd_correct){
+              this.$message.info('旧密码错误')
+            }
+            else if(!resp.data.passwdFormat.legal){
+              const format=resp.data.passwdFormat
+              if (format.too_long) {
+                this.$message.info('新密码太长')
+              }
+              else if(format.too_short){
+                this.$message.info('新密码太短')
+              }
+              else if(format.too_simple){
+                this.$message.info('新密码太简单，字母，数字或者特殊字符（-_）至少包含两种。')
+              }
+            }
         });
     }
-    // handleClose(done) {
-    //   this.$confirm('确认更改？')
-    //   .then(_=>{
-    //         done();
-    //       }
-    //   ).catch(_=>{});
-    // },
   }
 }
 </script>

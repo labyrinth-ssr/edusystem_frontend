@@ -34,7 +34,7 @@
       >
     </el-form-item>
   </el-form>
-  <change-passwd-dialog :visible="reset_passwd_needed" :user_id="loginForm.user_id"></change-passwd-dialog>
+  <change-passwd-dialog :visible="reset_passwd_needed" :user_id="loginForm.user_id" ref="change_passwd_box"></change-passwd-dialog>
     <!-- :visible="reset_passwd_needed" -->
 </div>
 </template>
@@ -54,11 +54,19 @@ export default {
       reset_passwd_needed:false
     };
   },
+  mounted(){
+    this.$watch("$refs.change_passwd_box.visible",(new_val)=>{
+      if(new_val==false){
+      this.reset_passwd_needed=false
+      }
+    })
+  },
   methods: {
     login() {
       // var _this = this;
       // console.log(this.$store.state);
       let data = new FormData();
+      console.log(this.loginForm)
       data.append("visitor_id", this.loginForm.user_id);
       data.append("passwd",this.loginForm.password);
       data.append("login_url",'127.0.0.1')
@@ -68,28 +76,33 @@ export default {
           headers: {
  	            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
  	          }
-          // visitor_id: this.loginForm.user_id,
-          // passwd: this.loginForm.password,
-          // login_url:'127.0.0.1',
-          // role:this.loginForm.user_id.length==8?'teacher':'student'
-          //简单判断，不容错
         })
         .then((response) => {
           console.log(response)
         const success_login=response.data.login_approved
           if (success_login) {
         //     _this.$store.commit("login", _this.loginForm);
-            var path = this.$route.query.redirect;
+            if(this.loginForm.user_id=='root'){
+              this.$router.replace({
+              path: "/admin" 
+            });
+            }
+            else{
+                var path = this.$route.query.redirect;
             this.$router.replace({
               path: path === "/" || path === undefined ? "/index" : path,
             });
+            }
           }
           else if(response.data.find_id&&response.data.passwd_correct){
+            this.$message.info("初次登录请重设密码");
             this.reset_passwd_needed=true
-
-            // this.$router.replace({
-            //   path: "/stu"
-            // });
+          }
+          else if(!response.data.find_id){
+            this.$message.info("学号/工号填写错误");
+          }
+          else if(!response.data.passwd_correct){
+            this.$message.info("密码错误");
           }
 /*         })
         .catch((failResponse) => {}); */

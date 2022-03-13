@@ -1,6 +1,6 @@
 <template xmlns:background-image="http://www.w3.org/1999/xhtml">
   <div>
-    <el-dialog title="添加用户" :visible.sync="dialogFormVisible" @close="clear">
+    <el-dialog title="添加用户" :visible.sync="dialogFormVisible" @close="cancel">
       <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
         <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
           <el-select v-model="form.role" placeholder="请选择" style="width: 40%">
@@ -12,7 +12,7 @@
           <el-input v-model="form.user_id" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth" prop="username">
-          <el-input v-model="form.username" autocomplete="off" maxlength="18" show-word-limit></el-input>
+          <el-input v-model="form.username" autocomplete="off" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
           <el-input v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
@@ -28,7 +28,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="dialogFormVisible = false;cancel()">取 消</el-button>
         <el-button type="primary" @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>
@@ -40,32 +40,36 @@ validate-event
 export default {
   name: "AddUserForm",
   data() {
-    // const validateIdNumber = (rule, value, callback) => {
-    //   this.$depot.get({
-    //     url: "/register",
-    //     config: {
-    //       params: {
-    //         taskName: 1,
-    //         userId: 1,
-    //       },
-    //     },
-    //     cb: (res) => {
-    //       this.nameOK = res.data == 1 ? true : false;
-    //     },
-    //   });
-    //   if (this.nameOK != false) {
-    //     callback();
-    //   } else {
-    //     callback(new Error("经验证，该项目已存在于数据库中"));
-    //   }
-    // };
-
+    const validateUserId1=(rule,value,callback)=>{
+      if(this.form.role=='student'){
+        /^\d{6}$/.test(value)?callback():callback(new Error("学生学号为6位数字"));
+      }
+      else if(this.form.role=='teacher'){
+        /^\d{8}$/.test(value)?callback():callback(new Error("教师工号为8位数字"));
+      }
+      else{
+          /^(\d{6}|\d{8})$/.test(value)?callback():callback(new Error("学号/工号为6位或8位数字"));
+      }
+    }
+    const validateUserId2=(rule,value,callback)=>{
+      this.$axios.get('/register/user_id/'+this.form.user_id)
+      .then((resp)=>{
+        resp.data?callback():callback(new Error("该学号/工号已注册"))
+      })
+      
+    }
+    const validateIdNum=(rule,value,callback)=>{
+      this.$axios.get('/register/id_number/'+this.form.id_number)
+      .then((resp)=>{
+        resp.data?callback():callback(new Error("该身份证号已注册"))
+      })
+    }
     return {
       rules: {
         id_number:[
-          {
-            
-          }
+          {min:18,max:18,message:'身份证长度必须为18位',trigger:'blur'
+          },
+          {required:true,message:'身份证号为必填项',trigger:'blur'}
         ],
         role: [
           {
@@ -74,7 +78,6 @@ export default {
             trigger: "change",
           }
         ],
-        //callback：判断role（可能需要validatefiled，）之后对返回值判断。
         user_id: [
           {
             required: true,
@@ -82,23 +85,19 @@ export default {
             trigger: "blur",
           },
           {
-            // validator:
+            validator:validateUserId1,trigger:'blur'
           },
+          {
+            validator:validateUserId2,trigger:'blur'
+          }
         ],
         username: [
           { required: true, message: "请输入姓名", trigger: "blur" },
           {
-            min: 2,
-            max: 10,
-            message: "长度在 2 到 10 个字符",
+            pattern: /^[\u4e00-\u9fa5a-zA-Z]+$/,
+            message: "姓名仅能出现英文字符与中文字符",
             trigger: "blur",
-          },
-          {
-            required: true,
-            pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/,
-            message: "姓名不支持特殊字符",
-            trigger: "blur",
-          },
+          }
         ],
         id_number: [
           {
@@ -107,12 +106,13 @@ export default {
             trigger: "blur",
           },
           {
-            // validator: validateIdNumber,
+            validator: validateIdNum,
+            trigger:'blur'
           },
         ],
         phone_number: [
           {
-            pattern: /^((0\d{2,3}-\d{7,8})|(1[3584]\d{9}))$/,
+            pattern: /^1\d{10}$/,
             message: "请输入合法手机号",
             trigger: "blur",
           },
@@ -140,10 +140,8 @@ export default {
       dialogFormVisible: true,
       Input2: "",
       form: {
-        id: "",
+        username: "",
         role: "",
-        user_id_suffix: "",
-        user_id_append: "",
         user_id: "",
         id_number: "",
         phone_number: "",
@@ -155,7 +153,7 @@ export default {
   methods: {
     clear() {
       this.form = {
-        id: "",
+        username: "",
         role: "",
         user_id: "",
         id_number: "",
@@ -163,10 +161,17 @@ export default {
         email: "",
       };
     },
+    cancel(){
+      console.log('cancel')
+      this.clear()
+      this.$router.replace(
+                "/admin"
+            )
+    },
     onSubmit() {
       this.$axios
         .post("/register", {
-      username: this.form.id,
+      username: this.form.username,
       user_id: this.form.user_id,
       id_number: this.form.id_number,
       email: this.form.email,
@@ -174,11 +179,14 @@ export default {
       phone_number: this.form.phone_number
         })
         .then((resp) => {
-          console.log(resp);
-          //   if (resp && resp.status === 200) {
-          this.dialogFormVisible = false;
-          this.$emit("onSubmit");
-          //   }
+          if(resp.data){
+            this.$router.replace(
+            "/admin"
+            )
+          }
+          else {
+            this.$message('提交失败，请检查表单内容')
+          }          
         });
     },
   },
