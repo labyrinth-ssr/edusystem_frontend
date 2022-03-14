@@ -1,10 +1,7 @@
 # 开发文档
 ## 功能
 - 使用反向代理解决跨域问题。
-- 未装饰的登录界面，在/login路径中。
-- 后端暂时使用了lab2—pre测试，已成功连接。
-- 点击登录可跳转至hello页面  
-(I hate css style.)
+- 登录界面在/login路径中。
 
 ## 知识点
 - webpack、代理、nginx、RESTful API、ajax
@@ -50,3 +47,41 @@ get传参还是post？怎样算安全？
 
 login 作为父组件：
 - 输入错误后关闭：此时visible为false，但是父组件值依然为true.. 使用parent watch完成
+
+10:09：
+前端路由拦截，homepage
+决定不为addUserForm设置路由，而是作为组件。
+美化info
+反正也不麻烦，今天一定能做完的吧？
+需要想明白拦截器具体的机制。
+token->user_id
+后端没有cookie，前端使用localStorage
+
+将home目录合并。
+13:53
+使用导航栏组件将student和admin归为统一页面，并且控制admin的导航栏。
+使用/register 暂时作为权限请求。
+
+未登录：NO_LOGIN
+普通用户：NO_AUTHORITY
+管理员：无拦截。
+
+动态组件：：前端实现...
+变化的导航栏：根据列表数据渲染。
+列表数据的变化
+14:35
+配置menu
+关于路由：成功登陆后指向同一个页面。
+关于什么时候渲染：它应该是一个层级结构。暂时保持dialog单独一个页面。
+同一页面应该长什么样子？
+首先测试动态渲染的menu
+16：16
+
+导航栏信息：
+- 管理：添加信息；修改密码
+- 用户：修改密码
+建议：后端动态菜单。
+对于el-submenu的渲染
+menu结构存在自身的data而非path里面。
+理解嵌套路由：渲染时的组合：<view-router>
+添加div后样式失效，发现是默认的div display的问题

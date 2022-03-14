@@ -12,7 +12,10 @@ Vue.use(VueRouter)
 const routes = [
   {path: '/adduserform',
   name: 'AddUserForm',
-  component: AddUserForm
+  component: AddUserForm,
+  meta: {
+    requireAuth: true
+  }
 },
   {
     path: '/login',
@@ -39,13 +42,19 @@ const routes = [
   {
     path: '/admin',
     name: 'AdminHome',
-    component: AdminHome
+    component: AdminHome,
+    meta: {
+      requireAuth: true
+    }
   },
   {
     path: '/stu',
     name: 'studentHome',
-    component: studentHome
-  }
+    component: studentHome,
+    meta: {
+      requireAuth: true
+    }
+  },
 ]
 
 const router = new VueRouter({

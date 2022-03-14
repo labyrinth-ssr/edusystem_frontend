@@ -7,34 +7,61 @@
       text-color="#222"
       active-text-color="red"
       style="min-width: 1300px">
-      <el-menu-item v-for="(item,i) in navList" :key="i" :index="item.name">
-        {{ item.navItem }}
-      </el-menu-item>
-
-      <i class="el-icon-menu" style="float:right;font-size: 45px;color: #222;padding-top: 8px"></i>
+      <inner-menu :navList="this.navList"></inner-menu>
     </el-menu>
 </template>
 
 <script>
+import InnerMenu from './innerMenu.vue'
   export default {
     name: 'NavMenu',
+    components: {
+    InnerMenu
+  },
     data () {
-      return {
+      if(this.$store.state.admin_auth){
+return {
         navList: [
-          {name: '/index', navItem: '首页'},
-          {name: '/admin', navItem: '个人中心'}
+          //不知道为啥index设成路径可以直接跳转路径
+          {path: '/index', name: '首页',icon:null},
+          {path: '/admin', name: '管理',icon:null
+            ,'children':[
+              {
+                path:'/admin/adduerform',
+                icon:"el-icon-circle-plus-outline",
+                name:'添加学生/教师'
+              }
+            ]},
+          {path: '/user', name: '个人中心',icon:null,'children':[
+              {
+                path:'/user/changepasswd',
+                icon:null,
+                name:'修改密码'
+              }
+            ]}
         ]
       }
+      }
+      else return{
+        navList: [
+          //不知道为啥index设成路径可以直接跳转路径
+          {path: '/index', name: '首页',icon:null},
+          {path: '/user', name: '个人中心',icon:null,'children':[
+              {
+                path:'/user/changepasswd',
+                icon:null,
+                name:'修改密码'
+              }
+            ]}
+        ]
+      }
+      
+    }
+    ,
+    methods:{
+
     }
   }
 </script>
 
-<style scoped>
-  a{
-    text-decoration: none;
-  }
 
-  span {
-    pointer-events: none;
-  }
-</style>

@@ -63,10 +63,8 @@ export default {
   },
   methods: {
     login() {
-      // var _this = this;
-      // console.log(this.$store.state);
+      console.log(this.$store.state);
       let data = new FormData();
-      console.log(this.loginForm)
       data.append("visitor_id", this.loginForm.user_id);
       data.append("passwd",this.loginForm.password);
       data.append("login_url",'127.0.0.1')
@@ -79,9 +77,10 @@ export default {
         })
         .then((response) => {
           console.log(response)
-        const success_login=response.data.login_approved
+          const success_login=response.data.login_approved
           if (success_login) {
-        //     _this.$store.commit("login", _this.loginForm);
+            //直接
+            this.$store.commit("login", this.loginForm.user_id);
             if(this.loginForm.user_id=='root'){
               this.$router.replace({
               path: "/admin" 

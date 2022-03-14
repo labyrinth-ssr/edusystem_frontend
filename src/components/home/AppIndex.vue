@@ -9,7 +9,3 @@
     name: 'AppIndex'
   }
 </script>
-
-<style scoped>
-
-</style>
