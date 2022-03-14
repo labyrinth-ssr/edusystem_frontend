@@ -13,13 +13,17 @@
 
 <script>
 import InnerMenu from './innerMenu.vue'
+
   export default {
     name: 'NavMenu',
     components: {
     InnerMenu
   },
+  created(){
+
+},
     data () {
-      if(this.$store.state.admin_auth){
+      if(this.$store.state.user_id=='root'){
 return {
         navList: [
           //不知道为啥index设成路径可以直接跳转路径
@@ -27,7 +31,7 @@ return {
           {path: '/admin', name: '管理',icon:null
             ,'children':[
               {
-                path:'/admin/adduerform',
+                path:'/admin/adduserform',
                 icon:"el-icon-circle-plus-outline",
                 name:'添加学生/教师'
               }

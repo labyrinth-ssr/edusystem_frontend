@@ -34,15 +34,12 @@
       >
     </el-form-item>
   </el-form>
-  <change-passwd-dialog :visible="reset_passwd_needed" :user_id="loginForm.user_id" ref="change_passwd_box"></change-passwd-dialog>
     <!-- :visible="reset_passwd_needed" -->
 </div>
 </template>
 
 <script>
-import changePasswdDialog from './changePasswdDialog.vue';
 export default {
-  components: { changePasswdDialog },
   name: "Login",
   data() {
     return {
@@ -55,15 +52,9 @@ export default {
     };
   },
   mounted(){
-    this.$watch("$refs.change_passwd_box.visible",(new_val)=>{
-      if(new_val==false){
-      this.reset_passwd_needed=false
-      }
-    })
   },
   methods: {
     login() {
-      console.log(this.$store.state);
       let data = new FormData();
       data.append("visitor_id", this.loginForm.user_id);
       data.append("passwd",this.loginForm.password);
@@ -76,26 +67,22 @@ export default {
  	          }
         })
         .then((response) => {
-          console.log(response)
           const success_login=response.data.login_approved
-          if (success_login) {
-            //直接
+          const first_login=response.data.find_id&&response.data.passwd_correct&&response.data.password_check
+          if (success_login||first_login) {
+            // console.log(first_login)
             this.$store.commit("login", this.loginForm.user_id);
-            if(this.loginForm.user_id=='root'){
-              this.$router.replace({
-              path: "/admin" 
-            });
+            if(first_login){
+              this.$store.commit('first_login_func',true)
             }
-            else{
-                var path = this.$route.query.redirect;
+            // else{
+            //   this.$store.commit('first_login_func',false)
+
+            // }
+            var path = this.$route.query.redirect;
             this.$router.replace({
               path: path === "/" || path === undefined ? "/index" : path,
             });
-            }
-          }
-          else if(response.data.find_id&&response.data.passwd_correct){
-            this.$message.info("初次登录请重设密码");
-            this.reset_passwd_needed=true
           }
           else if(!response.data.find_id){
             this.$message.info("学号/工号填写错误");

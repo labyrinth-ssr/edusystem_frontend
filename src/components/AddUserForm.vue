@@ -28,7 +28,10 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false;cancel()">取 消</el-button>
+        <el-button @click="
+            dialogFormVisible = false;
+            cancel();
+          ">取 消</el-button>
         <el-button type="primary" @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>
@@ -40,43 +43,50 @@ validate-event
 export default {
   name: "AddUserForm",
   data() {
-    const validateUserId1=(rule,value,callback)=>{
-      if(this.form.role=='student'){
-        /^\d{6}$/.test(value)?callback():callback(new Error("学生学号为6位数字"));
+    const validateUserId1 = (rule, value, callback) => {
+      if (this.form.role == "student") {
+        /^\d{6}$/.test(value)
+          ? callback()
+          : callback(new Error("学生学号为6位数字"));
+      } else if (this.form.role == "teacher") {
+        /^\d{8}$/.test(value)
+          ? callback()
+          : callback(new Error("教师工号为8位数字"));
+      } else {
+        /^(\d{6}|\d{8})$/.test(value)
+          ? callback()
+          : callback(new Error("学号/工号为6位或8位数字"));
       }
-      else if(this.form.role=='teacher'){
-        /^\d{8}$/.test(value)?callback():callback(new Error("教师工号为8位数字"));
-      }
-      else{
-          /^(\d{6}|\d{8})$/.test(value)?callback():callback(new Error("学号/工号为6位或8位数字"));
-      }
-    }
-    const validateUserId2=(rule,value,callback)=>{
-      this.$axios.get('/register/user_id/'+this.form.user_id)
-      .then((resp)=>{
-        resp.data?callback():callback(new Error("该学号/工号已注册"))
-      })
-      
-    }
-    const validateIdNum=(rule,value,callback)=>{
-      this.$axios.get('/register/id_number/'+this.form.id_number)
-      .then((resp)=>{
-        resp.data?callback():callback(new Error("该身份证号已注册"))
-      })
-    }
+    };
+    const validateUserId2 = (rule, value, callback) => {
+      this.$axios.get("/register/user_id/" + this.form.user_id).then((resp) => {
+        resp.data ? callback() : callback(new Error("该学号/工号已注册"));
+      });
+    };
+    const validateIdNum = (rule, value, callback) => {
+      this.$axios
+        .get("/register/id_number/" + this.form.id_number)
+        .then((resp) => {
+          resp.data ? callback() : callback(new Error("该身份证号已注册"));
+        });
+    };
     return {
       rules: {
-        id_number:[
-          {min:18,max:18,message:'身份证长度必须为18位',trigger:'blur'
+        id_number: [
+          {
+            min: 18,
+            max: 18,
+            message: "身份证长度必须为18位",
+            trigger: "blur",
           },
-          {required:true,message:'身份证号为必填项',trigger:'blur'}
+          { required: true, message: "身份证号为必填项", trigger: "blur" },
         ],
         role: [
           {
             required: true,
             message: "请输入用户角色",
             trigger: "change",
-          }
+          },
         ],
         user_id: [
           {
@@ -85,11 +95,13 @@ export default {
             trigger: "blur",
           },
           {
-            validator:validateUserId1,trigger:'blur'
+            validator: validateUserId1,
+            trigger: "blur",
           },
           {
-            validator:validateUserId2,trigger:'blur'
-          }
+            validator: validateUserId2,
+            trigger: "blur",
+          },
         ],
         username: [
           { required: true, message: "请输入姓名", trigger: "blur" },
@@ -97,7 +109,7 @@ export default {
             pattern: /^[\u4e00-\u9fa5a-zA-Z]+$/,
             message: "姓名仅能出现英文字符与中文字符",
             trigger: "blur",
-          }
+          },
         ],
         id_number: [
           {
@@ -107,7 +119,7 @@ export default {
           },
           {
             validator: validateIdNum,
-            trigger:'blur'
+            trigger: "blur",
           },
         ],
         phone_number: [
@@ -127,12 +139,12 @@ export default {
       },
       options: [
         {
-          key:'1',
+          key: "1",
           value: "teacher",
           label: "老师",
         },
         {
-          key:'2',
+          key: "2",
           value: "student",
           label: "学生",
         },
@@ -152,6 +164,7 @@ export default {
   },
   methods: {
     clear() {
+      
       this.form = {
         username: "",
         role: "",
@@ -161,32 +174,26 @@ export default {
         email: "",
       };
     },
-    cancel(){
-      console.log('cancel')
-      this.clear()
-      this.$router.replace(
-                "/admin"
-            )
+    cancel() {
+      this.clear();
+      this.$router.replace("/index");
     },
     onSubmit() {
       this.$axios
         .post("/register", {
-      username: this.form.username,
-      user_id: this.form.user_id,
-      id_number: this.form.id_number,
-      email: this.form.email,
-      role: this.form.role,
-      phone_number: this.form.phone_number
+          username: this.form.username,
+          user_id: this.form.user_id,
+          id_number: this.form.id_number,
+          email: this.form.email,
+          role: this.form.role,
+          phone_number: this.form.phone_number,
         })
         .then((resp) => {
-          if(resp.data){
-            this.$router.replace(
-            "/admin"
-            )
+          if (resp.data) {
+            this.$router.replace("/index");
+          } else {
+            this.$message("提交失败，请检查表单内容");
           }
-          else {
-            this.$message('提交失败，请检查表单内容')
-          }          
         });
     },
   },

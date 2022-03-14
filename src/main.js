@@ -12,26 +12,37 @@ axios.defaults.baseURL = '/api'
 //之后可在其他组件中通过 this.$axios 发送数据，
 Vue.prototype.$axios = axios
 Vue.use(ElementUI)
-
 Vue.config.productionTip = false
 
 
-// router.beforeEach((to, from, next) => {
-//   if (to.meta.requireAuth) {
-//     //两种类型Auth，判断Auth：成功登陆
-//     if (store.state.user.username) {
-//       next()
-//     } else {
-//       next({
-//         path: 'login',
-//         query: {redirect: to.fullPath}
-//       })
-//     }
-//   } else {
-//     next()
-//   }
-// }
-// )
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {
+    if(to.path.startsWith('/admin')){
+      if (store.state.user_id=='root') {
+        next()
+      }
+      else {
+        next({
+          path: 'login',
+          query: {redirect: to.fullPath}
+        })
+      }
+    }
+    if(to.path.startsWith('/user')||to.path.startsWith('/index')){
+      if (store.state.user_id) {
+        next()
+      } else {
+        next({
+          path: 'login',
+          query: {redirect: to.fullPath}
+        })
+      }
+    }
+  } else {
+    next()
+  }
+}
+)
 
 new Vue({
   el: '#app',// el 配置项指实例负责管理的区域；#app 指 id="app" 的dom标签里的所有内容

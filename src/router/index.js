@@ -4,13 +4,11 @@ import Login from '@/components/Login'
 import AppIndex from '@/components/home/AppIndex'
 import Home from '@/components/Home'
 import AddUserForm from '@/components/AddUserForm'
-import AdminHome from "@/components/AdminHome";
-import studentHome from "@/components/studentHome";
-
+import changePasswdDialog from '@/components/changePasswdDialog' 
 Vue.use(VueRouter)
 
 const routes = [
-  {path: '/adduserform',
+  {path: 'admin/adduserform',
   name: 'AddUserForm',
   component: AddUserForm,
   meta: {
@@ -23,10 +21,10 @@ const routes = [
     component: Login
   },
   {
+    //一个不会进入，只包含导航栏的页面
     path: '/home',
     name: 'Home',
     component: Home,
-    // home页面并不需要被访问
     redirect: '/index',
     children: [
       {
@@ -40,21 +38,21 @@ const routes = [
     ]
   },
   {
-    path: '/admin',
-    name: 'AdminHome',
-    component: AdminHome,
+    path: '/admin/adduserform',
+    name: 'AddUserForm',
+    component: AddUserForm,
     meta: {
       requireAuth: true
     }
   },
   {
-    path: '/stu',
-    name: 'studentHome',
-    component: studentHome,
+    path: '/user/changepasswd',
+    name: 'ChangePasswd',
+    component: changePasswdDialog,
     meta: {
       requireAuth: true
     }
-  },
+  }
 ]
 
 const router = new VueRouter({
