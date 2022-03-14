@@ -8,6 +8,10 @@ import changePasswdDialog from '@/components/changePasswdDialog'
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path:'',
+    redirect: '/login'
+  },
   {path: 'admin/adduserform',
   name: 'AddUserForm',
   component: AddUserForm,
