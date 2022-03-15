@@ -46,6 +46,7 @@ export default {
       loginForm: {
         user_id: "",
         password: "",
+        role:''
       },
       responseResult: [],
       reset_passwd_needed:false
@@ -55,11 +56,12 @@ export default {
   },
   methods: {
     login() {
+      this.loginForm.role= this.loginForm.user_id.length==6?'student':'teacher'
       let data = new FormData();
       data.append("visitor_id", this.loginForm.user_id);
       data.append("passwd",this.loginForm.password);
       data.append("login_url",'127.0.0.1')
-      data.append("role",'student')
+      data.append("role",this.loginForm.role)
       this.$axios
         .post("/login", data,{
           headers: {
@@ -67,8 +69,9 @@ export default {
  	          }
         })
         .then((response) => {
+          console.log(response)
           const success_login=response.data.login_approved
-          const first_login=response.data.find_id&&response.data.passwd_correct&&response.data.password_check
+          const first_login=response.data.find_id&&response.data.passwd_correct&&response.data.passwd_check
           if (success_login||first_login) {
             // console.log(first_login)
             this.$store.commit("login", this.loginForm.user_id);
