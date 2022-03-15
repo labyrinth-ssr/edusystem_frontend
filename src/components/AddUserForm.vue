@@ -44,11 +44,11 @@ export default {
   name: "AddUserForm",
   data() {
     const validateUserId1 = (rule, value, callback) => {
-      if (this.form.role == "student") {
+      if (this.form.role === "student") {
         /^\d{6}$/.test(value)
           ? callback()
           : callback(new Error("学生学号为6位数字"));
-      } else if (this.form.role == "teacher") {
+      } else if (this.form.role === "teacher") {
         /^\d{8}$/.test(value)
           ? callback()
           : callback(new Error("教师工号为8位数字"));
@@ -79,7 +79,14 @@ export default {
             message: "身份证长度必须为18位",
             trigger: "blur",
           },
-          { required: true, message: "身份证号为必填项", trigger: "blur" },
+          { required: true,
+            message: "身份证号为必填项",
+            trigger: "blur" ,
+          },
+          {
+            validator: validateIdNum,
+            trigger: "blur",
+          }
         ],
         role: [
           {
@@ -111,20 +118,19 @@ export default {
             trigger: "blur",
           },
         ],
-        id_number: [
-          {
-            required: true,
-            message: "请输入身份证号",
-            trigger: "blur",
-          },
-          {
-            validator: validateIdNum,
-            trigger: "blur",
-          },
-        ],
         phone_number: [
           {
-            pattern: /^1\d{10}$/,
+            /*
+            中国电信号段
+            133、153、173、177、180、181、189、190、191、193、199
+            中国联通号段
+            130、131、132、145、155、156、166、167、171、175、176、185、186、196
+            中国移动号段
+            134(0-8)、135、136、137、138、139、1440、147、148、150、151、152、157、158、159、172、178、182、183、184、187、188、195、197、198
+            ————————————————
+            版权声明：本文为CSDN博主「bcdon」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+            原文链接：https://blog.csdn.net/qq_35293533/article/details/122779708*/
+            pattern: /^1(3[0-9]|4[4578]|5[0-35-9]|7[1-35-8]|8[0-9]|9[0135-9])\d{8}$/,
             message: "请输入合法手机号",
             trigger: "blur",
           },
