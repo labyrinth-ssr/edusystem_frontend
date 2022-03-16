@@ -17,6 +17,7 @@
       <el-input
         type="password"
         v-model="loginForm.password"
+        show-password="true"
         auto-complete="off"
         placeholder="密码"
         style="width: 100%"

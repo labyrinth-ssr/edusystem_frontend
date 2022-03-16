@@ -12,6 +12,7 @@
             id="old"
             type="password"
             v-model="changePasswd.oldPassword"
+            show-password="true"
             auto-complete="off"
             placeholder="旧密码"
             style="width: 100%"
@@ -25,6 +26,7 @@
             v-model="changePasswd.newPassword"
             auto-complete="off"
             placeholder="新密码"
+            show-password="true"
             style="width: 100%"
           ></el-input>
         </el-form-item>
@@ -33,6 +35,7 @@
           <el-input
             id="conf"
             type="password"
+            show-password="true"
             v-model="changePasswd.confirmPassword"
             auto-complete="off"
             placeholder="再次输入"
