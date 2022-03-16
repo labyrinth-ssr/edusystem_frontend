@@ -1,5 +1,5 @@
-<template xmlns:background-image="http://www.w3.org/1999/xhtml">
-  <div>
+<template xmlns:background-image="http://www.w3.org/1999/xhtml" onmousedown = function (){}>
+  <div >
     <el-dialog title="添加用户" :visible.sync="dialogFormVisible" @close="cancel">
       <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
         <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
@@ -114,9 +114,6 @@ export default {
             message: "姓名仅能出现英文字符与中文字符",
             trigger: "blur",
           },
-        ],
-        id_number: [
-          
         ],
         phone_number: [
           {
