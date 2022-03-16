@@ -185,6 +185,7 @@ export default {
           phone_number: this.form.phone_number,
         })
         .then((resp) => {
+          console.log(resp)
           if (resp.data) {
             this.$router.replace("/index");
           } else {

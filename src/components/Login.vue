@@ -17,7 +17,7 @@
       <el-input
         type="password"
         v-model="loginForm.password"
-        show-password="true"
+        :show-password="true"
         auto-complete="off"
         placeholder="密码"
         style="width: 100%"
@@ -57,7 +57,13 @@ export default {
   },
   methods: {
     login() {
+      if(this.loginForm.user_id=='root'){
+        this.loginForm.role='admin'
+      }
+      else{
       this.loginForm.role= this.loginForm.user_id.length==6?'student':'teacher'
+      }
+
       let data = new FormData();
       data.append("visitor_id", this.loginForm.user_id);
       data.append("passwd",this.loginForm.password);

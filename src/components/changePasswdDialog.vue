@@ -12,7 +12,7 @@
             id="old"
             type="password"
             v-model="changePasswd.oldPassword"
-            show-password="true"
+            :show-password="true"
             auto-complete="off"
             placeholder="旧密码"
             style="width: 100%"
@@ -26,7 +26,7 @@
             v-model="changePasswd.newPassword"
             auto-complete="off"
             placeholder="新密码"
-            show-password="true"
+            :show-password="true"
             style="width: 100%"
           ></el-input>
         </el-form-item>
@@ -35,7 +35,7 @@
           <el-input
             id="conf"
             type="password"
-            show-password="true"
+            :show-password="true"
             v-model="changePasswd.confirmPassword"
             auto-complete="off"
             placeholder="再次输入"
@@ -59,24 +59,9 @@ export default {
   // props: ["visible", "user_id"],
   created(){
     this.changePasswd.user_id=this.$store.state.user_id
+    console.log(this.$store.state.user_id)
   },
   data() {
-    var vallidatePass = (rule, value, callback) => {
-      const data = this.formatData();
-      this.$axios
-        .post("/change_passwd", data, {
-          headers: {
-            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-          },
-        })
-        .then((resp) => {
-          if (!resp.data.old_passwd_correct) {
-            callback(new Error("旧密码错误"));
-          } else {
-            callback();
-          }
-        });
-    };
     var validatePass2 = (rule, value, callback) => {
       if (this.changePasswd.confirmPassword === "") {
         callback(new Error("请再次输入密码"));
@@ -101,10 +86,6 @@ export default {
           {
             required: true,
             message: "旧密码为必填项",
-            trigger: "blur",
-          },
-          {
-            validator: vallidatePass,
             trigger: "blur",
           },
         ],

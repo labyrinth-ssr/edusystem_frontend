@@ -12,13 +12,6 @@ const routes = [
     path:'',
     redirect: '/login'
   },
-  {path: 'admin/adduserform',
-  name: 'AddUserForm',
-  component: AddUserForm,
-  meta: {
-    requireAuth: true
-  }
-},
   {
     path: '/login',
     name: 'Login',
