@@ -73,13 +73,17 @@ export default {
     return {
       rules: {
         id_number: [
+          { required: true, message: "身份证号为必填项", trigger: "blur" },
           {
             min: 18,
             max: 18,
             message: "身份证长度必须为18位",
             trigger: "blur",
           },
-          { required: true, message: "身份证号为必填项", trigger: "blur" },
+          {
+            validator: validateIdNum,
+            trigger: "blur",
+          }
         ],
         role: [
           {
@@ -112,15 +116,7 @@ export default {
           },
         ],
         id_number: [
-          {
-            required: true,
-            message: "请输入身份证号",
-            trigger: "blur",
-          },
-          {
-            validator: validateIdNum,
-            trigger: "blur",
-          },
+          
         ],
         phone_number: [
           {
