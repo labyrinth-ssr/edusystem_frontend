@@ -27,7 +27,7 @@ public class RegisterFormat{
     public boolean email;
     //返回设置的默认密码
     public String passwd;
-    public RegisterFormat registerFormat{
+    public RegisterFormat registerFormat{ 
         public boolean isOk;//如果下列8个变量全部正确，返回为true
         //下列8个变量反映输入参数格式是否符合要求、唯一性参数是否与库中重复
         public boolean id_numberUnique;

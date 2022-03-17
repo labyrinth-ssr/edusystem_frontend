@@ -120,19 +120,17 @@ export default {
     },
     formatData() {
       let data = new FormData();
-      data.append("visitor_id", this.changePasswd.user_id);
-      data.append("old_passwd", this.changePasswd.oldPassword);
-      data.append("new_passwd", this.changePasswd.newPassword);
+      
       return data;
     },
     onSubmit() {
       const data = this.formatData();
       console.log(data)
       this.$axios
-        .post("/change_passwd", data, {
-          headers: {
-            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-          },
+        .post("/change_passwd", {
+          visitor_id: this.changePasswd.user_id,
+          old_passwd: this.changePasswd.oldPassword,
+          new_passwd: this.changePasswd.newPassword
         })
         .then((resp) => {
           console.log(resp);
