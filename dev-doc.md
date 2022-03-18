@@ -36,7 +36,6 @@
 导航栏sub-menu按键宽度太小，背景图片颜色太亮，初次登录用户进入主界面会被卡在重设密码的地方
 get直接传参的安全问题
 开发环境无法获取客户端域名
-若用户填完学号后把角色改为老师，不去点学号就不会提示错误。
 美化info
 直接使用user_id作为token的安全性问题，使用cookie还是localStorage?目前在前端使用localStorage。不点击刷新页面时存储着user_id，first_login（即权限信息）
 登录时无角色选择框，而是通过user_id长度判断role后传给后端。

@@ -64,16 +64,24 @@ export default {
       this.loginForm.role= this.loginForm.user_id.length==6?'student':'teacher'
       }
 
-      let data = new FormData();
-      data.append("visitor_id", this.loginForm.user_id);
-      data.append("passwd",this.loginForm.password);
-      data.append("login_url",'127.0.0.1')
-      data.append("role",this.loginForm.role)
-      this.$axios
-        .post("/login", data,{
-          headers: {
- 	            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
- 	          }
+      // let data = new FormData();
+      // data.append("visitor_id", this.loginForm.user_id);
+      // data.append("passwd",this.loginForm.password);
+      // data.append("login_url",'127.0.0.1')
+      // data.append("role",this.loginForm.role)
+      // this.$axios
+      //   .post("/login", data,{
+      //     headers: {
+ 	    //         "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+ 	    //       }
+      //   })
+
+        this.$axios
+        .post("/login", {
+         visitor_id: this.loginForm.user_id,
+      passwd:this.loginForm.password,
+      login_url:'127.0.0.1',
+      role:this.loginForm.role,
         })
         .then((response) => {
           console.log(response)
