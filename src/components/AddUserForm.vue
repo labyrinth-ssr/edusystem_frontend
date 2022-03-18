@@ -157,13 +157,13 @@ export default {
           },
                     {
             validator: (rule, value, callback)=>{
-               this.resp.user_idFormat||typeof(this.resp.user_idFormat)==undefined?callback() : callback(new Error("学号/工号格式错误"));
+              typeof(this.resp.user_idFormat)===undefined||this.resp.user_idFormat?callback() : callback(new Error("学号/工号格式错误"));
             },
             trigger: "blur",
           },
           {
             validator: (rule, value, callback)=>{
-               this.resp.user_idUnique||typeof(this.resp.user_idUnique)==undefined?callback() : callback(new Error("学号/工号已注册"));
+               this.resp.user_idUnique||typeof(this.resp.user_idUnique)===undefined?callback() : callback(new Error("学号/工号已注册"));
             },
             trigger: "blur",
           },
@@ -266,18 +266,17 @@ export default {
         })
         .then((resp) => {
           console.log(resp);
+          if(resp.data === "NO_LOGIN") this.$router.replace("/login")
           this.resp=resp.data.registerFormat
           this.$refs["form"].validate((valid) => {
-            if (valid) {
-              alert("submit!");
-            } else {
+            if (!valid) {
               console.log("error submit!!");
               return false;
             }
           });
 
           if (resp.data.isOk) {
-            this.$router.replace("/index");
+            this.$message("注册成功");
           } else {
             this.$message("提交失败，请检查表单内容");
           }

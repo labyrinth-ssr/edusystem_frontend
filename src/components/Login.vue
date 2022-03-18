@@ -38,7 +38,6 @@
     <!-- :visible="reset_passwd_needed" -->
 </div>
 </template>
-
 <script>
 export default {
   name: "Login",
@@ -50,7 +49,8 @@ export default {
         role:''
       },
       responseResult: [],
-      reset_passwd_needed:false
+      reset_passwd_needed:false,
+      ip:""
     };
   },
   mounted(){
@@ -78,25 +78,21 @@ export default {
 
         this.$axios
         .post("/login", {
-         visitor_id: this.loginForm.user_id,
-      passwd:this.loginForm.password,
-      login_url:'127.0.0.1',
-      role:this.loginForm.role,
+          visitor_id: this.loginForm.user_id,
+          passwd:this.loginForm.password,
+          login_url:'127.0.0.1',
+          role:this.loginForm.role,
         })
         .then((response) => {
           console.log(response)
           const success_login=response.data.login_approved
-          const first_login=response.data.find_id&&response.data.passwd_correct&&response.data.passwd_check
-          if (success_login||first_login) {
+          const first_login=(response.data.passwd_check===false)
+          if (success_login) {
             // console.log(first_login)
             this.$store.commit("login", this.loginForm.user_id);
             if(first_login){
               this.$store.commit('first_login_func',true)
             }
-            // else{
-            //   this.$store.commit('first_login_func',false)
-
-            // }
             var path = this.$route.query.redirect;
             this.$router.replace({
               path: path === "/" || path === undefined ? "/index" : path,
@@ -108,13 +104,17 @@ export default {
           else if(!response.data.passwd_correct){
             this.$message.info("密码错误");
           }
-/*         })
-        .catch((failResponse) => {}); */
+          else if(!response.data.repeat_login){
+            this.$message.info("该账号异地登录");
+          }
+          else{
+            this.$message.info("登陆失败！");
+          }
     })
-    .catch((failResponse) => {console.log(failResponse)}); 
+    .catch((failResponse) => {console.log(failResponse)});
   }
 
-}}
+  }}
 </script>
 
 <style>
