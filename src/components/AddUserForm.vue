@@ -127,13 +127,13 @@ export default {
           },
           {
             validator: (rule, value, callback)=>{
-               this.resp.id_numberFormat||typeof(this.resp.id_numberFormat)==undefined?callback() : callback(new Error("身份证格式错误"));
+               this.resp.id_numberFormat||typeof(this.resp.id_numberFormat)=="undefined"?callback() : callback(new Error("身份证格式错误"));
             },
             trigger: "blur",
           },
           {
             validator: (rule, value, callback)=>{
-               this.resp.id_numberUnique||typeof(this.resp.id_numberUnique)==undefined?callback() : callback(new Error("身份证号已注册"));
+               this.resp.id_numberUnique||typeof(this.resp.id_numberUnique)=="undefined"?callback() : callback(new Error("身份证号已注册"));
             },
             trigger: "blur",
           }
@@ -155,15 +155,17 @@ export default {
             validator: validateUserId1,
             trigger: "blur",
           },
-                    {
+            {
             validator: (rule, value, callback)=>{
-              typeof(this.resp.user_idFormat)===undefined||this.resp.user_idFormat?callback() : callback(new Error("学号/工号格式错误"));
+              // console.log(this.form)
+              console.log(typeof(this.resp.user_idFormat))
+              ((typeof(this.resp.user_idFormat)=="undefined")||this.resp.user_idFormat)?callback() : callback(new Error("学号/工号格式错误"));
             },
             trigger: "blur",
           },
           {
             validator: (rule, value, callback)=>{
-               this.resp.user_idUnique||typeof(this.resp.user_idUnique)===undefined?callback() : callback(new Error("学号/工号已注册"));
+               this.resp.user_idUnique||typeof(this.resp.user_idUnique)==="undefined"?callback() : callback(new Error("学号/工号已注册"));
             },
             trigger: "blur",
           },
@@ -177,7 +179,7 @@ export default {
           },
           {
             validator: (rule, value, callback)=>{
-               this.resp.usernameFormat||typeof(this.resp.usernameFormat)==undefined?callback() : callback(new Error("用户姓名格式错误"));
+               this.resp.usernameFormat||typeof(this.resp.usernameFormat)=="undefined"?callback() : callback(new Error("用户姓名格式错误"));
             },
             trigger: "blur",
           }
@@ -190,7 +192,7 @@ export default {
           },
           {
             validator: (rule, value, callback)=>{
-               this.resp.phone_numberFormat||typeof(this.resp.phone_numberFormat)==undefined?callback() : callback(new Error("手机号格式错误"));
+               this.resp.phone_numberFormat||typeof(this.resp.phone_numberFormat)=="undefined"?callback() : callback(new Error("手机号格式错误"));
             },
             trigger: "blur",
           }
@@ -203,7 +205,7 @@ export default {
           },
           {
             validator: (rule, value, callback)=>{
-               this.resp.emailFormat||typeof(this.resp.emailFormat)==undefined?callback() : callback(new Error("e-mail格式错误"));
+               this.resp.emailFormat||typeof(this.resp.emailFormat)=="undefined"?callback() : callback(new Error("e-mail格式错误"));
             },
             trigger: "blur",
           }
