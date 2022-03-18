@@ -120,9 +120,8 @@ export default {
         id_number: [
           { required: true, message: "身份证号为必填项", trigger: "blur" },
           {
-            min: 18,
-            max: 18,
-            message: "身份证长度必须为18位",
+            pattern:/^\d{18}$/,
+            message: "身份证号为18位数字",
             trigger: "blur",
           },
           {
