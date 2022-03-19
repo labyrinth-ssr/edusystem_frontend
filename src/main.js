@@ -19,7 +19,7 @@ Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
   if(!/^\/login\/?/.test(to.path)){
     axios.get("/pagecheck",{}).then((resp)=>{
-      if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY" || resp.data !== store.state.user_id){
+      if(resp.data === "" || resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY" || resp.data !== store.state.user_id){
         if(resp.data !== store.state.user_id) {
           store.state.user_id = resp.data
           alert("请重新登录")
