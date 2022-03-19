@@ -4,6 +4,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import store from './store'
 import 'element-ui/lib/theme-chalk/index.css'
+import fr from "element-ui/src/locale/lang/fr";
 
 // 设置反向代理，前端请求默认发送到 http://localhost:8080/api
 var axios = require('axios')//从node_modules引入axios
@@ -16,33 +17,23 @@ Vue.config.productionTip = false
 
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requireAuth) {
-    if(to.path.startsWith('/admin')){
-      if (store.state.user_id=='root') {
-        next()
-      }
-      else {
+  if(!/^\/login\/?/.test(to.path)){
+    axios.get("/pagecheck",{}).then((resp)=>{
+      if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY" || resp.data != store.state.user_id){
+        if(resp.data != store.state.user_id) {
+          store.state.user_id = resp.data
+          alert("您已登录其它账号，请重新登录")
+        }
         next({
-          path: 'login',
+          path: '/login',
           query: {redirect: to.fullPath}
         })
       }
-    }
-    if(to.path.startsWith('/user')||to.path.startsWith('/index')){
-      if (store.state.user_id) {
-        next()
-      } else {
-        next({
-          path: 'login',
-          query: {redirect: to.fullPath}
-        })
-      }
-    }
-  } else {
-    next()
+      else{ next()}
+    })
   }
-}
-)
+  else next();
+})
 
 new Vue({
   el: '#app',// el 配置项指实例负责管理的区域；#app 指 id="app" 的dom标签里的所有内容

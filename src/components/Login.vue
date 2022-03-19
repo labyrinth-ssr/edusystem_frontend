@@ -89,7 +89,8 @@ export default {
           const first_login=(response.data.passwd_check===false)
           if (success_login) {
             // console.log(first_login)
-            this.$store.commit("login", this.loginForm.user_id);
+            this.$store.commit("login", this.loginForm.user_id)
+            this.$store.commit("role",this.loginForm.role)
             if(first_login){
               this.$store.commit('first_login_func',true)
             }
@@ -98,13 +99,13 @@ export default {
               path: path === "/" || path === undefined ? "/index" : path,
             });
           }
-          else if(!response.data.find_id){
+          else if(typeof response.data.find_id !="undefined" && !response.data.find_id){
             this.$message.info("学号/工号填写错误");
           }
-          else if(!response.data.passwd_correct){
+          else if(typeof response.data.passwd_correct !="undefined"&&!response.data.passwd_correct){
             this.$message.info("密码错误");
           }
-          else if(!response.data.repeat_login){
+          else if(typeof response.data.repeat_login !="undefined"&&!response.data.repeat_login){
             this.$message.info("该账号异地登录");
           }
           else{

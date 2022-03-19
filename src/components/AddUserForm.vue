@@ -245,9 +245,13 @@ export default {
           phone_number: this.form.phone_number,
         })
         .then((resp) => {
-          if(resp.data === "NO_LOGIN") this.$router.replace("/login")
+
           this.resp=resp.data.registerFormat
-          if (resp.data.isOk) {
+          if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY") {
+            this.$router.replace("/login")
+            this.$message("您不具有此权限");
+          }
+          else if (resp.data.isOk) {
             this.$message("注册成功");
           } else {
             this.$message("提交失败，请检查表单内容");

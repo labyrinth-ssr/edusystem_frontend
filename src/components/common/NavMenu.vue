@@ -23,8 +23,8 @@ import InnerMenu from './innerMenu.vue'
 
 },
     data () {
-      if(this.$store.state.user_id=='root'){
-return {
+      if(this.$store.state.role=='admin'){
+      return {
         navList: [
           //不知道为啥index设成路径可以直接跳转路径
           {path: '/index', name: '首页',icon:null},
