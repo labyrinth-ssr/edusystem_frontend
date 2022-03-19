@@ -119,11 +119,7 @@ export default {
       rules: {
         id_number: [
           { required: true, message: "身份证号为必填项", trigger: "blur" },
-          {
-            pattern:/^\d{18}$/,
-            message: "身份证号为18位数字",
-            trigger: "blur",
-          },
+          {pattern:/^\d{17}[1-9x]$/, message: "身份证号格式错误", trigger: "blur",},
           {
             validator: (rule, value, callback)=>{
                this.resp.id_numberFormat||typeof(this.resp.id_numberFormat)=="undefined"?callback() : callback(new Error("身份证格式错误"));
@@ -137,27 +133,12 @@ export default {
             trigger: "blur",
           }
         ],
-        role: [
-          {
-            required: true,
-            message: "请输入用户角色",
-            trigger: "change",
-          },
-        ],
+        role: [{required: true, message: "请输入用户角色", trigger: "change",},],
         user_id: [
+          {required: true, message: "请输入学号/工号", trigger: "blur",},
+          {validator: validateUserId1, trigger: "blur",},
           {
-            required: true,
-            message: "请输入学号/工号",
-            trigger: "blur",
-          },
-          {
-            validator: validateUserId1,
-            trigger: "blur",
-          },
-            {
             validator: (rule, value, callback)=>{
-              // console.log(this.form)
-              console.log(typeof(this.resp.user_idFormat))
               ((typeof(this.resp.user_idFormat)=="undefined")||this.resp.user_idFormat)?callback() : callback(new Error("学号/工号格式错误"));
             },
             trigger: "blur",
@@ -253,8 +234,6 @@ export default {
       this.$router.replace("/index");
     },
     onSubmit() {
-      console.log(this.$store.state.user_id);
-      console.log(this.form)
       this.$axios
         .post("/register", {
           visitor_id: this.$store.state.user_id,
@@ -266,21 +245,20 @@ export default {
           phone_number: this.form.phone_number,
         })
         .then((resp) => {
-          console.log(resp);
           if(resp.data === "NO_LOGIN") this.$router.replace("/login")
           this.resp=resp.data.registerFormat
-          this.$refs["form"].validate((valid) => {
-            if (!valid) {
-              console.log("error submit!!");
-              return false;
-            }
-          });
-
           if (resp.data.isOk) {
             this.$message("注册成功");
           } else {
             this.$message("提交失败，请检查表单内容");
           }
+          this.$refs["form"].validate((valid) => {
+            if (!valid) {
+              return false;
+            }
+          });
+
+
         });
     },
   },

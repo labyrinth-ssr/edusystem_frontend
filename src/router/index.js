@@ -4,7 +4,7 @@ import Login from '@/components/Login'
 import AppIndex from '@/components/home/AppIndex'
 import Home from '@/components/Home'
 import AddUserForm from '@/components/AddUserForm'
-import changePasswdDialog from '@/components/changePasswdDialog' 
+import changePasswdDialog from '@/components/changePasswdDialog'
 Vue.use(VueRouter)
 
 const routes = [
