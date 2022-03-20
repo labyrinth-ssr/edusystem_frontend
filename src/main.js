@@ -17,22 +17,15 @@ Vue.config.productionTip = false
 
 
 router.beforeEach((to, from, next) => {
-  console.log("to: "+to.path);
-  console.log("from：" + from.path);
-  console.log("user: "+store.state.user_id);
   if(/^\/login\/?/.test(from.path)) next();
   else if(!/^\/login\/?/.test(to.path)){
     axios.get("/pagecheck",{}).then((resp)=>{
-      console.log("data "+ resp.data);
-      console.log(store.state.user_id);
       if(resp.data==""||resp.data == "NO_LOGIN"||resp.data=="NO_AUTHORITY" || resp.data != store.state.user_id){
         if(resp.data !== store.state.user_id) {
-          store.state.user_id = resp.data
           alert("请重新登录")
         }
         next({
-          path: '/login',
-          query: {redirect: to.fullPath}
+          path: '/login'
         })
       }
       else{ next()}
