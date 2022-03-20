@@ -25,7 +25,7 @@ router.beforeEach((to, from, next) => {
     axios.get("/pagecheck",{}).then((resp)=>{
       console.log("data "+ resp.data);
       console.log(store.state.user_id);
-      if(resp.data === "" || resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY" || resp.data !== store.state.user_id){
+      if(resp.data==""&&resp.data == "NO_LOGIN"||resp.data=="NO_AUTHORITY" || resp.data != store.state.user_id){
         if(resp.data !== store.state.user_id) {
           store.state.user_id = resp.data
           alert("请重新登录")
