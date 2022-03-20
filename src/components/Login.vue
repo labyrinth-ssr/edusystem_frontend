@@ -89,7 +89,7 @@ export default {
           const first_login=(response.data.passwd_check===false)
           if (success_login) {
             // console.log(first_login)
-            this.$store.commit("login", this.loginForm.user_id)
+            this.$store.commit("user_id", this.loginForm.user_id)
             this.$store.commit("role",this.loginForm.role)
             if(first_login){
               this.$store.commit('first_login_func',true)
