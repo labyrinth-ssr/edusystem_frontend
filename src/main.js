@@ -4,35 +4,31 @@ import router from './router'
 import ElementUI from 'element-ui'
 import store from './store'
 import 'element-ui/lib/theme-chalk/index.css'
-import fr from "element-ui/src/locale/lang/fr";
 
 // 设置反向代理，前端请求默认发送到 http://localhost:8080/api
-var axios = require('axios')//从node_modules引入axios
+var axios = require('axios')
 axios.defaults.baseURL = '/api'
-//在原型上定义，不污染全局作用域（添加实例property）
-//之后可在其他组件中通过 this.$axios 发送数据，
 Vue.prototype.$axios = axios
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
 
 router.beforeEach((to, from, next) => {
-  if(/^\/login\/?/.test(from.path)) next();
-  else if(!/^\/login\/?/.test(to.path)){
+  //注意：login页面必须判断成功登录后存储user_id
+  if(!/^\/login\/?/.test(to.path)){
+    //注意：/pagecheck接口不会被后端拦截器拦截
     axios.get("/pagecheck",{}).then((resp)=>{
-      if(resp.data==""||resp.data == "NO_LOGIN"||resp.data=="NO_AUTHORITY" || resp.data != store.state.user_id){
-        if(resp.data !== store.state.user_id) {
-          alert("请重新登录")
-        }
-        next({
-          path: '/login'
-        })
-      }
-      else{ next()}
-    })
+      if(resp.data!=""&&resp.data == store.state.user_id) next();
+      else {
+        if (resp.data != "") alert("请重新登录")
+        else if(resp.data == "") alert("请先登录")
+        next({path: '/login'})
+      }}
+    )
   }
   else next();
 })
+
 
 new Vue({
   el: '#app',// el 配置项指实例负责管理的区域；#app 指 id="app" 的dom标签里的所有内容

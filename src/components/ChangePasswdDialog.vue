@@ -56,7 +56,6 @@
 <script>
 export default {
   name: "changePasswdDialog",
-  // props: ["visible", "user_id"],
   created(){
     if(this.$store.state.first_login) this.$message.info("初次登录，请重置密码")
     this.changePasswd.user_id=this.$store.state.user_id
@@ -126,32 +125,28 @@ export default {
     },
     onSubmit() {
       const data = this.formatData();
-      console.log(data)
-      this.$axios
-        .post("/change_passwd", {
+      if(this.changePasswd.confirmPassword !== this.changePasswd.newPassword){
+        this.$message.info("提交失败")
+        return
+      }
+      this.$axios.post("/change_passwd", {
           visitor_id: this.changePasswd.user_id,
           old_passwd: this.changePasswd.oldPassword,
           new_passwd: this.changePasswd.newPassword
         })
         .then((resp) => {
-          console.log(resp);
+
           if (resp.data.change_approved) {
             this.visible = false;
             this.$store.commit('first_login_func',false)
             this.$router.replace("/index");
-          } else if (!resp.data.old_passwd_correct) {
-            this.$message.info("旧密码错误");
+          } else if (!resp.data.old_passwd_correct){
+            this.$message.info("旧密码错误")
           } else if (!resp.data.passwdFormat.legal) {
             const format = resp.data.passwdFormat;
-            if (format.too_long) {
-              this.$message.info("新密码太长");
-            } else if (format.too_short) {
-              this.$message.info("新密码太短");
-            } else if (format.too_simple) {
-              this.$message.info(
-                "新密码太简单，字母，数字或者特殊字符（-_）至少包含两种。"
-              );
-            }
+            if (format.too_long) this.$message.info("新密码太长")
+            else if (format.too_short) this.$message.info("新密码太短")
+            else if (format.too_simple) this.$message.info("新密码太简单，字母，数字或者特殊字符（-_）至少包含两种。")
           }
         });
     },

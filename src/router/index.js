@@ -4,7 +4,7 @@ import Login from '@/components/Login'
 import AppIndex from '@/components/home/AppIndex'
 import Home from '@/components/Home'
 import AddUserForm from '@/components/AddUserForm'
-import changePasswdDialog from '@/components/changePasswdDialog'
+import changePasswdDialog from '@/components/ChangePasswdDialog'
 Vue.use(VueRouter)
 
 const routes = [
@@ -28,9 +28,9 @@ const routes = [
         path: '/index',
         name: 'AppIndex',
         component: AppIndex,
-        meta: {
-          requireAuth: true
-        }
+        // meta: {
+        //   requireAuth: true
+        // }
       }
     ]
   },
@@ -38,23 +38,22 @@ const routes = [
     path: '/admin/adduserform',
     name: 'AddUserForm',
     component: AddUserForm,
-    meta: {
-      requireAuth: true
-    }
+    // meta: {
+    //   requireAuth: true
+    // }
   },
   {
     path: '/user/changepasswd',
     name: 'ChangePasswd',
     component: changePasswdDialog,
-    meta: {
-      requireAuth: true
-    }
+    // meta: {
+    //   requireAuth: true
+    // }
   }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  // base: process.env.BASE_URL,
+  mode: 'history', // base: process.env.BASE_URL,
   routes
 })
 
