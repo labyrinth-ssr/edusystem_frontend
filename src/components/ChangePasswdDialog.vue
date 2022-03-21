@@ -1,46 +1,20 @@
 <template>
-  <el-dialog title="重设密码" :visible.sync="dialogVisible" width="60%" @close="cancel">
+  <el-dialog title="重设密码" :visible.sync="dialogVisible" width="60%" @close="cancel" :close-on-click-modal='false'>
     <span>
-      <el-form
-        :model="changePasswd"
-        style="text-align: left"
-        ref="changePasswd"
-        :rules="rules"
-      >
+      <el-form :model="changePasswd" style="text-align: left" ref="changePasswd" :rules="rules">
         <el-form-item label="请输入旧密码" prop="oldPassword">
-          <el-input
-            id="old"
-            type="password"
-            v-model="changePasswd.oldPassword"
-            :show-password="true"
-            auto-complete="off"
-            placeholder="旧密码"
-            style="width: 100%"
-          ></el-input>
+          <el-input id="old" type="password" v-model="changePasswd.oldPassword" :show-password="true"
+            auto-complete="off" placeholder="旧密码" style="width: 100%"></el-input>
         </el-form-item>
         <br />
         <el-form-item label="请输入新密码" prop="newPassword">
-          <el-input
-            id="new"
-            type="password"
-            v-model="changePasswd.newPassword"
-            auto-complete="off"
-            placeholder="新密码"
-            :show-password="true"
-            style="width: 100%"
-          ></el-input>
+          <el-input id="new" type="password" v-model="changePasswd.newPassword" auto-complete="off" placeholder="新密码"
+            :show-password="true" style="width: 100%"></el-input>
         </el-form-item>
         <br />
         <el-form-item label="请再次输入新密码" prop="confirmPassword">
-          <el-input
-            id="conf"
-            type="password"
-            :show-password="true"
-            v-model="changePasswd.confirmPassword"
-            auto-complete="off"
-            placeholder="再次输入"
-            style="width: 100%"
-          ></el-input>
+          <el-input id="conf" type="password" :show-password="true" v-model="changePasswd.confirmPassword"
+            auto-complete="off" placeholder="再次输入" style="width: 100%"></el-input>
         </el-form-item>
         <br />
         <div id="tips"></div>
@@ -114,7 +88,7 @@ export default {
         confirmPassword:''
       };
     },
-    cancel() {
+    cancel(e) {
       this.clear();
       this.$router.replace("/index");
     },

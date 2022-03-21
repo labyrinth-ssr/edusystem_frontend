@@ -1,14 +1,8 @@
 <template>
-    <el-menu
-      :default-active="'/index'"
-      router
-      mode="horizontal"
-      background-color="white"
-      text-color="#222"
-      active-text-color="red"
-      style="min-width: 1300px">
-      <inner-menu :navList="this.navList"></inner-menu>
-    </el-menu>
+  <el-menu :default-active="'/index'" router mode="horizontal" background-color="white" text-color="#222"
+    active-text-color="red" style="min-width: 1300px">
+    <inner-menu :navList="this.navList"></inner-menu>
+  </el-menu>
 </template>
 
 <script>

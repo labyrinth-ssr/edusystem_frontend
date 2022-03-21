@@ -18,6 +18,7 @@ router.beforeEach((to, from, next) => {
   if(!/^\/login\/?/.test(to.path)){
     //注意：/pagecheck接口不会被后端拦截器拦截
     axios.get("/pagecheck",{}).then((resp)=>{
+      console.log(resp)
       if(resp.data!=""&&resp.data == store.state.user_id) next();
       else {
         if (resp.data != "") alert("请重新登录")

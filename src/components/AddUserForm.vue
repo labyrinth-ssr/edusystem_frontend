@@ -1,95 +1,37 @@
-<template xmlns:background-image="http://www.w3.org/1999/xhtml" onmousedown = function (){}>
+<template xmlns:background-image="http://www.w3.org/1999/xhtml" onmousedown=function (){}>
   <div>
-    <el-dialog
-      title="添加用户"
-      :visible.sync="dialogFormVisible"
-      @close="cancel"
-    >
+    <el-dialog title="添加用户" :visible.sync="dialogFormVisible" @close="cancel">
       <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
-        <el-form-item
-          label="用户角色"
-          :label-width="formLabelWidth"
-          prop="role"
-        >
-          <el-select
-            v-model="form.role"
-            placeholder="请选择"
-            style="width: 40%"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.key"
-              :label="item.label"
-              :value="item.value"
-            >
+        <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
+          <el-select v-model="form.role" placeholder="请选择" style="width: 40%">
+            <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="学号/工号"
-          :label-width="formLabelWidth"
-          prop="user_id"
-        >
+        <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
           <el-input v-model="form.user_id" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item
-          label="姓名"
-          :label-width="formLabelWidth"
-          prop="username"
-        >
-          <el-input
-            v-model="form.username"
-            autocomplete="off"
-            show-word-limit
-          ></el-input>
+        <el-form-item label="姓名" :label-width="formLabelWidth" prop="username">
+          <el-input v-model="form.username" autocomplete="off" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item
-          label="身份证号"
-          :label-width="formLabelWidth"
-          prop="id_number"
-        >
-          <el-input
-            v-model="form.id_number"
-            autocomplete="off"
-            maxlength="18"
-            show-word-limit
-          ></el-input>
+        <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
+          <el-input v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item
-          label="手机号（选填）"
-          :label-width="formLabelWidth"
-          prop="phone_number"
-        >
-          <el-input
-            v-model="form.phone_number"
-            autocomplete="off"
-            maxlength="11"
-            show-word-limit
-          ></el-input>
+        <el-form-item label="手机号（选填）" :label-width="formLabelWidth" prop="phone_number">
+          <el-input v-model="form.phone_number" autocomplete="off" maxlength="11" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item
-          label="邮箱（选填）"
-          :label-width="formLabelWidth"
-          prop="email"
-        >
+        <el-form-item label="邮箱（选填）" :label-width="formLabelWidth" prop="email">
           <el-input v-model="form.email" autocomplete="off"> </el-input>
         </el-form-item>
         <el-form-item prop="id" style="height: 0">
-          <el-input
-            type="hidden"
-            v-model="form.id"
-            autocomplete="off"
-          ></el-input>
+          <el-input type="hidden" v-model="form.id" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button
-          @click="
+        <el-button @click="
             dialogFormVisible = false;
             cancel();
-          "
-          >取 消</el-button
-        >
+          ">取 消</el-button>
         <el-button type="primary" @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>

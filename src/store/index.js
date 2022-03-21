@@ -6,15 +6,15 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
       first_login:false,
-      user_id: "",
-          // window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user_id' || '[]')),
+      user_id: 
+          window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user_id' || '[]')),
       role:""
           // window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]'))
   },
   mutations: {
     login (state, user_id) {
       state.user_id = user_id
-      // window.localStorage.setItem('user_id', JSON.stringify(user_id))
+      window.localStorage.setItem('user_id', JSON.stringify(user_id))
     },
     role(state,role){
       state.role = role
