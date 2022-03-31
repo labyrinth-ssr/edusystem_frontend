@@ -12,48 +12,42 @@ export default {
   name: "Notice_A_test",
   components: {InnerTable},
   created() {
+    this.$axios.post("/admin/user/getusers",{})
+    .then((response) => {
+      console.log(response.data)
+      this.$data.table.data = response.data
+    }).catch((failResponse)=>{console.log(failResponse)});
   },
   data(){
-    function editable(index, col) {
+    function myEditable(index, rows) {
       return undefined;
     };
-    function handleDelete(index,col){
+    function myHandleDelete(index,rows){
+      rows.splice(index,1);
+      console.log(index)
       return undefined;
     };
 
     return{
       table:{
         'data': [
-            {
-              date: '2016-05-02',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-              date: '2016-05-04',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1517 弄'
-            }, {
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-              date: '2016-05-03',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1516 弄'
-            }
         ],
         'head':[
-          {prop:"date",label:"日期"},
-          {prop:"name",label:"名字"},
-          {prop:"address",label:"地址"}
-        ],
-        method(){
-          editable = this.editable;
-          handleDelete = this.handleDelete
-        }
+          {prop:"user_id",label:"学号/工号",fix:"left",width:"120"},
+          {prop:"username",label:"名字",width: "120"},
+          {prop:"role",label:"身份",width: "120"},
+          {prop: "id_number",label: "身份证号",width: "200"},
+          {prop: "register_year",label: "注册年份",width: "100"},
+          {prop: "phone_number",label: "手机号码",width: "100"},
+          {prop: "department",label: "学院",width: "150"},
+          {prop: "major",label: "专业",width: "150"},
+          {prop: "status",label: "状态",width: "100"},
+          {prop: "email",label: "邮箱",width: "150"}
+        ]
       }
     }
   }
+
 }
 </script>
 <style>
