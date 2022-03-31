@@ -5,6 +5,9 @@ import AppIndex from '@/components/home/AppIndex'
 import Home from '@/components/Home'
 import AddUserForm from '@/components/AddUserForm'
 import changePasswdDialog from '@/components/ChangePasswdDialog'
+import OrgManage from "@/components/OrgManage";
+import Notice_A_test from "@/components/common/Notice_A_test";
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -43,12 +46,22 @@ const routes = [
     // }
   },
   {
+    path: '/admin/orgmanage',
+    name: 'OrgManage',
+    component: OrgManage
+  },
+  {
     path: '/user/changepasswd',
     name: 'ChangePasswd',
     component: changePasswdDialog,
     // meta: {
     //   requireAuth: true
     // }
+  },
+  {
+    path: '/admin/getusers',
+    name: 'Notice_A_test',
+    component: Notice_A_test
   }
 ]
 
