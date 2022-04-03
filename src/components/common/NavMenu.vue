@@ -8,29 +8,29 @@
 <script>
 import InnerMenu from './innerMenu.vue'
 
-  export default {
+export default {
     name: 'NavMenu',
     components: {
     InnerMenu
   },
   created(){
 
-},
+  },
     data () {
-      if(this.$store.state.role=='admin'){
+      if(this.$store.state.role==='admin'){
       return {
         navList: [
           //不知道为啥index设成路径可以直接跳转路径
           {path: '/index', name: '首页',icon:null},
-          {path: '/admin', name: '管理',icon:null
+          {path: '/admin', name: '管理',icon:"el-icon-menu"
             ,'children':[
               {
-                path:'/admin/adduserform',
-                icon:"el-icon-circle-plus-outline",
-                name:'添加学生/教师'
+                path: '/admin/getusers',
+                icon: "el-icon-s-tools",
+                name: '获取学生/教师列表'
               }
             ]},
-          {path: '/user', name: '个人中心',icon:null,'children':[
+          {path: '/user', name: '个人中心',icon:"el-icon-menu",'children':[
               {
                 path:'/user/changepasswd',
                 icon:null,

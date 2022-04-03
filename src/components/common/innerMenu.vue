@@ -6,7 +6,7 @@
         :index="item.path">
         <template slot="title"
           style="padding-left:10px">
-          <i class="el-icon-menu"></i>
+          <i :class="item.icon"></i>
           <span slot="title">{{ item.name}}</span>
         </template>
          <!-- 如果有子级数据使用递归组件 -->
