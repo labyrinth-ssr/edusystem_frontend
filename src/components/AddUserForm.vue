@@ -1,4 +1,4 @@
-<template xmlns:background-image="http://www.w3.org/1999/xhtml" onmousedown=function (){}>
+<template>
   <div>
     <el-dialog title="添加用户" :visible.sync="dialogFormVisible" @close="cancel">
       <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
@@ -43,11 +43,11 @@ export default {
   name: "AddUserForm",
   data() {
     const validateUserId1 = (rule, value, callback) => {
-      if (this.form.role == "student") {
+      if (this.form.role === "student") {
         /^\d{6}$/.test(value)
           ? callback()
           : callback(new Error("学生学号为6位数字"));
-      } else if (this.form.role == "teacher") {
+      } else if (this.form.role === "teacher") {
         /^\d{8}$/.test(value)
           ? callback()
           : callback(new Error("教师工号为8位数字"));
@@ -173,7 +173,7 @@ export default {
     },
     cancel() {
       this.clear();
-      this.$router.replace("/index");
+      this.$router.replace("/admin/getusers");
     },
     onSubmit() {
       this.$axios
@@ -212,16 +212,11 @@ export default {
 </script>
 
 <style scoped>
-.el-icon-circle-plus-outline {
-  margin: 50px 0 0 20px;
-  font-size: 100px;
-  float: left;
-  cursor: pointer;
-}
+
 </style>
 <style >
 body {
-  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
   background-size: 100% 100vh;
 }
 </style>
