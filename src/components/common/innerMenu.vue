@@ -14,7 +14,8 @@
       </el-submenu>
       <el-menu-item v-else
         :index="item.path"
-        :key="item.path">
+        :key="item.path"
+        mode="horizontal">
         <i :class="item.icon"></i>
         <span>{{item.name}}</span>
       </el-menu-item>
