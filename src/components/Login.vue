@@ -83,7 +83,8 @@ export default {
         else if(typeof response.data.find_id !="undefined"        && !response.data.find_id) this.$message.info("学号/工号填写错误");
         else if(typeof response.data.passwd_correct !="undefined" && !response.data.passwd_correct) this.$message.info("密码错误");
         else if(typeof response.data.repeat_login !="undefined"   && !response.data.repeat_login) this.$message.info("该账号异地登录");
-        else this.$message.info("登陆失败！");
+        else {this.$message.info("登陆失败！");
+          console.log(response.data)}
       }).catch((failResponse) => {console.log(failResponse)});
     }
   }//:method
