@@ -28,6 +28,11 @@ export default {
                 path: '/admin/getusers',
                 icon: "el-icon-s-tools",
                 name: '获取学生/教师列表'
+              },
+              {
+                path:'/admin/orgmanage',
+                icon: "el-icon-s-tools",
+                name: "获取院系/专业列表"
               }
             ]},
           {path: '/user', name: '个人中心',icon:"el-icon-menu",'children':[

@@ -5,8 +5,9 @@ import AppIndex from '@/components/home/AppIndex'
 import Home from '@/components/Home'
 import AddUserForm from '@/components/AddUserForm'
 import changePasswdDialog from '@/components/ChangePasswdDialog'
-import OrgManage from "@/components/OrgManage";
+import MajorManage from "@/components/common/MajorManage";
 import Notice_A_test from "@/components/common/Notice_A_test";
+import FileUpload from "@/components/FileUpload.vue";
 
 Vue.use(VueRouter)
 
@@ -48,7 +49,7 @@ const routes = [
   {
     path: '/admin/orgmanage',
     name: 'OrgManage',
-    component: OrgManage
+    component: MajorManage,
   },
   {
     path: '/user/changepasswd',
@@ -62,6 +63,11 @@ const routes = [
     path: '/admin/getusers',
     name: 'Notice_A_test',
     component: Notice_A_test
+  },
+  {
+    path: '/admin/upload',
+    name: "fileUpload",
+    component: FileUpload
   }
 ]
 
