@@ -21,12 +21,12 @@ export default {
   data(){
     function myEditable(index, rows) {
       return undefined;
-    };
+    }
     function myHandleDelete(index,rows){
       rows.splice(index,1);
       console.log(index)
       return undefined;
-    };
+    }
 
     return{
       table:{
@@ -43,6 +43,22 @@ export default {
           {prop: "major",label: "专业",width: "150"},
           {prop: "status",label: "状态",width: "100"},
           {prop: "email",label: "邮箱",width: "150"}
+        ],
+        navWidth:180,
+        navList:[
+            {path: '/admin', name: '添加学生/教师',icon:"el-icon-circle-plus-outline"
+              ,'children':[
+                {
+                  path:'/admin/adduserform',
+                  icon:null,
+                  name:'单次添加'
+                },
+                {
+                  path: '/admin/upload',
+                  icon: null,
+                  name: '批量添加'
+                }
+              ]},
         ]
       }
     }
