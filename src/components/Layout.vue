@@ -1,0 +1,38 @@
+<template>
+<el-container>
+  <el-aside width="200px">
+    <sidebar class="sidebar-container" />
+  </el-aside>
+  <el-container>
+    <el-header>
+        <navbar />
+    </el-header>
+    <el-main>
+      <router-view/>
+    </el-main>
+  </el-container>
+</el-container>
+</template>
+
+<script>
+import Sidebar from './Sidebar.vue'
+import Navbar from './NavBar.vue'
+
+
+export default {
+  name: 'Layout',
+  components: {
+    Navbar,
+    Sidebar,
+  },
+}
+</script>
+
+<style scoped>
+  .el-header{
+    background-color: aliceblue;
+  }
+  .el-container{
+    height: 100%;
+  }
+</style>

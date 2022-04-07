@@ -39,3 +39,12 @@ get直接传参的安全问题
 美化info
 直接使用user_id作为token的安全性问题，使用cookie还是localStorage?目前在前端使用localStorage。不点击刷新页面时存储着user_id，first_login（即权限信息）
 登录时无角色选择框，而是通过user_id长度判断role后传给后端。
+
+---
+2022-4-7 
+TODO:layout
+16:10
+在layout里装什么？直接 done:16:53
+18:44
+mockjs,md,我人没了，我不理解！
+22:04 时间完全没掌握好，失败，应该使用v-for

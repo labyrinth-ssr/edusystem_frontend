@@ -1,55 +1,69 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/components/Login'
-import AppIndex from '@/components/home/AppIndex'
-import Home from '@/components/Home'
+import Hello from '@/components/Hello'
+// import Home from '@/components/Home'
 import AddUserForm from '@/components/AddUserForm'
 import changePasswdDialog from '@/components/ChangePasswdDialog'
+import Layout from '@/components/Layout'
+import CourseTable from '@/components/CourseTable'
+import Blank from '@/components/Blank'
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path:'',
-    redirect: '/login'
+const routes = [{
+  path: '',
+  redirect: '/home'
+},
+{
+  path: '/login',
+  // name: 'Login',
+  component: Login
+},
+{
+  path: '/home',
+  // name: 'Layout',
+  component: Layout,
+  redirect: '/home/hellopage',
+  children: [{
+    path: 'hellopage',
+    name: 'Hello',
+    component: Hello,
+    // meta: {
+    //   requireAuth: true
+    // }
   },
+  // {
+  //   path: 'school',
+  // },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
-  {
-    //一个不会进入，只包含导航栏的页面
-    path: '/home',
-    name: 'Home',
-    component: Home,
-    redirect: '/index',
-    children: [
-      {
-        path: '/index',
-        name: 'AppIndex',
-        component: AppIndex,
-        // meta: {
-        //   requireAuth: true
-        // }
-      }
+    path: 'courses',
+    name: 'Courses',
+    component:Blank,
+    redirect:'courses/table',
+    children: [{
+      path: 'table',
+      name: 'CourseTable',
+      component: CourseTable
+    }
+    // ,
+    // {
+    //   path: 'audit',
+    //   name: 'CourseAudit',
+    //   component: CouseAudit
+    // }
     ]
-  },
-  {
-    path: '/admin/adduserform',
-    name: 'AddUserForm',
-    component: AddUserForm,
-    // meta: {
-    //   requireAuth: true
-    // }
-  },
-  {
-    path: '/user/changepasswd',
-    name: 'ChangePasswd',
-    component: changePasswdDialog,
-    // meta: {
-    //   requireAuth: true
-    // }
+  }, {
+    path: 'adminusers',
+    name: 'adminusers',
+    component: AddUserForm
   }
+  ]
+},
+{
+  path: '/user',
+  name: 'User',
+  component: changePasswdDialog
+}
 ]
 
 const router = new VueRouter({

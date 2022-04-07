@@ -90,7 +90,7 @@ export default {
     },
     cancel(e) {
       this.clear();
-      this.$router.replace("/index");
+      this.$router.replace("/home");
     },
     formatData() {
       let data = new FormData();
@@ -113,7 +113,7 @@ export default {
           if (resp.data.change_approved) {
             this.visible = false;
             this.$store.commit('first_login_func',false)
-            this.$router.replace("/index");
+            this.$router.replace("/home");
           } else if (!resp.data.old_passwd_correct){
             this.$message.info("旧密码错误")
           } else if (!resp.data.passwdFormat.legal) {

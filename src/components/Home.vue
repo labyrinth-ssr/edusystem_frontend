@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import NavMenu from './common/NavMenu'
+import NavMenu from './NavMenu'
 
 export default {
     name: 'Home',

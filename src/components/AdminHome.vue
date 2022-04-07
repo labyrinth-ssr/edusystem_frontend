@@ -54,8 +54,5 @@ export default {
 
 </style>
 <style >
-body{
-  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
-  background-size: 100% 100vh;
-}
+
 </style>

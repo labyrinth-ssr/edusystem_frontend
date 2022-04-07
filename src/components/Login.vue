@@ -77,7 +77,7 @@ export default {
           this.$store.commit("role",this.loginForm.role)
           if(first_login) this.$store.commit('first_login_func',true)
           var path = this.$route.query.redirect;
-          this.$router.replace({path: path === "/" || path === undefined ? "/index" : path});
+          this.$router.replace({path: path === "/" || path === undefined ? "/home" : path});
         }
 
         else if(typeof response.data.find_id !="undefined"        && !response.data.find_id) this.$message.info("学号/工号填写错误");
@@ -93,7 +93,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .login-container {
   border-radius: 15px;
   background-clip: padding-box;
@@ -119,8 +119,8 @@ export default {
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   color: white;
 }
-body {
-  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+/* body {
+  background-image: linear-gradient(to right, #4facfe 0%, #8ee1ff 100%);
   background-size: 100% 100vh;
-}
+} */
 </style>
