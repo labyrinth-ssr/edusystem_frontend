@@ -4,6 +4,9 @@
             <el-button @click="addcourse">
                 Add
             </el-button>
+            <el-button @click="uploaddialog">
+                批量添加课程
+            </el-button>
         </div>
         <el-table :data="tableData" height="600" style="width: 100%">
             <el-table-column prop="number" label="课程编号" width="80">
@@ -34,8 +37,7 @@
             </el-table-column>
         </el-table>
           <el-dialog title="添加课程" :visible.sync="dialogVisible" :close-on-click-modal='false'>
-
-              <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
+              <el-form :model="form" style="text-align: left" ref="form" >
                   <el-form-item label="课程名">
                       <el-input v-model="form.name" />
                   </el-form-item>
@@ -67,7 +69,6 @@
                       <el-input v-model="form.max_student" />
                   </el-form-item>
               </el-form>
-
               <div slot="footer" class="dialog-footer">
                   <el-button @click="dialogFormVisible = false">
                       取消
@@ -80,10 +81,17 @@
                   </el-button>
               </div>
           </el-dialog>
+          <el-dialog title="批量添加课程" :visible.sync="dialogVisible2" :close-on-click-modal='false'>
+              <el-upload action="fakeaction" :auto-upload="false" :on-change="fileChange" :file-list="fileList">
+                  选取文件
+              </el-upload>
+              <el-button type="primary" size="small" @click="submitUpload">上传</el-button>
+          </el-dialog>
     </div>
 </template>
 
 <script>
+
 import axios from 'axios'
 export default {
   name:'CourseTable',
@@ -95,6 +103,7 @@ mounted (){
   },
 data() {
       return {
+          fileList: [],
         tableData: [],
         form:{
             class_time: "",
@@ -111,6 +120,7 @@ data() {
         },
         form_op:'add',
         dialogVisible:false,
+        dialogVisible2:false,
         role:'teacher'
       }
     },
@@ -133,7 +143,6 @@ data() {
       handleEdit(index, row) {
         console.log(index, row);
           this.dialogVisible=true
-
         this.form=row
       },
       handleDelete(index, row) {
@@ -146,6 +155,15 @@ data() {
       confirm_form(){
         //   this.$axios.post('/course')
         this.empty_form
+      },
+      fileChange(){
+          this.fileList = fileList;
+      },
+      submitUpload(){
+        //   this.$axios.post('/')
+      },
+      uploaddialog(){
+          this.dialogVisible2=true
       }
     }
 }

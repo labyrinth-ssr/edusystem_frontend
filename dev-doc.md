@@ -48,3 +48,16 @@ TODO:layout
 18:44
 mockjs,md,我人没了，我不理解！
 22:04 时间完全没掌握好，失败，应该使用v-for
+路由使用permission list
+权限控制
+用户profile
+13:25
+table 行内编辑
+
+form：
+teacher
+admin
+
+add
+edit
+watch

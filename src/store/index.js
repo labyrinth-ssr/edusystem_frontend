@@ -18,7 +18,7 @@ export default new Vuex.Store({
     },
     role(state, role) {
       state.role = role
-      // window.localStorage.setItem('role',JSON.stringify(role))
+      window.localStorage.setItem('role',JSON.stringify(role))
     },
     first_login_func(state, is_first_log) {
       state.first_login = is_first_log

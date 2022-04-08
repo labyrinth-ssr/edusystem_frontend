@@ -8,6 +8,8 @@ import changePasswdDialog from '@/components/ChangePasswdDialog'
 import Layout from '@/components/Layout'
 import CourseTable from '@/components/CourseTable'
 import Blank from '@/components/Blank'
+import CourseAudit from '@/components/CourseAudit'
+import ClassSelbutton from '@/components/ClassSelButton'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -45,17 +47,35 @@ const routes = [{
       name: 'CourseTable',
       component: CourseTable
     }
-    // ,
-    // {
-    //   path: 'audit',
-    //   name: 'CourseAudit',
-    //   component: CouseAudit
-    // }
+    ,
+    {
+      path: 'audit',
+      name: 'CourseAudit',
+      component: CourseAudit
+    }
     ]
   }, {
     path: 'adminusers',
     name: 'adminusers',
     component: AddUserForm
+  },
+  {
+    path: 'academic',
+    name: 'Academic',
+    component:Blank,
+    redirect:'academic/classroomtable',
+    children: [/* {
+      path: 'classroomtable',
+      name: 'ClassroomTable',
+      component: ClassroomTable
+    }
+    , */
+    {
+      path: 'classselbutton',
+      name: 'ClassSelbutton',
+      component: ClassSelbutton
+    }
+    ]
   }
   ]
 },

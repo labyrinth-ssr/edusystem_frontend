@@ -25,6 +25,48 @@ function produceCoursesData() {
   }
   return coursesList
 }
+function producerequestData() {
+  let requestList = []
+  request1={
+    requester_id: '20000001', //'发起请求者的id',
+    request_class: 'AddCourseRequest', //'请求类的名，必须是Request（如AddCourseRequest）',
+    request_content: {
+      class_time: "2-3,2-4,2-5,3-1,3-2",
+      classes_per_week: 3,
+      classroom_id: "H3101",
+      department: "外语学院",
+      introduction: "基础大学英语课程",
+      max_student: '50',
+      name: "大学英语3",
+      number: "ENG001",
+      point: '3',
+  }, //'处理类的内容的json形式',
+    handler_id: 'root',//'处理者（管理员）的id',
+    handle_result: 'processing', //'\"approved\",\"rejected\",\"processing\"',
+    }
+    requestList.push(request1)
+    request2={
+      requester_id: '20000001', //'发起请求者的id',
+      request_class: 'EditCourseRequest', //'请求类的名，必须是Request（如AddCourseRequest）',
+      request_content: {
+        class_time: "2-3,2-4,2-5,3-1,3-2",
+        classes_per_week: 3,
+        classroom_id: "H3101",
+        department: "外语学院",
+        introduction: "基础大学英语课程",
+        max_student: '50',
+        name: "大学英语3",
+        number: "ENG001",
+        point: '3',
+    }, //'处理类的内容的json形式',
+      handler_id: 'root',//'处理者（管理员）的id',
+      handle_result: 'processing', //'\"approved\",\"rejected\",\"processing\"',
+      }
+    requestList.push(request2)
+ 
+  return requestList
+}
 
 // 拦截该url，就可以返回newsList
 Mock.mock('http://localhost:5000/courses', produceCoursesData) 
+Mock.mock('http://localhost:5000/requests', producerequestData) 
