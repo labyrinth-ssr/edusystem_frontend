@@ -12,22 +12,35 @@ Vue.prototype.$axios = axios
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
+const whiteList=[]
+var routeflag=false
 
 router.beforeEach((to, from, next) => {
-  //注意：login页面必须判断成功登录后存储user_id
-  if(!/^\/login\/?/.test(to.path)){
-    //注意：/pagecheck接口不会被后端拦截器拦截
-    axios.get("/pagecheck",{}).then((resp)=>{
-      console.log(resp)
-      if(resp.data!=""&&resp.data == store.state.user_id) next();
-      else {
-        if (resp.data != "") alert("请重新登录")
-        else if(resp.data == "") alert("请先登录")
-        next({path: '/login'})
-      }}
-    )
+  console.log(router.getRoutes())
+  if (store.state.user_id) { // 判断是否有token
+    if (to.path === '/login') {
+      next();
+    } else if (routeflag){
+      next()
+    }
+    else {
+          const role = store.state.role;
+          console.log(role)
+          store.dispatch('GenerateRoutes', role).then(() => { // 生成可访问的路由表
+            routeflag=true
+            store.state.addRouters.forEach((route)=>{
+              router.addRoute(route) // 动态添加可访问路由表
+            })
+            next({ ...to, replace: true }) // hack方法 确保addRoute已完成 ,set the replace: true so the navigation will not leave a history record
+          })
+    }
+  } else {
+    if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
+      next();
+    } else {
+      next('/login'); // 否则全部重定向到登录页
+    }
   }
-  else next();
 })
 
 

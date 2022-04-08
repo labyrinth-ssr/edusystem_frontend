@@ -12,83 +12,110 @@ import CourseAudit from '@/components/CourseAudit'
 import ClassSelbutton from '@/components/ClassSelButton'
 Vue.use(VueRouter)
 
-const routes = [{
-  path: '',
-  redirect: '/home'
-},
-{
-  path: '/login',
-  // name: 'Login',
-  component: Login
-},
-{
-  path: '/home',
-  // name: 'Layout',
-  component: Layout,
-  redirect: '/home/hellopage',
-  children: [{
-    path: 'hellopage',
-    name: 'Hello',
-    component: Hello,
-    // meta: {
-    //   requireAuth: true
-    // }
-  },
-  // {
-  //   path: 'school',
-  // },
+export const constantRouterMap = [
   {
-    path: 'courses',
-    name: 'Courses',
-    component:Blank,
-    redirect:'courses/table',
-    children: [{
-      path: 'table',
-      name: 'CourseTable',
-      component: CourseTable
-    }
-    ,
-    {
-      path: 'audit',
-      name: 'CourseAudit',
-      component: CourseAudit
-    }
-    ]
-  }, {
-    path: 'adminusers',
-    name: 'adminusers',
-    component: AddUserForm
-  },
-  {
-    path: 'academic',
-    name: 'Academic',
-    component:Blank,
-    redirect:'academic/classroomtable',
-    children: [/* {
-      path: 'classroomtable',
-      name: 'ClassroomTable',
-      component: ClassroomTable
-    }
-    , */
-    {
-      path: 'classselbutton',
-      name: 'ClassSelbutton',
-      component: ClassSelbutton
-    }
-    ]
+    path: '/login',
+    component: Login,
+    name:'登录'
   }
-  ]
-},
-{
-  path: '/user',
-  name: 'User',
-  component: changePasswdDialog
-}
+]
+
+export const asyncRouterMap = [{
+    path: '/',
+    redirect: '/home',
+    name:'主页'
+  },
+  {
+    path: '/home',
+    component: Layout,
+    redirect: '/home/hellopage',
+    meta: {
+      requireAuth: true
+    },
+    children: [{
+        path: 'hellopage',
+        name: 'Hello',
+        component: Hello,
+      },
+      // {
+      //   path: 'school',
+      // },
+      {
+        path: 'courses',
+        name: 'Courses',
+        component: Blank,
+        redirect: 'courses/table',
+        children: [{
+            path: 'table',
+            name: 'CourseTable',
+            component: CourseTable,
+            meta: {
+              role: ['admin','teacher']
+            }
+          },
+          {
+            path: 'audit',
+            name: 'CourseAudit',
+            component: CourseAudit,
+            meta: {
+              role: ['admin']
+            }
+          }/* ,{
+            path: 'studensel',
+            name: 'StuSel',
+            component: StuSel,
+            meta: {
+              role: ['student'],
+              selPermmision:true
+            }
+          }, */
+        ]
+      }, {
+        path: 'adminusers',
+        name: 'adminusers',
+        component: AddUserForm,
+        meta: {
+          role: ['admin']
+        }
+      },
+      {
+        path: 'academic',
+        name: 'Academic',
+        component: Blank,
+        redirect: 'academic/classroomtable',
+        meta: {
+          role: ['admin']
+        },
+        children: [
+          /* {
+                path: 'classroomtable',
+                name: 'ClassroomTable',
+                component: ClassroomTable
+              }
+              , */
+          {
+            path: 'classselbutton',
+            name: 'ClassSelbutton',
+            component: ClassSelbutton,
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: changePasswdDialog,
+    meta: {
+      requireAuth: true,
+      role:['teacher','student']
+    }
+  }
 ]
 
 const router = new VueRouter({
   mode: 'history', // base: process.env.BASE_URL,
-  routes
+  routes:constantRouterMap
 })
 
 export default router
