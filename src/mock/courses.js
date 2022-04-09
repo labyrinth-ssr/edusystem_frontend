@@ -25,6 +25,7 @@ function produceCoursesData() {
   }
   return coursesList
 }
+
 function producerequestData() {
   let requestList = []
   request1={
@@ -67,6 +68,19 @@ function producerequestData() {
   return requestList
 }
 
+function produceClasstableData (){
+  for (let i=0;i<7;i++){
+    let classtable={
+      'h3101':['','高数','高数','线代','线代','','','','','','','',''],
+      'h3102':['','','','线代','线代','大英','大英','','','','','','']
+    }
+    classtablelist.push(classtable)
+  }
+  classtablelist=[]
+}
+
 // 拦截该url，就可以返回newsList
 Mock.mock('http://localhost:5000/courses', produceCoursesData) 
 Mock.mock('http://localhost:5000/requests', producerequestData) 
+Mock.mock('http://localhost:5000/requests', produceClasstableData) 
+

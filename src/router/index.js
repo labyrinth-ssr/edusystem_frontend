@@ -35,7 +35,7 @@ export const asyncRouterMap = [{
       requireAuth: true
     },
     children: [{
-        path: 'hellopage',
+        path: '/home/hellopage',
         name: 'Hello',
         component: Hello,
       },
@@ -48,7 +48,7 @@ export const asyncRouterMap = [{
         component: Blank,
         redirect: 'courses/table',
         children: [{
-            path: 'table',
+            path: '/home/courses/table',
             name: 'CourseTable',
             component: CourseTable,
             meta: {
@@ -56,7 +56,7 @@ export const asyncRouterMap = [{
             }
           },
           {
-            path: 'audit',
+            path: '/home/courses/audit',
             name: 'CourseAudit',
             component: CourseAudit,
             meta: {
@@ -73,7 +73,7 @@ export const asyncRouterMap = [{
           }, */
         ]
       }, {
-        path: 'adminusers',
+        path: '/home/adminusers',
         name: 'adminusers',
         component: AddUserForm,
         meta: {
@@ -96,7 +96,7 @@ export const asyncRouterMap = [{
               }
               , */
           {
-            path: 'classselbutton',
+            path: '/home/academic/classselbutton',
             name: 'ClassSelbutton',
             component: ClassSelbutton,
           }

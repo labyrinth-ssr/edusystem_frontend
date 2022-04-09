@@ -57,18 +57,13 @@ export default {
   methods: {
     login() {
       //todo 通过调用后端接口获取用户角色信息
-      if(this.loginForm.user_id=='root') this.loginForm.role='admin'
-      else this.loginForm.role= this.loginForm.user_id.length==6?'student':'teacher'
-
       this.$axios
       .post("/login", {
-        visitor_id: this.loginForm.user_id,
-        passwd:this.loginForm.password,
+        visitor_id: 'root',
+        passwd:'abc123',
         login_url:'127.0.0.1',
-        role:this.loginForm.role,
       })
       .then((response) => {
-
         console.log(response)
         const success_login=response.data.login_approved
         const first_login=(response.data.passwd_check===false)
