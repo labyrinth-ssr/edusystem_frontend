@@ -11,6 +11,7 @@ import Blank from '@/components/Blank'
 import CourseAudit from '@/components/CourseAudit'
 import ClassSelbutton from '@/components/ClassSelButton'
 import Account from '@/components/Account'
+import ClassroomTable from '@/components/Classtable'
 Vue.use(VueRouter)
 
 export const constantRouterMap = [
@@ -89,12 +90,12 @@ export const asyncRouterMap = [{
           role: ['admin']
         },
         children: [
-          /* {
-                path: 'classroomtable',
+          {
+                path: '/home/academic/classroomtable',
                 name: 'ClassroomTable',
                 component: ClassroomTable
               }
-              , */
+              ,
           {
             path: '/home/academic/classselbutton',
             name: 'ClassSelbutton',

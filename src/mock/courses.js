@@ -69,18 +69,20 @@ function producerequestData() {
 }
 
 function produceClasstableData (){
+  var classtablelist=[]
+
   for (let i=0;i<7;i++){
     let classtable={
-      'h3101':['','高数','高数','线代','线代','','','','','','','',''],
-      'h3102':['','','','线代','线代','大英','大英','','','','','','']
+      'h3101':['','高数','高数','线代','线代','','','','','','','','',''],
+      'h3102':['','','','线代','线代','大英','大英','','','','','','','']
     }
     classtablelist.push(classtable)
   }
-  classtablelist=[]
+  return classtablelist
 }
 
 // 拦截该url，就可以返回newsList
 Mock.mock('http://localhost:5000/courses', produceCoursesData) 
 Mock.mock('http://localhost:5000/requests', producerequestData) 
-Mock.mock('http://localhost:5000/requests', produceClasstableData) 
+Mock.mock('http://localhost:5000/classtable', produceClasstableData) 
 

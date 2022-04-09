@@ -59,20 +59,24 @@ export default {
       //todo 通过调用后端接口获取用户角色信息
       this.$axios
       .post("/login", {
-        visitor_id: 'root',
-        passwd:'abc123',
+        visitor_id: this.loginForm.user_id,
+        passwd:this.loginForm.password,
         login_url:'127.0.0.1',
       })
       .then((response) => {
         console.log(response)
         const success_login=response.data.login_approved
         const first_login=(response.data.passwd_check===false)
+        this.loginForm.role=response.data.role
         if (success_login) {
           this.$store.commit("login", this.loginForm.user_id)
           this.$store.commit("role",this.loginForm.role)
           this.$store.dispatch('GenerateRoutes', this.loginForm.role).then(() => { // 生成可访问的路由表
             this.$store.state.addRouters.forEach((route)=>{
+              if (!this.$router.hasRoute(route)){
               this.$router.addRoute(route) // 动态添加可访问路由表
+
+              }
             })
           })
           if(first_login) this.$store.commit('first_login_func',true)
