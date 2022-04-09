@@ -73,11 +73,17 @@
                   <el-button @click="dialogFormVisible = false">
                       取消
                   </el-button>
-                  <el-button type="primary" @click="dialogFormVisible = false" v-if="role=='admin'">
-                      确认
+                  <el-button type="primary" @click="admin_teacher_add_course" v-if="role=='admin'&&form_op=='add'">
+                      确认增加
                   </el-button>
-                  <el-button type="primary" @click="dialogFormVisible = false" v-else>
-                      申请
+                  <el-button type="primary" @click="admin_teacher_add_course" v-if="role=='teacher'&&form_op=='add'">
+                      申请增加
+                  </el-button>
+                  <el-button type="primary" @click="admin_teacher_edit_course" v-if="role=='admin'&&form_op=='edit'">
+                      确认修改
+                  </el-button>
+                  <el-button type="primary" @click="admin_teacher_edit_course" v-if="role=='teacher'&&form_op=='edit'">
+                      申请修改
                   </el-button>
               </div>
           </el-dialog>
@@ -96,10 +102,7 @@ import axios from 'axios'
 export default {
   name:'CourseTable',
 mounted (){
-      axios.get('http://localhost:5000/courses')
-      .then((resp)=>{
-          this.tableData=resp.data
-      })
+      this.get_table()
   },
 data() {
       return {
@@ -110,7 +113,6 @@ data() {
             classes_per_week: '',
             classroom_id: "",
             department: "",
-            id: "",
             introduction: "",
             max_student: '',
             name: "",
@@ -125,42 +127,83 @@ data() {
       }
     },
     methods: {
+        get_table(){
+            axios.get('http://localhost:5000/courses')
+        .then((resp)=>{
+          this.tableData=resp.data
+        })
+        },
         empty_form(){
             this.form={
             class_time: "",
             classes_per_week: '',
             classroom_id: "",
             department: "",
-            id: "",
             introduction: "",
             max_student: '',
             name: "",
             number: "",
             point: '',
-            teacher_id: ""
+            teacher_id: "",
+            suffix:0
         }
         },
       handleEdit(index, row) {
         console.log(index, row);
-          this.dialogVisible=true
+        this.form_op='edit'
+        this.dialogVisible=true
         this.form=row
       },
       handleDelete(index, row) {
-        console.log(index, row);
+        // console.log(index, row);
+        // this.$axios.delete('/',{data:})
+        // this.get_table()
       },
       addcourse(){
-          this.empty_form
+          this.form_op='add'
+          this.empty_form()
           this.dialogVisible=true
       },
+      admin_teacher_add_course(){
+          this.$axios.post('/course/admin_teacher/add',{
+              requester_id:this.$store.state.user_id,
+              courseInfo:this.form
+          }).then((resp)=>{
+              console.log(resp.data)
+              if (resp.data.submitted) {
+            this.$message("添加成功");
+          } else {
+            this.$message("提交失败，请检查表单内容");
+          }
+          })
+      },
+      admin_teacher_edit_course(){
+          this.$axios.post('/course/admin_teacher/add',{
+              requester_id:this.$store.state.user_id,
+              courseInfo:this.form
+          }).then((resp)=>{
+              console.log(resp.data)
+              if (resp.data.submitted) {
+            this.$message("添加成功");
+          } else {
+            this.$message("提交失败，请检查表单内容");
+          }
+          })
+      },
       confirm_form(){
-        //   this.$axios.post('/course')
+        // this.$axios.post('/course')
         this.empty_form
       },
       fileChange(){
           this.fileList = fileList;
       },
       submitUpload(){
-        //   this.$axios.post('/')
+          this.$axios.post('/upload/csv/admin/batch_add_course',{
+              user_id:this.$store.state.user_id,
+              file:this.fileList[0]
+          }).then((resp)=>{
+              console.log(resp.data)
+          })
       },
       uploaddialog(){
           this.dialogVisible2=true

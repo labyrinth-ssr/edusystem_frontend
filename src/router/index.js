@@ -10,6 +10,7 @@ import CourseTable from '@/components/CourseTable'
 import Blank from '@/components/Blank'
 import CourseAudit from '@/components/CourseAudit'
 import ClassSelbutton from '@/components/ClassSelButton'
+import Account from '@/components/Account'
 Vue.use(VueRouter)
 
 export const constantRouterMap = [
@@ -23,12 +24,13 @@ export const constantRouterMap = [
 export const asyncRouterMap = [{
     path: '/',
     redirect: '/home',
-    name:'主页'
+    hidden:true
   },
   {
     path: '/home',
     component: Layout,
     redirect: '/home/hellopage',
+    name:'主页',
     meta: {
       requireAuth: true
     },
@@ -105,7 +107,12 @@ export const asyncRouterMap = [{
   {
     path: '/user',
     name: 'User',
-    component: changePasswdDialog,
+    component: Layout,
+    children:[{
+      path:'account',
+      component: Account,
+      name:'账户'
+    }],
     meta: {
       requireAuth: true,
       role:['teacher','student']

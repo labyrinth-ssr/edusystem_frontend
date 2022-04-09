@@ -1,21 +1,20 @@
-<template xmlns:background-image="http://www.w3.org/1999/xhtml" onmousedown=function (){}>
-  <div>
-    <el-dialog title="添加用户" :visible.sync="dialogFormVisible" @close="cancel">
-      <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
-        <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
-          <el-select v-model="form.role" placeholder="请选择" style="width: 40%">
+<template>
+<div>
+  <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
+        <el-form-item  label="用户角色" :label-width="formLabelWidth" prop="role">
+          <el-select :disabled="action=='user_edit'" v-model="form.role" placeholder="请选择" style="width: 40%">
             <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
-          <el-input v-model="form.user_id" autocomplete="off"></el-input>
+          <el-input :disabled="action=='user_edit'" v-model="form.user_id" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" :label-width="formLabelWidth" prop="username">
-          <el-input v-model="form.username" autocomplete="off" show-word-limit></el-input>
+        <el-form-item  label="姓名" :label-width="formLabelWidth" prop="username">
+          <el-input :disabled="action=='user_edit'" v-model="form.username" autocomplete="off" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
-          <el-input v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
+          <el-input :disabled="action=='user_edit'" v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="手机号（选填）" :label-width="formLabelWidth" prop="phone_number">
           <el-input v-model="form.phone_number" autocomplete="off" maxlength="11" show-word-limit></el-input>
@@ -29,16 +28,17 @@
             dialogFormVisible = false;
             cancel();
           ">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-if="action=='admin_add'" type="primary" @click="SubmitAdd">添加</el-button>
+        <el-button v-if="action=='user_edit'" type="primary" @click="SubmitEdit">修改</el-button>
       </div>
-    </el-dialog>
-    <footer></footer>
-  </div>
+</div>
 </template>
+
 <script>
+import axios from 'axios';
 export default {
-  name: "AddUserForm",
-  data() {
+    name:'Account',
+ data() {
     const validateUserId1 = (rule, value, callback) => {
       if (this.form.role == "student") {
         /^\d{6}$/.test(value)
@@ -55,6 +55,8 @@ export default {
       }
     };
     return {
+    role:this.$store.state.role,
+    action:'user_edit',
       rules: {
         id_number: [
           { required: true, message: "身份证号为必填项", trigger: "blur" },
@@ -172,7 +174,7 @@ export default {
       this.clear();
       this.$router.replace("/home");
     },
-    onSubmit() {
+    SubmitAdd() {
       this.$axios
         .post("/register", {
           visitor_id: this.$store.state.user_id,
@@ -186,36 +188,69 @@ export default {
         .then((resp) => {
 
           this.resp=resp.data.registerFormat
-          if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY") {
-            this.$router.replace("/login")
-            this.$message("您不具有此权限");
-          }
-          else if (resp.data.isOk) {
-            this.$message("注册成功");
-          } else {
-            this.$message("提交失败，请检查表单内容");
-          }
           this.$refs["form"].validate((valid) => {
             if (!valid) {
               return false;
             }
           });
-
+         /*  if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY") {
+            this.$router.replace("/login")
+            this.$message("您不具有此权限");
+          }
+          else  */
+          if (resp.data.isOk) {
+            this.$message("注册成功");
+          } else {
+            this.$message("提交失败，请检查表单内容");
+          }
 
         });
     },
+    SubmitEdit() {
+        // let data1 = new FormData()
+        // let data2 = new FormData()
+        // data1.append('email', this.form.email)
+        // data1.append('user_id', this.$store.state.user_id)
+        // data2.append('phone', this.form.phone_number)
+        // data2.append('user_id', this.$store.state.user_id)
+        // const request1 = this.$axios.put('/userinfo/user/altphone_number', data1, {
+        //     headers: {
+        //         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+        //     }
+        // })
+        // const request2 = this.$axios.put('/userinfo/user/altemail', data2, {
+        //     headers: {
+        //         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+        //     }
+        // })
+        // this.$axios.all[request1, request2].then(() => {
+        //     this.$axios.spread
+        // })
+        // .then((resp) => {
+
+        //   this.resp=resp.data.registerFormat
+        //   this.$refs["form"].validate((valid) => {
+        //     if (!valid) {
+        //       return false;
+        //     }
+        //   });
+        //   if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY") {
+        //     this.$router.replace("/login")
+        //     this.$message("您不具有此权限");
+        //   }
+        //   else if (resp.data.isOk) {
+        //     this.$message("注册成功");
+        //   } else {
+        //     this.$message("提交失败，请检查表单内容");
+        //   }
+
+        // });
+    },
   },
 };
+
 </script>
 
-<style scoped>
-.el-icon-circle-plus-outline {
-  margin: 50px 0 0 20px;
-  font-size: 100px;
-  float: left;
-  cursor: pointer;
-}
-</style>
-<style >
+<style>
 
 </style>

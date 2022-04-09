@@ -75,6 +75,11 @@ export default {
         if (success_login) {
           this.$store.commit("login", this.loginForm.user_id)
           this.$store.commit("role",this.loginForm.role)
+          this.$store.dispatch('GenerateRoutes', this.loginForm.role).then(() => { // 生成可访问的路由表
+            this.$store.state.addRouters.forEach((route)=>{
+              this.$router.addRoute(route) // 动态添加可访问路由表
+            })
+          })
           if(first_login) this.$store.commit('first_login_func',true)
           var path = this.$route.query.redirect;
           this.$router.replace({path: path === "/" || path === undefined ? "/home" : path});
