@@ -110,7 +110,7 @@ export const asyncRouterMap = [{
     name: 'User',
     component: Layout,
     children:[{
-      path:'account',
+      path:'/user/account',
       component: Account,
       name:'账户'
     }],

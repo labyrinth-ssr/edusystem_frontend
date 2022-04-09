@@ -30,6 +30,12 @@
 <script>
 export default {
   name: "changePasswdDialog",
+  props:['visible'],
+  watch:{
+    visible:function(newval){
+      this.dialogVisible=newval
+    }
+  },
   created(){
     if(this.$store.state.first_login) this.$message.info("初次登录，请重置密码")
     this.changePasswd.user_id=this.$store.state.user_id
@@ -48,7 +54,7 @@ export default {
     };
 
     return {
-      dialogVisible: true,
+      dialogVisible: false,
       changePasswd: {
         user_id: '',
         oldPassword: "",
@@ -90,7 +96,8 @@ export default {
     },
     cancel(e) {
       this.clear();
-      this.$router.replace("/home");
+      this.$emit('dialogclose')
+      this.dialogVisible=false
     },
     formatData() {
       let data = new FormData();

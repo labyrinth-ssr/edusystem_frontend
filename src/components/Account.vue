@@ -1,8 +1,8 @@
 <template>
-<div>
-  <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
+<div style="text-align: center" >
+  <el-form :model="form" style="text-align: left" ref="form" :rules="rules" >
         <el-form-item  label="用户角色" :label-width="formLabelWidth" prop="role">
-          <el-select :disabled="action=='user_edit'" v-model="form.role" placeholder="请选择" style="width: 40%">
+          <el-select :disabled="action=='user_edit'" v-model="form.role" placeholder="请选择" style="width: 30%">
             <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -23,19 +23,23 @@
           <el-input v-model="form.email" autocomplete="off"> </el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="
+      <div slot="footer" class="dialog-footer" style="text-align: center">
+        <el-button v-if="action=='admin_add'" @click="
             dialogFormVisible = false;
             cancel();
           ">取 消</el-button>
         <el-button v-if="action=='admin_add'" type="primary" @click="SubmitAdd">添加</el-button>
         <el-button v-if="action=='user_edit'" type="primary" @click="SubmitEdit">修改</el-button>
+        <el-button v-if="action=='user_edit'" type="primary" @click="change_passwd">修改密码</el-button>
       </div>
+      <change-passwd-dialog :visible="dialogVisible" @dialogclose='dialogclose'/>
 </div>
 </template>
 
 <script>
+import ChangePasswdDialog from '@/components/ChangePasswdDialog.vue';
 export default {
+  components: { ChangePasswdDialog },
     name:'Account',
  data() {
     const validateUserId1 = (rule, value, callback) => {
@@ -54,6 +58,7 @@ export default {
       }
     };
     return {
+    dialogVisible:false,
     role:this.$store.state.role,
     action:'user_edit',
       rules: {
@@ -164,6 +169,10 @@ export default {
     })
   },
   methods: {
+    dialogclose(){
+      console.log('dialog close')
+      this.dialogVisible=false
+    },
     clear() {
       this.form = {
         username: "",
@@ -177,6 +186,10 @@ export default {
     cancel() {
       this.clear();
       this.$router.replace("/home");
+    },
+    change_passwd(){
+      this.dialogVisible=false
+      this.dialogVisible=true
     },
     SubmitAdd() {
       this.$axios
@@ -212,7 +225,7 @@ export default {
     },
     SubmitEdit() {
         this.$axios.get('/userinfo/user/altemailandphone?email='+this.form.email+'&phone='+this.form.phone_number).then((resp)=>{
-          if(resp){
+          if(resp.data){
             this.$message("修改成功");
           }
           else{
@@ -225,6 +238,8 @@ export default {
 
 </script>
 
-<style>
-
+<style scoped>
+ .el-input{
+   width: 30%;
+ }
 </style>
