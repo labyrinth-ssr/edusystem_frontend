@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 export default {
     name:'Account',
  data() {
@@ -159,6 +158,11 @@ export default {
       },
     };
   },
+  created(){
+    this.$axios.get('/userinfo/common/getuserinfo').then((resp)=>{
+      this.form=resp.data
+    })
+  },
   methods: {
     clear() {
       this.form = {
@@ -207,44 +211,14 @@ export default {
         });
     },
     SubmitEdit() {
-        // let data1 = new FormData()
-        // let data2 = new FormData()
-        // data1.append('email', this.form.email)
-        // data1.append('user_id', this.$store.state.user_id)
-        // data2.append('phone', this.form.phone_number)
-        // data2.append('user_id', this.$store.state.user_id)
-        // const request1 = this.$axios.put('/userinfo/user/altphone_number', data1, {
-        //     headers: {
-        //         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-        //     }
-        // })
-        // const request2 = this.$axios.put('/userinfo/user/altemail', data2, {
-        //     headers: {
-        //         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-        //     }
-        // })
-        // this.$axios.all[request1, request2].then(() => {
-        //     this.$axios.spread
-        // })
-        // .then((resp) => {
-
-        //   this.resp=resp.data.registerFormat
-        //   this.$refs["form"].validate((valid) => {
-        //     if (!valid) {
-        //       return false;
-        //     }
-        //   });
-        //   if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY") {
-        //     this.$router.replace("/login")
-        //     this.$message("您不具有此权限");
-        //   }
-        //   else if (resp.data.isOk) {
-        //     this.$message("注册成功");
-        //   } else {
-        //     this.$message("提交失败，请检查表单内容");
-        //   }
-
-        // });
+        this.$axios.get('/userinfo/user/altemailandphone?email='+this.form.email+'&phone='+this.form.phone_number).then((resp)=>{
+          if(resp){
+            this.$message("修改成功");
+          }
+          else{
+            this.$message("修改失败，请检查表单内容");
+          }
+        })
     },
   },
 };
