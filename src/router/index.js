@@ -35,6 +35,9 @@ export const asyncRouterMap = [{
         path: '/home',
         name: '首页',
         component: Layout,
+        meta: {
+          role: ['admin','teacher','student']
+        }
       },
       // {
       //   path: 'school',

@@ -26,21 +26,21 @@
             </el-table-column>
         </el-table>
         <el-dialog :visible.sync="requestDialogVis">
-          <course-form :formdata_prop="request_data" />
+          <course-form :formdata_prop="request_data" action_prop="watch"/>
         </el-dialog>
     </div>
 </template>
 
 <script>
 
-import axios from 'axios'
 import CourseForm from './CourseForm.vue'
 export default {
   components: { CourseForm },
   name:'CourseAudit',
 mounted (){
-      axios.get('http://localhost:5000/requests')
+      this.$axios.get('/requests/courses/admin/view/all')
       .then((resp)=>{
+        console.log(resp.data)
           this.tableData=resp.data
       })
   },
@@ -53,12 +53,26 @@ data() {
     },
     methods: {
       handleApprove(index, row) {
-        console.log(index, row);
         row.handle_result='approved'
+        this.$axios.post('/requests/courses/admin/permit',{
+          handler_id: "root", 
+          request_id: row.id, 
+          approve: true 
+        }).then((resp)=>{
+          console.log(resp)
+          row.handler_id=this.$store.state.user_id
+        })
       },
       handleReject(index, row) {
-        console.log(index, row);
         row.handle_result='rejected'
+        this.$axios.post('/requests/courses/admin/permit',{
+          handler_id: "root", 
+          request_id: row.id, 
+          approve: false 
+        }).then((resp)=>{
+          console.log(resp)
+          row.handler_id=this.$store.state.user_id
+        })
       },
       requestDetail(info){
         this.request_data=info

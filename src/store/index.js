@@ -21,8 +21,8 @@ export default new Vuex.Store({
     user_id:
       window.localStorage.getItem('user_id' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user_id' || '[]')),
     role:
-    // 'teacher'
-      window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]'))
+    'student'
+      // window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]'))
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {

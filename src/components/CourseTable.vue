@@ -10,7 +10,7 @@
         </div>
         <el-table :data="tableData" height="600" style="width: 100%">
             <el-table-column prop="number" label="课程编号" width="80">
-            </el-table-column>handleDelete
+            </el-table-column>
             <el-table-column prop="name" label="课程名" width="180">
             </el-table-column>
             <el-table-column prop="department" label="开课院系" width="80">
@@ -29,7 +29,7 @@
             </el-table-column>
             <el-table-column prop="max_student" label="任课容量" width="80">
             </el-table-column>
-            <el-table-column label="管理" width="180">
+            <el-table-column label="操作" width="180">
                 <template slot-scope="scope">
                     <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button size="mini" type="danger" @click.native.prevent="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
@@ -39,8 +39,9 @@
           <el-dialog title="添加课程" :visible.sync="dialogVisible" :close-on-click-modal='false'>
               <course-form :action_prop="form_op" :formdata_prop="form"/>
               <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogVisible = false">
+                  <el-button @click="test">
                       取消
+                      <!-- dialogVisible = false -->
                   </el-button>
                   <el-button type="primary" @click="admin_teacher_add_course" v-if="role=='admin'&&form_op=='add'">
                       确认增加
@@ -67,7 +68,6 @@
 
 <script>
 
-import axios from 'axios'
 import CourseForm from './CourseForm.vue'
 export default {
   components: { CourseForm },
@@ -99,6 +99,11 @@ data() {
       }
     },
     methods: {
+        test(){
+            console.log(this.tableData)
+            console.log(this.form)
+            this.dialogVisible=false
+        },
         get_table(){
             this.$axios.get('/course/common/view/all')
         .then((resp)=>{
@@ -125,18 +130,26 @@ data() {
         this.form_op='edit'
         this.dialogVisible=true
         row.suffix=1
-        this.form=row
+        this.form=JSON.parse(JSON.stringify(row))
       },
       handleDelete(index, rows,row) {
-        // console.log(index, row);
+        console.log(this.$store.state.user_id);
+        console.log({
+                    requester_id:this.$store.state.user_id,
+                    del_keyword:'teacher',// id, number, department, teacher
+                    number:row.number,
+                    suffix:2,
+                    department:'',
+                    teacher:row.teacher_id
+                })
         this.$axios.delete('/course/admin_teacher/del', {
                 data:{
-                    requester_id:this.role,
+                    requester_id:this.$store.state.user_id,
                     del_keyword:'number',// id, number, department, teacher
                     number:row.number,
-                    suffix:1,
-                    department:row.department,
-                    teacher:row.teacher
+                    suffix:2,
+                    department:'',
+                    teacher:''
                 }
             }).then((resp)=>{
               console.log(resp.data)
@@ -144,7 +157,7 @@ data() {
             this.$message("删除成功");
             this.get_table()
           } else {
-            this.$message("出错了");
+            this.$message("没有删除权限");
           }
           })
         this.get_table()
@@ -206,8 +219,10 @@ data() {
       }
     }
 }
+
 </script>
 
 <style>
 
 </style>
+
