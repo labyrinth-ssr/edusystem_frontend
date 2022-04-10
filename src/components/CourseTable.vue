@@ -10,7 +10,7 @@
         </div>
         <el-table :data="tableData" height="600" style="width: 100%">
             <el-table-column prop="number" label="课程编号" width="80">
-            </el-table-column>
+            </el-table-column>handleDelete
             <el-table-column prop="name" label="课程名" width="180">
             </el-table-column>
             <el-table-column prop="department" label="开课院系" width="80">
@@ -32,7 +32,7 @@
             <el-table-column label="管理" width="180">
                 <template slot-scope="scope">
                     <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    <el-button size="mini" type="danger" @click.native.prevent="handleDelete(scope.$index, tableData)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -124,10 +124,12 @@ data() {
         this.dialogVisible=true
         this.form=row
       },
-      handleDelete(index, row) {
+      handleDelete(index, rows) {
         // console.log(index, row);
         // this.$axios.delete('/',{data:})
         // this.get_table()
+        rows.splice(index, 1);
+        console.log(rows)
       },
       addcourse(){
           this.form_op='add'

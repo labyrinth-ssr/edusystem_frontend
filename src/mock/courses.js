@@ -7,7 +7,7 @@ const Random = Mock.Random
 // mock新闻数据，包括新闻标题title、内容content、创建时间createdTime
 function produceCoursesData() {
   let coursesList = []
-  for (let i = 0; i < 500; i++) {
+  for (let i = 0; i < 5; i++) {
     let newcoursesObject = {
        id: 'ENG001.01' ,//课程编号.id，.id为两位，例如：ENG001.01',
        number: 'ENG001', //课程编号，3位字母表示类型，三位数字表示编号，例如：ENG001',

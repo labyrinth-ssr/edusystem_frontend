@@ -24,7 +24,7 @@
       ></el-input>
     </el-form-item>
     <br />
-    <el-form-item STYLE="width: 100%">
+    <el-form-item STYLE="width: 100%;text-align:center">
       <el-button
         type="primary"
         style="width: 50%; background: #505458; border: none"
