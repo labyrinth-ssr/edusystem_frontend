@@ -2,7 +2,7 @@
 <div >
   <user-from :formdata_prop="form"/>
       <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button  type="primary" @click="SubmitEdit">修改</el-button>
+        <el-button  type="primary" @click="SubmitEdit">修改个人信息</el-button>
         <el-button  type="primary" @click="change_passwd">修改密码</el-button>
       </div>
       <change-passwd-dialog :visible="dialogVisible" @dialogclose='dialogclose'/>

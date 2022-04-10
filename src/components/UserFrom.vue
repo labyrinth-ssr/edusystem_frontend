@@ -41,7 +41,7 @@
 export default {
 //   components: { ChangePasswdDialog },
     name:'UserFrom',
-    props:['formdata_prop'],
+    props:['formdata_prop','action_prop'],
     data() {
     const validateUserId1 = (rule, value, callback) => {
       if (this.form.role == "student") {
@@ -155,12 +155,14 @@ export default {
         email: "",
       },
       formLabelWidth: "120px",
-      resp: {
-      },
+      action:'user_edit'
     };
   },
   watch:{
       formdata_prop:function(newval){
+          this.form=newval
+    },
+    action_prop:function(newval){
           this.form=newval
     }
   },

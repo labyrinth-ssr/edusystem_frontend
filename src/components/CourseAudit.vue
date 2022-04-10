@@ -7,7 +7,8 @@
             </el-table-column>
             <el-table-column prop="request_content" label="请求内容" width="180">
                 <template slot-scope="scope">
-            {{scope.row.request_content}}
+                  <el-link :underline="false" @click="requestDetail(scope.row.request_content)">详情</el-link>
+            <!-- {{scope.row.request_content}} -->
             </template>
             </el-table-column>
             <el-table-column prop="handler_id" label="处理人" width="180">
@@ -24,14 +25,18 @@
                 </template>
             </el-table-column>
         </el-table>
-        
+        <el-dialog :visible.sync="requestDialogVis">
+          <course-form :formdata_prop="request_data" />
+        </el-dialog>
     </div>
 </template>
 
 <script>
 
 import axios from 'axios'
+import CourseForm from './CourseForm.vue'
 export default {
+  components: { CourseForm },
   name:'CourseAudit',
 mounted (){
       axios.get('http://localhost:5000/requests')
@@ -42,6 +47,8 @@ mounted (){
 data() {
       return {
         tableData: [],
+        request_data:{},
+        requestDialogVis:false
       }
     },
     methods: {
@@ -52,6 +59,10 @@ data() {
       handleReject(index, row) {
         console.log(index, row);
         row.handle_result='rejected'
+      },
+      requestDetail(info){
+        this.request_data=info
+        this.requestDialogVis=true
       }
     }
 }

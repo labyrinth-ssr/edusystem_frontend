@@ -28,7 +28,7 @@
     props:['navList'],
     data () {
       return {
-        norender:['登录','账户','init']
+        norender:['登录','账户','init','个人中心']
       }
     }
   }

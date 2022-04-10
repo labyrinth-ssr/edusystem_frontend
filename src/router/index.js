@@ -46,7 +46,7 @@ export const asyncRouterMap = [{
         redirect: '/courses/table',
         children: [{
             path: '/courses/table',
-            name: 'CourseTable',
+            name: '课程列表',
             component: CourseTable,
             meta: {
               role: ['admin','teacher']
@@ -54,7 +54,7 @@ export const asyncRouterMap = [{
           },
           {
             path: '/courses/audit',
-            name: 'CourseAudit',
+            name: '课程申请列表',
             component: CourseAudit,
             meta: {
               role: ['admin']
@@ -89,13 +89,13 @@ export const asyncRouterMap = [{
         children: [
           {
                 path: '/academic/classroomtable',
-                name: 'ClassroomTable',
+                name: '教务列表',
                 component: ClassroomTable
               }
               ,
           {
             path: '/academic/classselbutton',
-            name: 'ClassSelbutton',
+            name: '权限开关',
             component: ClassSelbutton,
           }
         ]
@@ -104,7 +104,7 @@ export const asyncRouterMap = [{
   // },
   {
     path: '/user',
-    name: 'User',
+    name: '个人中心',
     component: Layout,
     redirect:'/user/account',
     children:[{

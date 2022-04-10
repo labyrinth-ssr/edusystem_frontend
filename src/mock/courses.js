@@ -59,6 +59,7 @@ function producerequestData() {
         name: "大学英语3",
         number: "ENG001",
         point: '3',
+        teacher_id:'20000001'
     }, //'处理类的内容的json形式',
       handler_id: 'root',//'处理者（管理员）的id',
       handle_result: 'processing', //'\"approved\",\"rejected\",\"processing\"',

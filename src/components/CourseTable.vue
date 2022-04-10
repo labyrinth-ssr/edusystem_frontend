@@ -2,7 +2,7 @@
     <div class="app-container">
         <div class="controller-container">
             <el-button @click="addcourse">
-                Add
+                单条添加课程
             </el-button>
             <el-button @click="uploaddialog">
                 批量添加课程
@@ -37,38 +37,7 @@
             </el-table-column>
         </el-table>
           <el-dialog title="添加课程" :visible.sync="dialogVisible" :close-on-click-modal='false'>
-              <el-form :model="form" style="text-align: left" ref="form" >
-                  <el-form-item label="课程名">
-                      <el-input v-model="form.name" />
-                  </el-form-item>
-                  <el-form-item label="课程编号" v-if="role=='admin'">
-                      <el-input v-model="form.number" />
-                  </el-form-item>
-                  <el-form-item label="开课院系" v-if="role=='admin'">
-                      <el-input v-model="form.department" />
-                  </el-form-item>
-                  <el-form-item label="学时" v-if="role=='admin'">
-                      <el-input v-model="form.classes_per_week" />
-                  </el-form-item>
-                  <el-form-item label="学分" v-if="role=='admin'">
-                      <el-input v-model="form.point" />
-                  </el-form-item>
-                  <el-form-item label="任课教师" v-if="role=='admin'">
-                      <el-input v-model="form.teacher_id" />
-                  </el-form-item>
-                  <el-form-item label="课程介绍" v-if="role=='admin'">
-                      <el-input v-model="form.introduction" />
-                  </el-form-item>
-                  <el-form-item label="上课时间">
-                      <el-input v-model="form.class_time" />
-                  </el-form-item>
-                  <el-form-item label="上课教室">
-                      <el-input v-model="form.classroom_id" />
-                  </el-form-item>
-                  <el-form-item label="选课容量" v-if="role=='admin'">
-                      <el-input v-model="form.max_student" />
-                  </el-form-item>
-              </el-form>
+              <course-form :action_prop="form_op" :formdata_prop="form"/>
               <div slot="footer" class="dialog-footer">
                   <el-button @click="dialogFormVisible = false">
                       取消
@@ -99,31 +68,33 @@
 <script>
 
 import axios from 'axios'
+import CourseForm from './CourseForm.vue'
 export default {
+  components: { CourseForm },
   name:'CourseTable',
 mounted (){
       this.get_table()
   },
 data() {
       return {
-          fileList: [],
+        fileList: [],
         tableData: [],
         form:{
-            class_time: "",
-            classes_per_week: '',
-            classroom_id: "",
-            department: "",
-            introduction: "",
-            max_student: '',
-            name: "",
             number: "",
+            suffix:0,
+            name: "",
             point: '',
-            teacher_id: ""
+            classes_per_week: '',
+            teacher_id: "",
+            max_student: '',
+            introduction: "",
+            department: "",
+            class_time:''
         },
         form_op:'add',
         dialogVisible:false,
         dialogVisible2:false,
-        role:'teacher'
+        role:this.$store.state.role
       }
     },
     methods: {
@@ -135,17 +106,16 @@ data() {
         },
         empty_form(){
             this.form={
-            class_time: "",
-            classes_per_week: '',
-            classroom_id: "",
-            department: "",
-            introduction: "",
-            max_student: '',
-            name: "",
             number: "",
+            suffix:0,
+            name: "",
             point: '',
+            classes_per_week: '',
             teacher_id: "",
-            suffix:0
+            max_student: '',
+            introduction: "",
+            department: "",
+            class_time:''
         }
         },
       handleEdit(index, row) {

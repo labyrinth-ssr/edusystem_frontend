@@ -19,7 +19,6 @@ import InnerMenu from './innerMenu.vue'
     data () {
       return{
         navList:store.state.routers,
-        norender:['登录','账户']
       }
       // if(this.$store.state.role=='admin'){
       // return {
