@@ -16,7 +16,7 @@ const whiteList=[]
 var routeflag=false
 
 router.beforeEach((to, from, next) => {
-  console.log(router.getRoutes())
+  // console.log(router.getRoutes())
   if (store.state.user_id) { // 判断是否有token
     if (to.path === '/login') {
       next();

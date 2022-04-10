@@ -19,7 +19,7 @@
             </el-table-column>
             <el-table-column prop="point" label="学分" width="80">
             </el-table-column>
-            <el-table-column prop="number" label="任课教师" width="80">
+            <el-table-column prop="teacher_id" label="任课教师id" width="80">
             </el-table-column>
             <el-table-column prop="introduction" label="课程介绍" width="180">
             </el-table-column>
@@ -32,14 +32,14 @@
             <el-table-column label="管理" width="180">
                 <template slot-scope="scope">
                     <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="mini" type="danger" @click.native.prevent="handleDelete(scope.$index, tableData)">删除</el-button>
+                    <el-button size="mini" type="danger" @click.native.prevent="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
           <el-dialog title="添加课程" :visible.sync="dialogVisible" :close-on-click-modal='false'>
               <course-form :action_prop="form_op" :formdata_prop="form"/>
               <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogFormVisible = false">
+                  <el-button @click="dialogVisible = false">
                       取消
                   </el-button>
                   <el-button type="primary" @click="admin_teacher_add_course" v-if="role=='admin'&&form_op=='add'">
@@ -89,7 +89,8 @@ data() {
             max_student: '',
             introduction: "",
             department: "",
-            class_time:''
+            class_time:'',
+            classroom_id:''
         },
         form_op:'add',
         dialogVisible:false,
@@ -99,15 +100,16 @@ data() {
     },
     methods: {
         get_table(){
-            axios.get('http://localhost:5000/courses')
+            this.$axios.get('/course/common/view/all')
         .then((resp)=>{
+            console.log(resp.data)
           this.tableData=resp.data
         })
         },
         empty_form(){
             this.form={
             number: "",
-            suffix:0,
+            suffix:1,
             name: "",
             point: '',
             classes_per_week: '',
@@ -115,21 +117,38 @@ data() {
             max_student: '',
             introduction: "",
             department: "",
-            class_time:''
+            class_time:'',
+            classroom_id:''
+
         }
         },
       handleEdit(index, row) {
-        console.log(index, row);
         this.form_op='edit'
         this.dialogVisible=true
+        row.suffix=1
         this.form=row
       },
-      handleDelete(index, rows) {
+      handleDelete(index, rows,row) {
         // console.log(index, row);
-        // this.$axios.delete('/',{data:})
-        // this.get_table()
-        rows.splice(index, 1);
-        console.log(rows)
+        this.$axios.delete('/course/admin_teacher/del', {
+                data:{
+                    requester_id:this.role,
+                    del_keyword:'number',// id, number, department, teacher
+                    number:row.number,
+                    suffix:1,
+                    department:row.department,
+                    teacher:row.teacher
+                }
+            }).then((resp)=>{
+              console.log(resp.data)
+              if (resp.data.submitted) {
+            this.$message("删除成功");
+            this.get_table()
+          } else {
+            this.$message("出错了");
+          }
+          })
+        this.get_table()
       },
       addcourse(){
           this.form_op='add'
@@ -137,6 +156,7 @@ data() {
           this.dialogVisible=true
       },
       admin_teacher_add_course(){
+          console.log(this.form)
           this.$axios.post('/course/admin_teacher/add',{
               requester_id:this.$store.state.user_id,
               courseInfo:this.form
@@ -144,19 +164,24 @@ data() {
               console.log(resp.data)
               if (resp.data.submitted) {
             this.$message("添加成功");
+            this.dialogVisible=false
+            this.get_table()
           } else {
             this.$message("提交失败，请检查表单内容");
           }
           })
       },
       admin_teacher_edit_course(){
-          this.$axios.post('/course/admin_teacher/add',{
+          console.log(this.form)
+          this.$axios.put('/course/admin_teacher/alt',{
               requester_id:this.$store.state.user_id,
               courseInfo:this.form
           }).then((resp)=>{
               console.log(resp.data)
               if (resp.data.submitted) {
             this.$message("添加成功");
+            this.dialogVisible=false
+            this.get_table()
           } else {
             this.$message("提交失败，请检查表单内容");
           }

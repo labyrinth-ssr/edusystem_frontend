@@ -20,8 +20,8 @@ export default new Vuex.Store({
     first_login: false,
     user_id:
       window.localStorage.getItem('user_id' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user_id' || '[]')),
-    role:
-      window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]'))
+    role:'admin'
+      // window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]'))
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {

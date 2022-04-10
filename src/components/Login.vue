@@ -70,7 +70,7 @@ export default {
         this.loginForm.role=response.data.role
         if (success_login) {
           this.$store.commit("login", this.loginForm.user_id)
-          this.$store.commit("role",this.loginForm.role)
+          this.$store.commit("role",'admin')
           this.$store.dispatch('GenerateRoutes', this.loginForm.role).then(() => { // 生成可访问的路由表
             this.$store.state.addRouters.forEach((route)=>{
               console.log(route)
