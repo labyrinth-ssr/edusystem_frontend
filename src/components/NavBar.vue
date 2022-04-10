@@ -1,9 +1,10 @@
 <template>
 <div>
-  <el-dropdown @command="changepasswd">
+  <el-dropdown @command="userCommand">
     <i class="el-icon-arrow-down el-icon--right"></i>
   <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item v-if="role=='teacher'||role=='student'" @click="changepasswd">修改密码</el-dropdown-item>
+    <el-dropdown-item v-if="role=='teacher'||role=='student'" command="getAccount">账户信息</el-dropdown-item>
+    <el-dropdown-item command="relogin">重新登录</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>
 <img loading="lazy" src="https://img0.baidu.com/it/u=2936316438,1380992198&fm=253&fmt=auto&app=138&f=JPEG?w=400&h=400"/>
@@ -21,15 +22,18 @@
 },
     data () {
       return{
-      role:this.$store.state.role
-
+      role:this.$store.state.role,
       }
     }
     ,
     methods:{
-      changepasswd(){
-        this.$router.replace("/user");
-        console.log(this.$router)
+      userCommand(command){
+        if(command=='getAccount'){
+          this.$router.replace("/user/account");
+        }
+        else if (command=='relogin'){
+          this.$router.replace("/login");
+        }
       }
     }
   }
@@ -54,7 +58,7 @@
   }
   .el-dropdown{
     float: right;
-    bottom: 0px;
+        margin-top: 34px;
   }
 
 </style>

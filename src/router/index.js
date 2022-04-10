@@ -1,13 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/components/Login'
-import Hello from '@/components/Hello'
-// import Home from '@/components/Home'
-import AddUserForm from '@/components/AddUserForm'
-import changePasswdDialog from '@/components/ChangePasswdDialog'
 import Layout from '@/components/Layout'
 import CourseTable from '@/components/CourseTable'
-import Blank from '@/components/Blank'
 import CourseAudit from '@/components/CourseAudit'
 import ClassSelbutton from '@/components/ClassSelButton'
 import Account from '@/components/Account'
@@ -25,31 +20,32 @@ export const constantRouterMap = [
 export const asyncRouterMap = [{
     path: '/',
     redirect: '/home',
-    hidden:true
+    name:'init'
   },
-  {
-    path: '/home',
-    component: Layout,
-    redirect: '/home/hellopage',
-    name:'主页',
-    meta: {
-      requireAuth: true
-    },
-    children: [{
-        path: '/home/hellopage',
-        name: 'Hello',
-        component: Hello,
+  // {
+  //   path: '/home',
+  //   component: Layout,
+  //   redirect: '/home/hellopage',
+  //   name:'主页',
+  //   meta: {
+  //     requireAuth: true
+  //   },
+  //   children: [
+      {
+        path: '/home',
+        name: '首页',
+        component: Layout,
       },
       // {
       //   path: 'school',
       // },
       {
-        path: 'courses',
-        name: 'Courses',
-        component: Blank,
-        redirect: 'courses/table',
+        path: '/courses',
+        name: '课程',
+        component: Layout,
+        redirect: '/courses/table',
         children: [{
-            path: '/home/courses/table',
+            path: '/courses/table',
             name: 'CourseTable',
             component: CourseTable,
             meta: {
@@ -57,7 +53,7 @@ export const asyncRouterMap = [{
             }
           },
           {
-            path: '/home/courses/audit',
+            path: '/courses/audit',
             name: 'CourseAudit',
             component: CourseAudit,
             meta: {
@@ -73,42 +69,44 @@ export const asyncRouterMap = [{
             }
           }, */
         ]
-      }, {
-        path: '/home/adminusers',
-        name: 'adminusers',
-        component: AddUserForm,
-        meta: {
-          role: ['admin']
-        }
-      },
+      }, 
+      // {
+      //   path: '/adminusers',
+      //   name: '用户管理',
+      //   component: AddUserForm,
+      //   meta: {
+      //     role: ['admin']
+      //   }
+      // },
       {
         path: 'academic',
-        name: 'Academic',
-        component: Blank,
-        redirect: 'academic/classroomtable',
+        name: '教务管理',
+        component: Layout,
+        redirect: '/academic/classroomtable',
         meta: {
           role: ['admin']
         },
         children: [
           {
-                path: '/home/academic/classroomtable',
+                path: '/academic/classroomtable',
                 name: 'ClassroomTable',
                 component: ClassroomTable
               }
               ,
           {
-            path: '/home/academic/classselbutton',
+            path: '/academic/classselbutton',
             name: 'ClassSelbutton',
             component: ClassSelbutton,
           }
         ]
-      }
-    ]
-  },
+      },
+    // ]
+  // },
   {
     path: '/user',
     name: 'User',
     component: Layout,
+    redirect:'/user/account',
     children:[{
       path:'/user/account',
       component: Account,

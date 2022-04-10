@@ -73,10 +73,11 @@ export default {
           this.$store.commit("role",this.loginForm.role)
           this.$store.dispatch('GenerateRoutes', this.loginForm.role).then(() => { // 生成可访问的路由表
             this.$store.state.addRouters.forEach((route)=>{
-              if (!this.$router.hasRoute(route)){
+              console.log(route)
+              // if (!this.$router.hasRoute(route.path)){
               this.$router.addRoute(route) // 动态添加可访问路由表
 
-              }
+              // }
             })
           })
           if(first_login) this.$store.commit('first_login_func',true)

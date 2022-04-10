@@ -1,7 +1,7 @@
 <template>
     <div id="iter-menu">
     <template v-for="item in navList">
-      <el-submenu v-if="item.hasOwnProperty('children')&&item.children.length>0"
+      <el-submenu v-if="item.hasOwnProperty('children')&&item.children.length>0&&norender.indexOf(item.name)==-1"
         :key="item.path"
         :index="item.path">
         <template slot="title"
@@ -12,7 +12,7 @@
          <!-- 如果有子级数据使用递归组件 -->
         <InnerMenu :navList="item.children"></InnerMenu>
       </el-submenu>
-      <el-menu-item v-else
+      <el-menu-item v-else-if="norender.indexOf(item.name)==-1"
         :index="item.path"
         :key="item.path">
         <i :class="item.icon"></i>
@@ -28,6 +28,7 @@
     props:['navList'],
     data () {
       return {
+        norender:['登录','账户','init']
       }
     }
   }

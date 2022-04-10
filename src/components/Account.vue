@@ -1,36 +1,9 @@
 <template>
-<div style="text-align: center" >
-  <el-form :model="form" style="text-align: left" ref="form" :rules="rules" >
-        <el-form-item  label="用户角色" :label-width="formLabelWidth" prop="role">
-          <el-select :disabled="action=='user_edit'" v-model="form.role" placeholder="请选择" style="width: 30%">
-            <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
-          <el-input :disabled="action=='user_edit'" v-model="form.user_id" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item  label="姓名" :label-width="formLabelWidth" prop="username">
-          <el-input :disabled="action=='user_edit'" v-model="form.username" autocomplete="off" show-word-limit></el-input>
-        </el-form-item>
-        <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
-          <el-input :disabled="action=='user_edit'" v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
-        </el-form-item>
-        <el-form-item label="手机号（选填）" :label-width="formLabelWidth" prop="phone_number">
-          <el-input v-model="form.phone_number" autocomplete="off" maxlength="11" show-word-limit></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱（选填）" :label-width="formLabelWidth" prop="email">
-          <el-input v-model="form.email" autocomplete="off"> </el-input>
-        </el-form-item>
-      </el-form>
+<div >
+  <user-from :formdata_prop="form"/>
       <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button v-if="action=='admin_add'" @click="
-            dialogFormVisible = false;
-            cancel();
-          ">取 消</el-button>
-        <el-button v-if="action=='admin_add'" type="primary" @click="SubmitAdd">添加</el-button>
-        <el-button v-if="action=='user_edit'" type="primary" @click="SubmitEdit">修改</el-button>
-        <el-button v-if="action=='user_edit'" type="primary" @click="change_passwd">修改密码</el-button>
+        <el-button  type="primary" @click="SubmitEdit">修改</el-button>
+        <el-button  type="primary" @click="change_passwd">修改密码</el-button>
       </div>
       <change-passwd-dialog :visible="dialogVisible" @dialogclose='dialogclose'/>
 </div>
@@ -38,118 +11,14 @@
 
 <script>
 import ChangePasswdDialog from '@/components/ChangePasswdDialog.vue';
+import UserFrom from './UserFrom.vue';
 export default {
-  components: { ChangePasswdDialog },
+  components: { ChangePasswdDialog, UserFrom },
     name:'Account',
  data() {
-    const validateUserId1 = (rule, value, callback) => {
-      if (this.form.role == "student") {
-        /^\d{6}$/.test(value)
-          ? callback()
-          : callback(new Error("学生学号为6位数字"));
-      } else if (this.form.role == "teacher") {
-        /^\d{8}$/.test(value)
-          ? callback()
-          : callback(new Error("教师工号为8位数字"));
-      } else {
-        /^(\d{6}|\d{8})$/.test(value)
-          ? callback()
-          : callback(new Error("学号/工号为6位或8位数字"));
-      }
-    };
     return {
-    dialogVisible:false,
+      dialogVisible:false,
     role:this.$store.state.role,
-    action:'user_edit',
-      rules: {
-        id_number: [
-          { required: true, message: "身份证号为必填项", trigger: "blur" },
-          {pattern:/^\d{17}[1-9x]$/, message: "身份证号格式错误", trigger: "blur",},
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.id_numberFormat||typeof(this.resp.id_numberFormat)=="undefined"?callback() : callback(new Error("身份证格式错误"));
-            },
-            trigger: "blur",
-          },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.id_numberUnique||typeof(this.resp.id_numberUnique)=="undefined"?callback() : callback(new Error("身份证号已注册"));
-            },
-            trigger: "blur",
-          }
-        ],
-        role: [{required: true, message: "请输入用户角色", trigger: "change",},],
-        user_id: [
-          {required: true, message: "请输入学号/工号", trigger: "blur",},
-          {validator: validateUserId1, trigger: "blur",},
-          {
-            validator: (rule, value, callback)=>{
-              ((typeof(this.resp.user_idFormat)=="undefined")||this.resp.user_idFormat)?callback() : callback(new Error("学号/工号格式错误"));
-            },
-            trigger: "blur",
-          },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.user_idUnique||typeof(this.resp.user_idUnique)==="undefined"?callback() : callback(new Error("学号/工号已注册"));
-            },
-            trigger: "blur",
-          },
-        ],
-        username: [
-          { required: true, message: "请输入姓名", trigger: "blur" },
-          {
-            pattern: /^[\u4e00-\u9fa5a-zA-Z]+$/,
-            message: "姓名仅能出现英文字符与中文字符",
-            trigger: "blur",
-          },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.usernameFormat||typeof(this.resp.usernameFormat)=="undefined"?callback() : callback(new Error("用户姓名格式错误"));
-            },
-            trigger: "blur",
-          }
-        ],
-        phone_number: [
-          {
-            pattern: /^1\d{10}$/,
-            message: "请输入合法手机号",
-            trigger: "blur",
-          },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.phone_numberFormat||typeof(this.resp.phone_numberFormat)=="undefined"?callback() : callback(new Error("手机号格式错误"));
-            },
-            trigger: "blur",
-          }
-        ],
-        email: [
-          {
-            type: "email",
-            message: "请输入正确的e-mail",
-            trigger: "blur",
-          },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.emailFormat||typeof(this.resp.emailFormat)=="undefined"?callback() : callback(new Error("e-mail格式错误"));
-            },
-            trigger: "blur",
-          }
-        ],
-      },
-      options: [
-        {
-          key: "1",
-          value: "teacher",
-          label: "老师",
-        },
-        {
-          key: "2",
-          value: "student",
-          label: "学生",
-        },
-      ],
-      dialogFormVisible: true,
-      Input2: "",
       form: {
         username: "",
         role: "",
@@ -157,9 +26,6 @@ export default {
         id_number: "",
         phone_number: "",
         email: "",
-      },
-      formLabelWidth: "120px",
-      resp: {
       },
     };
   },
@@ -190,38 +56,6 @@ export default {
     change_passwd(){
       this.dialogVisible=false
       this.dialogVisible=true
-    },
-    SubmitAdd() {
-      this.$axios
-        .post("/register", {
-          visitor_id: this.$store.state.user_id,
-          username: this.form.username,
-          user_id: this.form.user_id,
-          id_number: this.form.id_number,
-          email: this.form.email,
-          role: this.form.role,
-          phone_number: this.form.phone_number,
-        })
-        .then((resp) => {
-
-          this.resp=resp.data.registerFormat
-          this.$refs["form"].validate((valid) => {
-            if (!valid) {
-              return false;
-            }
-          });
-         /*  if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY") {
-            this.$router.replace("/login")
-            this.$message("您不具有此权限");
-          }
-          else  */
-          if (resp.data.isOk) {
-            this.$message("注册成功");
-          } else {
-            this.$message("提交失败，请检查表单内容");
-          }
-
-        });
     },
     SubmitEdit() {
         this.$axios.get('/userinfo/user/altemailandphone?email='+this.form.email+'&phone='+this.form.phone_number).then((resp)=>{
