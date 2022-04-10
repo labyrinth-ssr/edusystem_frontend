@@ -38,6 +38,7 @@ export default {
     props: ['formdata_prop', 'action_prop'],
     computed: {
     judgeDisable: function () {
+        console.log(this.role,this.action)
       return this.action=='watch'||(this.role=='teacher'&&this.action=='edit')
     },
     judgeDisable2: function () {

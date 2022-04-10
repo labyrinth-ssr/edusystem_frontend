@@ -119,7 +119,6 @@ data() {
             department: "",
             class_time:'',
             classroom_id:''
-
         }
         },
       handleEdit(index, row) {
