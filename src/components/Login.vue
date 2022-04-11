@@ -54,9 +54,6 @@ export default {
   mounted(){},
   methods: {
     login() {
-      
-
-
       this.$axios
       .post("/login", {
         visitor_id: this.loginForm.user_id,
@@ -69,6 +66,13 @@ export default {
         const first_login=(response.data.passwd_check===false)
         if (success_login) {
           this.$store.commit("login", this.loginForm.user_id)
+          if(response.data.role=='student'||response.data.role=='teacher'){
+            this.$axios.get('/userinfo/common/getuserinfo').then((resp)=>{
+              if(resp.data.status=='quit' ){
+          this.$store.commit("role",'rejected')
+              }
+            })
+          }
           if(response.data.role=='student'){
             this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
               if(resp.data){
@@ -79,6 +83,7 @@ export default {
               }
             })
           }
+
           this.$store.commit("role",response.data.role)
           this.$store.dispatch('GenerateRoutes', this.$store.state.role).then(() => { // 生成可访问的路由表
           console.log('role',this.$store.state.role)
