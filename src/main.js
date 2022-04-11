@@ -12,12 +12,12 @@ Vue.prototype.$axios = axios
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
-const whiteList=[]
+const whiteList=['/login']
 var routeflag=false
 
 router.beforeEach((to, from, next) => {
-  // console.log(router.getRoutes())
-  if (store.state.user_id) { // 判断是否有token
+  console.log(store.state.user_id!='')
+  if (store.state.user_id!='') { // 判断是否有token
     if (to.path === '/login') {
       next();
     } else if (routeflag){
@@ -38,7 +38,7 @@ router.beforeEach((to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
       next();
     } else {
-      next('/login'); // 否则全部重定向到登录页
+      next({path:'/login'}); // 否则全部重定向到登录页
     }
   }
 })
