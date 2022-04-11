@@ -6,7 +6,7 @@ import Home from '@/components/Home'
 import AddUserForm from '@/components/AddUserForm'
 import changePasswdDialog from '@/components/ChangePasswdDialog'
 import MajorManage from "@/components/common/MajorManage";
-import Notice_A_test from "@/components/common/Notice_A_test";
+import Notice_A_test from "@/components/common/MemTable";
 import FileUpload from "@/components/FileUpload.vue";
 
 Vue.use(VueRouter)

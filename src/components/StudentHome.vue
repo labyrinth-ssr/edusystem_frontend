@@ -142,5 +142,9 @@ export default {
 </script>
 
 <style scoped>
-
+.myStuMenu{
+  text-color:"#000000";
+  active-text-color:"#ffffff";
+  background-color: #4facfe;
+}
 </style>
