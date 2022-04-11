@@ -54,6 +54,9 @@ export default {
   mounted(){},
   methods: {
     login() {
+      
+
+
       this.$axios
       .post("/login", {
         visitor_id: this.loginForm.user_id,

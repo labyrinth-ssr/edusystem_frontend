@@ -44,7 +44,6 @@
               <div slot="footer" class="dialog-footer">
                   <el-button @click="test">
                       取消
-                      <!-- dialogVisible = false -->
                   </el-button>
                   <el-button type="primary" @click="admin_teacher_add_course" v-if="role=='admin'&&form_op=='add'">
                       确认增加

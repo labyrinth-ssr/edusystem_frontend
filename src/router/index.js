@@ -7,6 +7,9 @@ import CourseAudit from '@/components/CourseAudit'
 import ClassSelbutton from '@/components/ClassSelButton'
 import Account from '@/components/Account'
 import ClassroomTable from '@/components/Classtable'
+import MajorManage from '@/components/MajorManage'
+import MemTable from '@/components/MemTable'
+
 Vue.use(VueRouter)
 
 export const constantRouterMap = [
@@ -26,9 +29,36 @@ export const asyncRouterMap = [
           role: ['admin','teacher','student','sel_student']
         }
       },
-      // {
-      //   path: 'school',
-      // },
+      {
+        path: '/school',
+        name: '学院专业',
+        component: Layout,
+        redirect: '/department/table',
+        children: [{
+            path: '/department/table',
+            name: '学院专业列表',
+            component: MajorManage,
+            meta: {
+              role: ['admin']
+            }
+          }
+        ]
+      },
+      {
+        path: '/users',
+        name: '用户',
+        component: Layout,
+        redirect: '/users/table',
+        children: [{
+            path: '/users/table',
+            name: '用户列表',
+            component: MemTable,
+            meta: {
+              role: ['admin']
+            }
+          }
+        ]
+      },
       {
         path: '/courses',
         name: '课程',

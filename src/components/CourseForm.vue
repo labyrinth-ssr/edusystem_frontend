@@ -58,18 +58,6 @@ export default {
             role:this.$store.state.role,
             action:this.action_prop,
             form: this.formdata_prop
-            // {
-            //     number: "",
-            //     suffix: 0,
-            //     name: "aaa",
-            //     point: '',
-            //     classes_per_week: '',
-            //     teacher_id: "",
-            //     max_student: '',
-            //     introduction: "",
-            //     department: "",
-            //     class_time: ''
-            // }
         }
     }
 }
