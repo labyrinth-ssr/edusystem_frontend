@@ -84,7 +84,7 @@ data() {
         tableData: [],
         form:{
             number: "",
-            suffix:0,
+            suffix:1,
             name: "",
             point: '',
             classes_per_week: '',
@@ -127,7 +127,8 @@ data() {
             } else {
                 this.$axios.get('/course/common/view/all')
                     .then((resp) => {
-                        console.log(resp.data)
+                        this.tableData = resp.data
+
                     })
             }
         },

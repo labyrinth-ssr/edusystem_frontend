@@ -55,7 +55,6 @@ export default {
   mounted(){},
   methods: {
     login() {
-      //todo 通过调用后端接口获取用户角色信息
       this.$axios
       .post("/login", {
         visitor_id: this.loginForm.user_id,
@@ -63,7 +62,7 @@ export default {
         login_url:'127.0.0.1',
       })
       .then((response) => {
-        console.log(response)
+        console.log(response.data)
         const success_login=response.data.login_approved
         const first_login=(response.data.passwd_check===false)
         if (success_login) {
@@ -78,6 +77,7 @@ export default {
               }
             })
           }
+          this.$store.commit("role",response.data.role)
           this.$store.dispatch('GenerateRoutes', this.$store.state.role).then(() => { // 生成可访问的路由表
           console.log('role',this.$store.state.role)
             this.$store.state.addRouters.forEach((route)=>{

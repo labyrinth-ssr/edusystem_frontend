@@ -98,7 +98,7 @@ export const asyncRouterMap = [{
     }],
     meta: {
       requireAuth: true,
-      role:['teacher','student']
+      role:['teacher','student','sel_student']
     }
   }
 ]
