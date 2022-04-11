@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" style="text-align: left" ref="form" >
+  <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
                   <el-form-item label="课程名">
                       <el-input v-model="form.name" :disabled="judgeDisable2"/>
                   </el-form-item>
@@ -15,8 +15,8 @@
                   <el-form-item label="学分" >
                       <el-input v-model="form.point" :disabled="judgeDisable"/>
                   </el-form-item>
-                  <el-form-item label="任课教师" >
-                      <el-input v-model="form.teacher_id" :disabled="judgeDisable"/>
+                  <el-form-item label="任课教师" v-if="this.role!='teacher'">
+                      <el-input v-model="form.teacher_id" :disabled="judgeDisable" />
                   </el-form-item>
                   <el-form-item label="课程介绍" >
                       <el-input v-model="form.introduction" :disabled="judgeDisable"/>
@@ -48,6 +48,9 @@ export default {
     watch: {
         formdata_prop:function (newval) {
               this.form=newval
+        },
+        action_prop:function (newval) {
+              this.form=newval
         }
     },
     created() {
@@ -57,7 +60,8 @@ export default {
         return {
             role:this.$store.state.role,
             action:this.action_prop,
-            form: this.formdata_prop
+            form: this.formdata_prop,
+            
         }
     }
 }

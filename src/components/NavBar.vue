@@ -1,5 +1,6 @@
 <template>
 <div>
+  <span>用户名:{{this.$store.state.user_id}},身份:{{this.$store.state.role}}</span>
   <el-dropdown @command="userCommand">
     <i class="el-icon-arrow-down el-icon--right"></i>
   <el-dropdown-menu slot="dropdown">

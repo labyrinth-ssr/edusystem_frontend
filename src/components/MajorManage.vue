@@ -21,7 +21,6 @@ export default {
 
         ],
         'head':[
-          {prop:"id",label:"id",fix:"left",width:"200"},
           {prop:"department",label:"院系",width:"250"},
           {prop:"major",label:"专业",width:"250"}
         ],

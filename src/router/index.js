@@ -37,6 +37,9 @@ export const asyncRouterMap = [
         path: '/school',
         name: '学院专业',
         component: Layout,
+        meta: {
+          role: ['admin']
+        },
         redirect: '/department/table',
         children: [{
             path: '/department/table',
@@ -53,6 +56,9 @@ export const asyncRouterMap = [
         name: '用户',
         component: Layout,
         redirect: '/users/table',
+        meta: {
+          role: ['admin']
+        },
         children: [{
             path: '/users/table',
             name: '用户列表',
@@ -84,6 +90,7 @@ export const asyncRouterMap = [
         name: '课程',
         component: Layout,
         redirect: '/courses/table',
+        
         children: [{
             path: '/courses/table',
             name: '课程列表',

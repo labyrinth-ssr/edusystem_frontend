@@ -33,8 +33,8 @@
                 <template slot-scope="scope">
                     <el-button size="mini" v-if="role=='sel_student'">选课</el-button>
                     <div v-else>
-                    <el-button size="mini"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="mini"  type="danger" @click.native.prevent="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
+                    <el-button size="mini"  v-if="edit_render(scope.row)" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button size="mini"  v-if="edit_render(scope.row)" type="danger" @click.native.prevent="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -105,6 +105,9 @@ data() {
             console.log(this.tableData)
             console.log(this.form)
             this.dialogVisible=false
+        },
+        edit_render(row){
+            return this.role=='admin'||(this.role=='teacher'&&row.teacher_id==this.$store.state.user_id)
         },
         get_table() {
             if (this.role == 'sel_student') {
@@ -189,6 +192,9 @@ data() {
       },
       admin_teacher_add_course(){
           console.log(this.form)
+          if(this.role=='teacher'){
+              this.form.teacher_id=this.$store.state.user_id
+          }
           this.$axios.post('/course/admin_teacher/add',{
               requester_id:this.$store.state.user_id,
               courseInfo:this.form
