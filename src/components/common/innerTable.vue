@@ -25,8 +25,8 @@
             </el-menu>
           </template>
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" size="middle">编辑</el-button>
-            <el-button size="middle" type ="danger" >删除</el-button>
+            <el-button @click="handleClick(scope.row)" size="middle">{{handel1.text}}</el-button>
+            <el-button size="middle" @click="handleDelete(scope.row)">{{handel2.text}}</el-button>
           </template>
         </el-table-column>
     </el-table>
@@ -35,16 +35,42 @@
 
 <script>
 import InnerMenu from './innerMenu.vue'
+import row from "element-ui/packages/row";
 
 export default {
   name: "InnerTable",
-  props:['table'],
+  props: {
+    'table': {},
+    handel1: {
+      text: '',
+      edit: {
+        type: Function
+      }
+    },
+    handel2: {
+      text: '',
+      del: {
+        type: Function
+      }
+    }
+  },
   components: {InnerMenu},
   data(){
+
     return{
 
     }
+  },
+  methods: {
+    handleClick(row){
+      this.handel1.edit(row)
+    },
+    handleDelete(row){
+      this.handel2.del(row)
+}
   }
+
+
 }
 </script>
 

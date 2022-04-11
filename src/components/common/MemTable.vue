@@ -1,6 +1,6 @@
 <!--WARNING:This is a test from zhx-->
 <template>
-  <inner-table :table="this.table">
+  <inner-table :table="this.table" :handel1="this.handel1" :handel2="this.handel2">
 
   </inner-table>
 </template>
@@ -12,19 +12,16 @@ export default {
   name: "Notice_A_test",
   components: {InnerTable},
   created() {
-    this.$axios.post("/admin/user/getusers",{})
-    .then((response) => {
-      console.log(response.data)
-      this.$data.table.data = response.data
-    }).catch((failResponse)=>{console.log(failResponse)});
+    this.clear()
   },
   data(){
-    function myEditable(index, rows) {
+    function myEditable(rows) {
+      console.log(rows)
+      rows.setValue
       return undefined;
     }
-    function myHandleDelete(index,rows){
-      rows.splice(index,1);
-      console.log(index)
+    function myHandleDelete(rows){
+      console.log(rows)
       return undefined;
     }
 
@@ -60,7 +57,25 @@ export default {
                 }
               ]},
         ]
-      }
+      },
+      handel1:{
+        text:"编辑",
+        edit: myEditable
+        },
+      handel2:{
+        text:"修改状态",
+        del:myHandleDelete
+      },
+
+    }
+  },
+  methods: {
+    clear(){
+      this.$axios.post("/userinfo/admin/getusers",{})
+          .then((response) => {
+            console.log(response.data)
+            this.$data.table.data = response.data
+          }).catch((failResponse)=>{console.log(failResponse)});
     }
   }
 

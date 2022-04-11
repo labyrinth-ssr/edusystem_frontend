@@ -17,6 +17,13 @@
         <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
           <el-input v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
         </el-form-item>
+        <el-form-item label="学院/专业" :label-width="formLabelWidth" prop="major_department">
+          <el-cascader
+              v-model="form.major_department"
+              :options="major_department_options"
+              :props="{ expandTrigger: 'hover' }"
+              @change="handleChange"></el-cascader>
+        </el-form-item>
         <el-form-item label="手机号（选填）" :label-width="formLabelWidth" prop="phone_number">
           <el-input v-model="form.phone_number" autocomplete="off" maxlength="11" show-word-limit></el-input>
         </el-form-item>
@@ -41,6 +48,31 @@
 <script>
 export default {
   name: "AddUserForm",
+  created () {
+    this.$axios.get("/org/admin/getorgs",{})
+        .then(response => {
+          console.log(response.data)
+          const list = Array.from(response.data).map(item1 =>({
+              value: item1.department,
+              label: item1.department,
+              children:
+              Array.from(response.data).map((item)=> {
+                  if(item.department === item1.department)
+                  {
+                    return({
+                      value: item.major,
+                      label: item.major
+                    })
+                  }
+                })
+          }));
+          console.log(list)
+          this.$data.major_department_options = list
+
+        }).catch((error) => {
+          console.log(error)
+    })
+  },
   data() {
     const validateUserId1 = (rule, value, callback) => {
       if (this.form.role === "student") {
@@ -158,6 +190,169 @@ export default {
       formLabelWidth: "120px",
       resp: {
       },
+      major_department_options:[{
+        value: 'zhinan',
+        label: '指南',
+        children: [{
+          value: 'shejiyuanze',
+          label: '设计原则'
+        }, {
+          value: 'daohang',
+          label: '导航'},
+          {
+            value: 'dingbudaohang',
+            label: '顶部导航'
+          }]
+      },
+        {
+        value: 'zujian',
+        label: '组件',
+        children: [{
+          value: 'basic',
+          label: 'Basic',
+        }, {
+          value: 'form',
+          label: 'Form',
+          children: [{
+            value: 'radio',
+            label: 'Radio 单选框'
+          }, {
+            value: 'checkbox',
+            label: 'Checkbox 多选框'
+          }, {
+            value: 'input',
+            label: 'Input 输入框'
+          }, {
+            value: 'input-number',
+            label: 'InputNumber 计数器'
+          }, {
+            value: 'select',
+            label: 'Select 选择器'
+          }, {
+            value: 'cascader',
+            label: 'Cascader 级联选择器'
+          }, {
+            value: 'switch',
+            label: 'Switch 开关'
+          }, {
+            value: 'slider',
+            label: 'Slider 滑块'
+          }, {
+            value: 'time-picker',
+            label: 'TimePicker 时间选择器'
+          }, {
+            value: 'date-picker',
+            label: 'DatePicker 日期选择器'
+          }, {
+            value: 'datetime-picker',
+            label: 'DateTimePicker 日期时间选择器'
+          }, {
+            value: 'upload',
+            label: 'Upload 上传'
+          }, {
+            value: 'rate',
+            label: 'Rate 评分'
+          }, {
+            value: 'form',
+            label: 'Form 表单'
+          }]
+        }, {
+          value: 'data',
+          label: 'Data',
+          children: [{
+            value: 'table',
+            label: 'Table 表格'
+          }, {
+            value: 'tag',
+            label: 'Tag 标签'
+          }, {
+            value: 'progress',
+            label: 'Progress 进度条'
+          }, {
+            value: 'tree',
+            label: 'Tree 树形控件'
+          }, {
+            value: 'pagination',
+            label: 'Pagination 分页'
+          }, {
+            value: 'badge',
+            label: 'Badge 标记'
+          }]
+        }, {
+          value: 'notice',
+          label: 'Notice',
+          children: [{
+            value: 'alert',
+            label: 'Alert 警告'
+          }, {
+            value: 'loading',
+            label: 'Loading 加载'
+          }, {
+            value: 'message',
+            label: 'Message 消息提示'
+          }, {
+            value: 'message-box',
+            label: 'MessageBox 弹框'
+          }, {
+            value: 'notification',
+            label: 'Notification 通知'
+          }]
+        }, {
+          value: 'navigation',
+          label: 'Navigation',
+          children: [{
+            value: 'menu',
+            label: 'NavMenu 导航菜单'
+          }, {
+            value: 'tabs',
+            label: 'Tabs 标签页'
+          }, {
+            value: 'breadcrumb',
+            label: 'Breadcrumb 面包屑'
+          }, {
+            value: 'dropdown',
+            label: 'Dropdown 下拉菜单'
+          }, {
+            value: 'steps',
+            label: 'Steps 步骤条'
+          }]
+        }, {
+          value: 'others',
+          label: 'Others',
+          children: [{
+            value: 'dialog',
+            label: 'Dialog 对话框'
+          }, {
+            value: 'tooltip',
+            label: 'Tooltip 文字提示'
+          }, {
+            value: 'popover',
+            label: 'Popover 弹出框'
+          }, {
+            value: 'card',
+            label: 'Card 卡片'
+          }, {
+            value: 'carousel',
+            label: 'Carousel 走马灯'
+          }, {
+            value: 'collapse',
+            label: 'Collapse 折叠面板'
+          }]
+        }]
+      }, {
+        value: 'ziyuan',
+        label: '资源',
+        children: [{
+          value: 'axure',
+          label: 'Axure Components'
+        }, {
+          value: 'sketch',
+          label: 'Sketch Templates'
+        }, {
+          value: 'jiaohu',
+          label: '组件交互文档'
+        }]
+      }],
     };
   },
   methods: {
@@ -169,8 +364,18 @@ export default {
         id_number: "",
         phone_number: "",
         email: "",
+        major_department: "",
+        major: "",
+        department: ""
       };
     },
+      handleChange(value) {
+        this.$data.form.major = this.$data.form.major_department[1];
+        this.$data.form.department = this.$data.form.major_department[0];
+        console.log(this.$data.form.major)
+        console.log(this.$data.form.department)
+        console.log(value);
+      },
     cancel() {
       this.clear();
       this.$router.replace("/admin/getusers");
@@ -185,6 +390,8 @@ export default {
           email: this.form.email,
           role: this.form.role,
           phone_number: this.form.phone_number,
+          major: this.form.major,
+          department: this.form.department
         })
         .then((resp) => {
 
