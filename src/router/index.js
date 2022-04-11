@@ -17,13 +17,9 @@ export const constantRouterMap = [
   }
 ]
 
-export const asyncRouterMap = [{
-    path: '/',
-    redirect: '/home',
-    name:'init'
-  },
+export const asyncRouterMap = [
       {
-        path: '/home',
+        path: '/',
         name: '首页',
         component: Layout,
         meta: {

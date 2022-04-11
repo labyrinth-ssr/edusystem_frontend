@@ -1,6 +1,6 @@
 <template>
 <div >
-  <user-from :formdata_prop="form"/>
+  <user-form :formdata_prop="form"/>
       <div slot="footer" class="dialog-footer" style="text-align: center">
         <el-button  type="primary" @click="SubmitEdit">修改个人信息</el-button>
         <el-button  type="primary" @click="change_passwd">修改密码</el-button>
@@ -11,9 +11,9 @@
 
 <script>
 import ChangePasswdDialog from '@/components/ChangePasswdDialog.vue';
-import UserFrom from './UserFrom.vue';
+import UserForm from './UserForm.vue';
 export default {
-  components: { ChangePasswdDialog, UserFrom },
+  components: { ChangePasswdDialog, UserForm },
     name:'Account',
  data() {
     return {
@@ -51,7 +51,7 @@ export default {
     },
     cancel() {
       this.clear();
-      this.$router.replace("/home");
+      this.$router.replace("/");
     },
     change_passwd(){
       this.dialogVisible=false

@@ -224,14 +224,23 @@ data() {
         // this.$axios.post('/course')
         this.empty_form
       },
-      fileChange(){
+      fileChange(file,fileList){
+          console.log(file)
+          console.log(fileList)
           this.fileList = fileList;
       },
       submitUpload(){
-          this.$axios.post('/upload/csv/admin/batch_add_course',{
-              user_id:this.$store.state.user_id,
-              file:this.fileList[0]
-          }).then((resp)=>{
+          console.log(this.fileList)
+        //   this.$axios.post('/upload/csv/admin/batch_add_course',null,{params:{
+        //       requester_id:this.$store.state.user_id,
+        //       file:this.fileList[0].raw
+        //   }}).then((resp)=>{
+        //       console.log(resp.data)
+        //   })
+        const formData = new FormData() //FormData对象，添加参数只能通过append('key', value)的形式添加
+        formData.append('file', this.fileList[0].raw) //添加文件对象
+        formData.append('requester_id', this.$store.state.user_id)
+          this.$axios.post('/upload/csv/admin/batch_add_course',formData/* ,{params:formData} */).then((resp)=>{
               console.log(resp.data)
           })
       },

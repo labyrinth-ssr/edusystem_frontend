@@ -35,7 +35,6 @@
       >
     </el-form-item>
   </el-form>
-    <!-- :visible="reset_passwd_needed" -->
 </div>
 </template>
 <script>
@@ -82,15 +81,12 @@ export default {
           console.log('role',this.$store.state.role)
             this.$store.state.addRouters.forEach((route)=>{
               console.log(route)
-              // if (!this.$router.hasRoute(route.path)){
               this.$router.addRoute(route) // 动态添加可访问路由表
-
-              // }
             })
           })
           if(first_login) this.$store.commit('first_login_func',true)
           var path = this.$route.query.redirect;
-          this.$router.replace({path: path === "/" || path === undefined ? "/home" : path});
+          this.$router.replace({path: path === undefined ? "/" : path});
         }
 
         else if(typeof response.data.find_id !="undefined"        && !response.data.find_id) this.$message.info("学号/工号填写错误");

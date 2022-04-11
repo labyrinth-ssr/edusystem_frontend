@@ -1,21 +1,20 @@
-<template xmlns:background-image="http://www.w3.org/1999/xhtml" onmousedown=function (){}>
-  <div>
-    <el-dialog title="添加用户" :visible.sync="dialogFormVisible" @close="cancel">
-      <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
-        <el-form-item label="用户角色" :label-width="formLabelWidth" prop="role">
-          <el-select v-model="form.role" placeholder="请选择" style="width: 40%">
-            <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
+<template>
+<div >
+  <el-form :model="form" style="text-align: left" ref="form" :rules="rules" >
+        <el-form-item  label="用户角色" :label-width="formLabelWidth" prop="role">
+          <el-select :disabled="action=='user_edit'" v-model="form.role" placeholder="请选择" >
+            <el-option v-for="item in options" :key="item.label" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
-          <el-input v-model="form.user_id" autocomplete="off"></el-input>
+          <el-input :disabled="action=='user_edit'" v-model="form.user_id" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" :label-width="formLabelWidth" prop="username">
-          <el-input v-model="form.username" autocomplete="off" show-word-limit></el-input>
+        <el-form-item  label="姓名" :label-width="formLabelWidth" prop="username">
+          <el-input :disabled="action=='user_edit'" v-model="form.username" autocomplete="off" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
-          <el-input v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
+          <el-input :disabled="action=='user_edit'" v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="手机号（选填）" :label-width="formLabelWidth" prop="phone_number">
           <el-input v-model="form.phone_number" autocomplete="off" maxlength="11" show-word-limit></el-input>
@@ -24,21 +23,26 @@
           <el-input v-model="form.email" autocomplete="off"> </el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="
+      <!-- <div slot="footer" class="dialog-footer" style="text-align: center">
+        <el-button v-if="action=='admin_add'" @click="
             dialogFormVisible = false;
             cancel();
           ">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-if="action=='admin_add'" type="primary" @click="SubmitAdd">添加</el-button>
+        <el-button v-if="action=='user_edit'" type="primary" @click="SubmitEdit">修改</el-button>
+        <el-button v-if="action=='user_edit'" type="primary" @click="change_passwd">修改密码</el-button>
       </div>
-    </el-dialog>
-    <footer></footer>
-  </div>
+      <change-passwd-dialog :visible="dialogVisible" @dialogclose='dialogclose'/> -->
+</div>
 </template>
+
 <script>
+// import ChangePasswdDialog from '@/components/ChangePasswdDialog.vue';
 export default {
-  name: "AddUserForm",
-  data() {
+//   components: { ChangePasswdDialog },
+    name:'UserForm',
+    props:['formdata_prop','action_prop'],
+    data() {
     const validateUserId1 = (rule, value, callback) => {
       if (this.form.role == "student") {
         /^\d{6}$/.test(value)
@@ -55,6 +59,7 @@ export default {
       }
     };
     return {
+    role:this.$store.state.role,
       rules: {
         id_number: [
           { required: true, message: "身份证号为必填项", trigger: "blur" },
@@ -132,18 +137,15 @@ export default {
       },
       options: [
         {
-          key: "1",
           value: "teacher",
           label: "老师",
         },
         {
-          key: "2",
           value: "student",
           label: "学生",
         },
       ],
       dialogFormVisible: true,
-      Input2: "",
       form: {
         username: "",
         role: "",
@@ -153,12 +155,21 @@ export default {
         email: "",
       },
       formLabelWidth: "120px",
-      resp: {
-      },
+      action:'user_edit'
     };
   },
+  watch:{
+      formdata_prop:function(newval){
+          this.form=newval
+    },
+    action_prop:function(newval){
+          this.form=newval
+    }
+  },
+  created(){
+  },
   methods: {
-    clear() {
+    clearUserForm() {
       this.form = {
         username: "",
         role: "",
@@ -168,54 +179,13 @@ export default {
         email: "",
       };
     },
-    cancel() {
-      this.clear();
-      this.$router.replace("/home");
-    },
-    onSubmit() {
-      this.$axios
-        .post("/register", {
-          visitor_id: this.$store.state.user_id,
-          username: this.form.username,
-          user_id: this.form.user_id,
-          id_number: this.form.id_number,
-          email: this.form.email,
-          role: this.form.role,
-          phone_number: this.form.phone_number,
-        })
-        .then((resp) => {
-
-          this.resp=resp.data.registerFormat
-          if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY") {
-            this.$router.replace("/login")
-            this.$message("您不具有此权限");
-          }
-          else if (resp.data.isOk) {
-            this.$message("注册成功");
-          } else {
-            this.$message("提交失败，请检查表单内容");
-          }
-          this.$refs["form"].validate((valid) => {
-            if (!valid) {
-              return false;
-            }
-          });
-
-
-        });
-    },
   },
 };
+
 </script>
 
 <style scoped>
-.el-icon-circle-plus-outline {
-  margin: 50px 0 0 20px;
-  font-size: 100px;
-  float: left;
-  cursor: pointer;
-}
-</style>
-<style >
-
+ .el-input{
+   width: 350px;
+ }
 </style>
