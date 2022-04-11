@@ -46,7 +46,6 @@ export default {
       loginForm: {
         user_id: "",
         password: "",
-        role:''
       },
       responseResult: [],
       reset_passwd_needed:false,
@@ -67,11 +66,20 @@ export default {
         console.log(response)
         const success_login=response.data.login_approved
         const first_login=(response.data.passwd_check===false)
-        this.loginForm.role=response.data.role
         if (success_login) {
           this.$store.commit("login", this.loginForm.user_id)
-          this.$store.commit("role",this.loginForm.role)
-          this.$store.dispatch('GenerateRoutes', this.loginForm.role).then(() => { // 生成可访问的路由表
+          if(response.data.role=='student'){
+            this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
+              if(resp.data){
+          this.$store.commit("role",'sel_student')
+              }
+              else{
+          this.$store.commit("role",'student')
+              }
+            })
+          }
+          this.$store.dispatch('GenerateRoutes', this.$store.state.role).then(() => { // 生成可访问的路由表
+          console.log('role',this.$store.state.role)
             this.$store.state.addRouters.forEach((route)=>{
               console.log(route)
               // if (!this.$router.hasRoute(route.path)){

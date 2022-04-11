@@ -1,4 +1,4 @@
-    import Vue from 'vue'
+import Vue from 'vue'
 import Vuex from 'vuex'
 import { asyncRouterMap, constantRouterMap } from '../router/index.js';
 
@@ -43,9 +43,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    GenerateRoutes({ commit }, data) {
+    GenerateRoutes({ commit }, data1,data2) {
       return new Promise(resolve => {
-        const role = data;
+        const role = data1;
         const accessedRouters = asyncRouterMap.filter(v => {
           if (hasPermission(role, v)) {
             if (v.children && v.children.length > 0) {

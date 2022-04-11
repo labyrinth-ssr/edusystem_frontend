@@ -22,21 +22,12 @@ export const asyncRouterMap = [{
     redirect: '/home',
     name:'init'
   },
-  // {
-  //   path: '/home',
-  //   component: Layout,
-  //   redirect: '/home/hellopage',
-  //   name:'主页',
-  //   meta: {
-  //     requireAuth: true
-  //   },
-  //   children: [
       {
         path: '/home',
         name: '首页',
         component: Layout,
         meta: {
-          role: ['admin','teacher','student']
+          role: ['admin','teacher','student','sel_student']
         }
       },
       // {
@@ -52,7 +43,7 @@ export const asyncRouterMap = [{
             name: '课程列表',
             component: CourseTable,
             meta: {
-              role: ['admin','teacher']
+              role: ['admin','teacher','sel_student']
             }
           },
           {
@@ -62,15 +53,7 @@ export const asyncRouterMap = [{
             meta: {
               role: ['admin']
             }
-          }/* ,{
-            path: 'studensel',
-            name: 'StuSel',
-            component: StuSel,
-            meta: {
-              role: ['student'],
-              selPermmision:true
-            }
-          }, */
+          }
         ]
       }, 
       // {
@@ -103,8 +86,6 @@ export const asyncRouterMap = [{
           }
         ]
       },
-    // ]
-  // },
   {
     path: '/user',
     name: '个人中心',

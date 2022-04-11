@@ -11,7 +11,7 @@
         <el-table :data="tableData" height="600" style="width: 100%">
             <el-table-column prop="number" label="课程编号" width="80">
             </el-table-column>
-            <el-table-column prop="name" label="课程名" width="180">
+            <el-table-column prop="name" label="课程名" width="80">
             </el-table-column>
             <el-table-column prop="department" label="开课院系" width="80">
             </el-table-column>
@@ -19,7 +19,7 @@
             </el-table-column>
             <el-table-column prop="point" label="学分" width="80">
             </el-table-column>
-            <el-table-column prop="teacher_id" label="任课教师id" width="80">
+            <el-table-column prop="teacher_id" label="任课教师id" width="180">
             </el-table-column>
             <el-table-column prop="introduction" label="课程介绍" width="180">
             </el-table-column>
@@ -31,8 +31,11 @@
             </el-table-column>
             <el-table-column label="操作" width="180">
                 <template slot-scope="scope">
-                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="mini" type="danger" @click.native.prevent="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
+                    <el-button size="mini" v-if="role=='sel_student'">选课</el-button>
+                    <div v-else>
+                    <el-button size="mini"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button size="mini"  type="danger" @click.native.prevent="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -104,12 +107,29 @@ data() {
             console.log(this.form)
             this.dialogVisible=false
         },
-        get_table(){
-            this.$axios.get('/course/common/view/all')
-        .then((resp)=>{
-            console.log(resp.data)
-          this.tableData=resp.data
-        })
+        get_table() {
+            if (this.role == 'sel_student') {
+                this.$axios.get('/userinfo/common/getuserinfo').then((resp) => {
+                    console.log(resp.data)
+                    const department = resp.data.department
+                    this.$axios({
+                        method: 'get',
+                        url: '/course/common/view/by_department',
+                        params: {
+                            'department': department
+                        }
+                    }).then((resp) => {
+                        this.tableData = resp.data
+
+                    })
+                })
+
+            } else {
+                this.$axios.get('/course/common/view/all')
+                    .then((resp) => {
+                        console.log(resp.data)
+                    })
+            }
         },
         empty_form(){
             this.form={
