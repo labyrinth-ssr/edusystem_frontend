@@ -6,8 +6,8 @@
         :stripe = "true"
         border
         flex="left">
-      <template v-for="col in table.head" >
-        <el-table-column :key="col"
+      <template v-for="col in table.head">
+        <el-table-column :key="col.prop"
             :prop="col.prop"
             :label="col.label"
             :fixed="col.fix"
@@ -19,11 +19,10 @@
             :width=table.navWidth
             fixed = "right">
           <template slot="header" >
-            <!-- <el-menu :default-active="'/index'" router mode="horizontal" background-color="white" text-color="#222"
+            <el-menu :default-active="'/index'" router mode="horizontal" background-color="white" text-color="#222"
                      active-text-color="red" style="min-width: 1300px">
               <inner-menu :navList="table.navList"></inner-menu>
-            </el-menu> -->
-            <el-button @click="dialogVisible=true" size="middle">{{table.navList[0].name}}</el-button>
+            </el-menu>
           </template>
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" size="middle">{{handel1.text}}</el-button>
@@ -31,25 +30,17 @@
           </template>
         </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogVisible">
-      <department-form :formdata_prop="departmentForm"/>
-      <div slot="footer" class="dialog-footer">
-                  <el-button >
-                      取消
-                  </el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import InnerMenu from './innerMenu.vue'
-import DepartmentForm from './DepartmentForm.vue';
+import row from "element-ui/packages/row";
 
 export default {
   name: "InnerTable",
   props: {
-    table: {},
+    'table': {},
     handel1: {
       text: '',
       edit: {
@@ -63,25 +54,20 @@ export default {
       }
     }
   },
-  components: {
-    InnerMenu,
-    DepartmentForm
-  },
-  data() {
+  components: {InnerMenu},
+  data(){
 
-    return {
-      dialogVisible: false,
-      departmentForm: this.table.data
+    return{
 
     }
   },
   methods: {
-    handleClick(row) {
+    handleClick(row){
       this.handel1.edit(row)
     },
-    handleDelete(row) {
+    handleDelete(row){
       this.handel2.del(row)
-    }
+}
   }
 
 

@@ -51,8 +51,10 @@ export default {
     department_del(data)
     {
       console.log(data.department)
+      const formData = new FormData() 
+        formData.append('department', data.department) 
       this.$axios.delete("org/admin/deldepartment",{
-        data:data
+        data:formData
       }).then( (response)=>{
         console.log(response.data)
         this.clear()
@@ -63,8 +65,11 @@ export default {
     },
     major_del(data){
       console.log(data.major, data.department);
+      const formData = new FormData() 
+        formData.append('department', data.department) 
+        formData.append('major', data.major)
       this.$axios.delete("/org/admin/delmajor",{
-        data:data
+        data:formData
       }).then( (response)=>{
         console.log(response.data)
         this.clear()

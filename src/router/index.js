@@ -9,6 +9,10 @@ import Account from '@/components/Account'
 import ClassroomTable from '@/components/Classtable'
 import MajorManage from '@/components/MajorManage'
 import MemTable from '@/components/MemTable'
+import AddUserForm from '@/components/AddUserForm'
+import FileUpload from '@/components/FileUpload'
+
+
 
 Vue.use(VueRouter)
 
@@ -53,6 +57,22 @@ export const asyncRouterMap = [
             path: '/users/table',
             name: '用户列表',
             component: MemTable,
+            meta: {
+              role: ['admin']
+            }
+          },
+          {
+            path: '/users/adduserform',
+            component: AddUserForm,
+            name:'',
+            meta: {
+              role: ['admin']
+            }
+          },
+          {
+            path: '/users/addusercsv',
+            component: FileUpload,
+            name:'',
             meta: {
               role: ['admin']
             }

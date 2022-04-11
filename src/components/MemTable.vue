@@ -38,12 +38,12 @@ export default {
             {path: '/admin', name: '添加学生/教师',icon:"el-icon-circle-plus-outline"
               ,'children':[
                 {
-                  path:'/admin/adduserform',
+                  path:'/users/adduserform',
                   icon:null,
                   name:'单次添加'
                 },
                 {
-                  path: '/admin/upload',
+                  path: '/users/addusercsv',
                   icon: null,
                   name: '批量添加'
                 }
