@@ -1,23 +1,39 @@
-<!--WARNING:This is a test from zhx-->
 <template>
-  <inner-table :table="this.table" :handel1="this.handel1" :handel2="this.handel2">
-
-  </inner-table>
+  <div>
+    <inner-table :table="this.table" :handel1="this.handel1" :handel2="this.handel2">
+    </inner-table>
+    <el-dialog title="修改学生/教师" :visible.sync="dialogVisible" :close-on-click-modal='false' v-if = "dialogVisible" :modal="false">
+      <div>
+        <user-form :action_prop="form_op" :formdata_prop="form"/>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
 import InnerTable from "./innerTable";
-
+import UserForm from "./UserForm"
 export default {
   name: "MemTable",
-  components: {InnerTable},
+  components: {InnerTable,UserForm},
   created() {
     this.clear()
   },
   data(){
-
-
     return{
+      form_op:"add",
+      dialogVisible:false,
+      form:{
+        username: "",
+        role: "",
+        user_id: "",
+        id_number: "",
+        phone_number: "",
+        email: "",
+        major_department: "",
+        major: "",
+        department: ""
+      },
       table:{
         'data': [
         ],
@@ -70,7 +86,15 @@ export default {
           }).catch((failResponse)=>{console.log(failResponse)});
     },
     myEditable(rows) {
+      this.form_op='admin_add'
+      this.dialogVisible=true
+      this.form=JSON.parse(JSON.stringify(rows))
       console.log(rows)
+      this.$axios.post("/userinfo/admin/getusers",{})
+          .then((response) => {
+            console.log(response.data)
+            this.$data.table.data = response.data
+          }).catch((failResponse)=>{console.log(failResponse)});
       return undefined;
     },
     myHandleDelete(rows){

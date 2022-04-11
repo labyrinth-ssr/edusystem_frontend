@@ -2,17 +2,25 @@
 <div >
   <el-form :model="form" style="text-align: left" ref="form" :rules="rules" >
         <el-form-item  label="用户角色" :label-width="formLabelWidth" prop="role">
-          <el-select :disabled="action=='user_edit'" v-model="form.role" placeholder="请选择" >
+          <el-select :disabled="action=='user_edit'||action=='admin_add'" v-model="form.role" placeholder="请选择" >
             <el-option v-for="item in options" :key="item.label" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
-          <el-input :disabled="action=='user_edit'" v-model="form.user_id" autocomplete="off"></el-input>
+          <el-input :disabled="action=='user_edit'||action=='admin_add'" v-model="form.user_id" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item  label="姓名" :label-width="formLabelWidth" prop="username">
           <el-input :disabled="action=='user_edit'" v-model="form.username" autocomplete="off" show-word-limit></el-input>
         </el-form-item>
+      <el-form-item label="学院/专业" :label-width="formLabelWidth" prop="major_department">
+        <el-cascader
+            :disabled="action=='user_edit'"
+        v-model="form.major_department"
+            :options="major_department_options"
+            :props="{ expandTrigger: 'hover' }"
+            @change="handleChange"></el-cascader>
+      </el-form-item>
         <el-form-item label="身份证号" :label-width="formLabelWidth" prop="id_number">
           <el-input :disabled="action=='user_edit'" v-model="form.id_number" autocomplete="off" maxlength="18" show-word-limit></el-input>
         </el-form-item>
@@ -23,16 +31,16 @@
           <el-input v-model="form.email" autocomplete="off"> </el-input>
         </el-form-item>
       </el-form>
-      <!-- <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button v-if="action=='admin_add'" @click="
-            dialogFormVisible = false;
-            cancel();
-          ">取 消</el-button>
-        <el-button v-if="action=='admin_add'" type="primary" @click="SubmitAdd">添加</el-button>
-        <el-button v-if="action=='user_edit'" type="primary" @click="SubmitEdit">修改</el-button>
-        <el-button v-if="action=='user_edit'" type="primary" @click="change_passwd">修改密码</el-button>
-      </div>
-      <change-passwd-dialog :visible="dialogVisible" @dialogclose='dialogclose'/> -->
+<!--      <div slot="footer" class="dialog-footer" style="text-align: center">-->
+<!--        <el-button v-if="action=='admin_add'" @click="-->
+<!--            dialogFormVisible = false;-->
+<!--            cancel();-->
+<!--          ">取 消</el-button>-->
+        <el-button v-if="action=='admin_add'" type="primary" @click="SubmitAdd">添加/修改</el-button>
+<!--        <el-button v-if="action=='user_edit'" type="primary" @click="SubmitEdit">修改</el-button>-->
+<!--        <el-button v-if="action=='user_edit'" type="primary" @click="change_passwd">修改密码</el-button>-->
+<!--      </div>-->
+<!--      <change-passwd-dialog :visible="dialogVisible" @dialogclose='dialogclose'/>-->
 </div>
 </template>
 
@@ -59,7 +67,7 @@ export default {
       }
     };
     return {
-    role:this.$store.state.role,
+      role:this.$store.state.role,
       rules: {
         id_number: [
           { required: true, message: "身份证号为必填项", trigger: "blur" },
@@ -153,9 +161,13 @@ export default {
         id_number: "",
         phone_number: "",
         email: "",
+        major_department: "",
+        major: "",
+        department: ""
       },
       formLabelWidth: "120px",
-      action:'user_edit'
+      action:'user_edit',
+      major_department_options:[]
     };
   },
   watch:{
@@ -163,10 +175,59 @@ export default {
           this.form=newval
     },
     action_prop:function(newval){
-          this.form=newval
+          this.action=newval
+      console.log(newval)
     }
   },
   created(){
+    console.log(this.formdata_prop)
+    this.$axios.get("/org/admin/getorgs",{})
+        .then(response => {
+          console.log(response.data)
+          var res = {}
+          var res2 = []
+          response.data.forEach(element => {
+            if (element.department in res) {
+              if ('children' in res[element.department]) {
+                res[element.department].children.push({label:element.major,value:element.major})
+              }
+            } else res[element.department] = {
+              children: [{label:element.major,value:element.major}]
+            }
+          });
+          Object.keys(res).forEach((key) => {
+            res2.push({
+              label: key,
+              value:key,
+              children: res[key].children
+            })
+          })
+          console.log(res2)
+          // const list = Array.from(response.data).map(item1 =>({
+          //     value: item1.department,
+          //     label: item1.department,
+          //     children:
+          //     Array.from(response.data).map((item)=> {
+          //         if(item.department === item1.department)
+          //         {
+          //           return({
+          //             value: item.major,
+          //             label: item.major
+          //           })
+          //         }
+          //       })
+          // }));
+          // console.log(list)
+          this.major_department_options = res2
+
+        }).catch((error) => {
+      console.log(error)
+    })
+    this.form=this.formdata_prop
+    this.action=this.action_prop
+    console.log("act=",this.action_prop)
+    this.form.major_department=Array.from([this.form.department, this.form.major])
+    console.log(this.form.major_department)
   },
   methods: {
     clearUserForm() {
@@ -177,9 +238,31 @@ export default {
         id_number: "",
         phone_number: "",
         email: "",
+        major_department: "",
+        major: "",
+        department: ""
       };
     },
+    handleChange(value) {
+      this.$data.form.major = this.$data.form.major_department[1];
+      this.$data.form.department = this.$data.form.major_department[0];
+      console.log(this.$data.form.major)
+      console.log(this.$data.form.department)
+      console.log(value);
+    },
+    SubmitAdd(){
+      this.$axios.put("userinfo/admin/altuser",this.$data.form)
+          .then((response)=>{
+            console.log(response.data);
+            if(response.data.isOk){
+              ;
+            }
+          }).catch((error)=>{
+            console.log(error)
+      })
+    }
   },
+
 };
 
 </script>
