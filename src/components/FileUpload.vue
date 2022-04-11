@@ -35,10 +35,8 @@ export default {
         const formData = new FormData() //FormData对象，添加参数只能通过append('key', value)的形式添加
         formData.append('file', this.fileList[0].raw) //添加文件对象
         formData.append('requester_id', this.$store.state.user_id)
-          this.$axios.post('/userinfo/admin/addusers_csv',{
-              requester_id:this.$store.state.user_id,
-              file:this.fileList[0].raw
-          }/* ,{params:formData} */).then((resp)=>{
+        console.log(this.$store.state.user_id)
+          this.$axios.post('/userinfo/admin/addusers_csv',formData).then((resp)=>{
               console.log(resp.data)
           })
       },
