@@ -1,3 +1,4 @@
+<script src="../router/index.js"></script>
 <template>
   <div>
     <inner-table :table="this.table" :handel1="this.handel1" :handel2="this.handel2">
@@ -103,8 +104,9 @@ export default {
       this.form_op='admin_add'
       this.dialogVisible=true
       this.form=JSON.parse(JSON.stringify(rows))
-      this.form.major_department =Array.from([this.rows.department, this.rows.major])
-      this.raw =  JSON.parse( JSON.stringify(this.form) )
+      this.form.major_department =Array.from([rows.department, rows.major])
+      this.raw =  JSON.parse( JSON.stringify(rows) )
+      this.raw.major_department =Array.from([rows.department, rows.major])
     },
     myHandleDelete(rows){
       let temp = rows;
