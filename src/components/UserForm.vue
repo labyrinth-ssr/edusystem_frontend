@@ -236,7 +236,10 @@ export default {
     })
 
     this.form=this.formdata_prop
-    this.action=this.action_prop
+    if(this.$store.state.role==='admin')
+    {
+      this.action=this.action_prop
+    }
     console.log("act=",this.action_prop)
     this.form.major_department=Array.from([this.form.department, this.form.major])
     if (this.form.role =="teacher"){
@@ -257,6 +260,10 @@ export default {
             this.status_list = Array.from(response.data)
             console.log(response.data)
           })
+    }
+    if(this.$store.state.role!=='admin')
+    {
+      this.action = 'user_edit'
     }
     console.log(this.status_list)
   },
