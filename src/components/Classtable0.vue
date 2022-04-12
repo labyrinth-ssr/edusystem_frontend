@@ -29,7 +29,7 @@
     <el-table :data="tabledata" style="width: 100%">
       <el-table-column prop="classroom" label="教室" width="80">
       </el-table-column>
-      <el-table-column v-for="index in classnum" :key="index" :prop="index+''" :label="'第'+(index+1)+'节'" width="86" />
+      <el-table-column v-for="index in classnum" :key="index" :prop="index+''" :label="'第'+(index+1)+'节'"  />
     </el-table>
     <div style="text-align: center;margin-top: 30px;">
       <el-pagination background layout="prev, pager, next" :total="total" @current-change="current_change">
@@ -47,7 +47,7 @@ export default {
         multabledata:[],
         tabledata:[],
         page:0,
-        classnum:[...(new Array(14)).keys()],
+        classnum:[/* ...(new Array(14)).keys() */],
         total:70,
         form:{
           id:'',
@@ -62,6 +62,10 @@ export default {
       }
     },
     created(){
+      
+      this.$axios.get('/classtime/admin/getsectionnum').then((resp)=>{
+              this.classnum=[...(new Array(10)).keys()]
+          })
       this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
               this.classrooms=resp.data
           })

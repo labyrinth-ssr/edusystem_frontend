@@ -33,7 +33,7 @@
     <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
       <el-select :disabled="action=='user_edit'"  v-model="form.status" placeholder="请选择状态">
         <template v-for="item1 in status_list">
-          <el-option :label="item1" :value="item1"></el-option>
+          <el-option :label="item1" :value="item1" :key="item1"></el-option>
         </template>
       </el-select>
     </el-form-item>
@@ -53,7 +53,6 @@
 
 <script>
 // import ChangePasswdDialog from '@/components/ChangePasswdDialog.vue';
-import { Message } from "element-ui";
 export default {
 //   components: { ChangePasswdDialog },
     name:'UserForm',

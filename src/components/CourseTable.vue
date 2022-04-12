@@ -9,7 +9,7 @@
             </el-button>
         </div>
         <el-table :data="tableData" height="600" style="width: 100%">
-            <el-table-column prop="id" label="课程编号" width="80">
+            <el-table-column prop="number" label="课程编号" width="80">
             </el-table-column>
             <el-table-column prop="name" label="课程名" width="80">
             </el-table-column>
@@ -171,10 +171,9 @@ data() {
                     requester_id:this.$store.state.user_id,
                     del_keyword:'number',// id, number, department, teacher
                     number:row.number,
-                    suffix:1,
                     department:'',
                     teacher:'',
-            suffix:1
+                    suffix:parseInt(this.form.id.split('.')[1])
                 }
             }).then((resp)=>{
               console.log(resp.data)
@@ -210,12 +209,13 @@ data() {
               }).then((resp) => {
                   console.log(resp.data)
                   if (resp.data.submitted) {
-                      const arr_form = {
+                      if(this.role=='admin'){
+const arr_form = {
                           requester_id: this.$store.state.user_id,
                           number: this.form.number,
                           class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
                           classroom_id: this.form.classroom_id,
-                        suffix:1
+                        suffix:resp.data.suffix
                       }
                       console.log(arr_form)
                       this.$axios.post('/class_table/admin/arrange', arr_form).then((resp) => {
@@ -229,27 +229,29 @@ data() {
                       this.$message("课程时间或地点填写错误");
                           }
                       })
-
+                      }
                   } else {
                       this.$message("提交失败，请检查表单内容");
                   }
               })
           },
           admin_teacher_edit_course() {
-              console.log(this.form)
+              this.form.suffix=parseInt(this.form.id.split('.')[1])
+              console.log(this.form,this.$store.state.user_id)
               this.$axios.put('/course/admin_teacher/alt', {
                   requester_id: this.$store.state.user_id,
                   courseInfo: this.form
               }).then((resp) => {
                   console.log(resp.data)
                   if (resp.data.submitted) {
+                      if(this.role=='admin'){
+
                       const arr_form = {
                           requester_id: this.$store.state.user_id,
                           number: this.form.number,
                           class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
                           classroom_id: this.form.classroom_id,
-                        suffix:1
-
+                        suffix:parseInt(this.form.id.split('.')[1])
                       }
                       console.log(arr_form)
 
@@ -263,7 +265,10 @@ data() {
                           else{
                       this.$message("课程时间或地点填写错误");
                           }
-                      })
+                      })}else{
+                          this.$message("申请修改成功");
+                              this.dialogVisible = false
+                      }
                   } else {
                       this.$message("提交失败，请检查表单内容");
                   }
@@ -272,7 +277,7 @@ data() {
           },
       confirm_form(){
         // this.$axios.post('/course')
-        this.empty_form
+        this.empty_form()
       },
       fileChange(file,fileList){
           console.log(file)
