@@ -26,7 +26,7 @@
           </template>
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" size="middle">{{handel1.text}}</el-button>
-            <el-button size="middle" @click="handleDelete(scope.row)">{{handel2.text}}</el-button>
+            <el-button :style="{display:handel2.visible}" size="middle" @click="handleDelete(scope.row)">{{handel2.text}}</el-button>
           </template>
         </el-table-column>
     </el-table>
@@ -48,6 +48,7 @@ export default {
       }
     },
     handel2: {
+      visible:'none',
       text: '',
       del: {
         type: Function

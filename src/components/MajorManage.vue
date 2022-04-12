@@ -34,6 +34,7 @@ export default {
         edit:this.major_del
       },
       handel2:{
+        visible:'',
         text:"删除学院",
         del:this.department_del
       }

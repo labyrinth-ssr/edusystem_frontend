@@ -84,8 +84,8 @@ export default {
         edit: this.myEditable
         },
       handel2:{
-        visible:false,
-        text:"修改状态",
+        visible:'none',
+        text:"",
         del:this.myHandleDelete
       },
 
@@ -123,7 +123,7 @@ export default {
     SubmitAdd() {
       this.$axios.put("userinfo/admin/altuser", this.$data.form)
           .then((response) => {
-            this.dialogVisible = false
+            this.dialogVisible = "none"
             console.log(response.data);
             console.log(response.data['isOk'])
             if (response.data['isOk'] === true) {
