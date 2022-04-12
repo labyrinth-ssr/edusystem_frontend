@@ -16,31 +16,49 @@ const whiteList=['/login']
 var routeflag=false
 
 router.beforeEach((to, from, next) => {
-  console.log(store.state.user_id!='')
-  if (store.state.user_id!='') { // 判断是否有token
+  axios.get('pagecheck').then((resp) => {
+    if (!resp.data) {
+      if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
+        next();
+      } else {
+        next({
+          path: '/login'
+        }); // 否则全部重定向到登录页
+      }
+    }
+else{
+  if (store.state.user_id != '') { // 判断是否有token
     if (to.path === '/login') {
       next();
-    } else if (routeflag){
+    } else if (routeflag) {
       next()
-    }
-    else {
-          const role = store.state.role;
-          console.log(role)
-          store.dispatch('GenerateRoutes', role).then(() => { // 生成可访问的路由表
-            routeflag=true
-            store.state.addRouters.forEach((route)=>{
-              router.addRoute(route) // 动态添加可访问路由表
-            })
-            next({ ...to, replace: true }) // hack方法 确保addRoute已完成 ,set the replace: true so the navigation will not leave a history record
-          })
+    } else {
+      const role = store.state.role;
+      console.log(role)
+      store.dispatch('GenerateRoutes', role).then(() => { // 生成可访问的路由表
+        routeflag = true
+        store.state.addRouters.forEach((route) => {
+          router.addRoute(route) // 动态添加可访问路由表
+        })
+        next({
+          ...to,
+          replace: true
+        }) // hack方法 确保addRoute已完成 ,set the replace: true so the navigation will not leave a history record
+      })
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
       next();
     } else {
-      next({path:'/login'}); // 否则全部重定向到登录页
+      next({
+        path: '/login'
+      }); // 否则全部重定向到登录页
     }
   }
+}
+    
+  })
+
 })
 
 

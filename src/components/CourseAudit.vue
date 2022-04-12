@@ -18,8 +18,8 @@
             <el-tag size="medium">{{ scope.row.handle_result }}</el-tag>
             </template>
             </el-table-column>
-            <el-table-column label="操作" width="180">
-                <template slot-scope="scope">
+            <el-table-column label="操作" width="180" >
+                <template slot-scope="scope" v-if="!processed">
                     <el-button size="mini" @click="handleApprove(scope.$index, scope.row)">通过</el-button>
                     <el-button size="mini" type="danger" @click="handleReject(scope.$index, scope.row)">驳回</el-button>
                 </template>
@@ -41,6 +41,11 @@ mounted (){
       this.$axios.get('/requests/courses/admin/view/all')
       .then((resp)=>{
         console.log(resp.data)
+        if(resp.data.handle_result=='processing'){
+          this.processed=false
+        }else{
+          this.processed=true
+        }
           this.tableData=resp.data
       })
   },
@@ -48,7 +53,8 @@ data() {
       return {
         tableData: [],
         request_data:{},
-        requestDialogVis:false
+        requestDialogVis:false,
+        processed:false
       }
     },
     methods: {
