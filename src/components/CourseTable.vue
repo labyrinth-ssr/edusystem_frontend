@@ -9,7 +9,7 @@
             </el-button>
         </div>
         <el-table :data="tableData" height="600" style="width: 100%">
-            <el-table-column prop="number" label="课程编号" width="80">
+            <el-table-column prop="id" label="课程代码" width="80">
             </el-table-column>
             <el-table-column prop="name" label="课程名" width="80">
             </el-table-column>
@@ -167,30 +167,29 @@ data() {
         //             teacher:row.teacher_id
         //         })
         this.$axios.delete('/course/admin_teacher/del', {
-                data:{
-                    requester_id:this.$store.state.user_id,
-                    del_keyword:'number',// id, number, department, teacher
-                    number:row.number,
-                    department:'',
-                    teacher:'',
-                    suffix:parseInt(this.form.id.split('.')[1])
+            data: {
+                requester_id: this.$store.state.user_id,
+                del_keyword: 'id', // id, number, department, teacher
+                number: row.id.split('.')[0],
+                department: '',
+                teacher: '',
+                suffix: parseInt(row.id.split('.')[1])
+            }
+        }).then((resp) => {
+            console.log(resp.data)
+            if (resp.data.submitted) {
+                if (this.role == 'admin') {
+                    this.$message("删除成功");
+
+                } else {
+                    this.$message("成功提交删除申请");
+
                 }
-            }).then((resp)=>{
-              console.log(resp.data)
-              if (resp.data.submitted) {
-                  if (this.role=='admin'){
-            this.$message("删除成功");
-
-                  }
-                  else{
-            this.$message("成功提交删除申请");
-
-                  }
-            this.get_table()
-          } else {
-            this.$message("没有删除权限");
-          }
-          })
+                this.get_table()
+            } else {
+                this.$message("没有删除权限");
+            }
+        })
         this.get_table()
       },
       addcourse(){

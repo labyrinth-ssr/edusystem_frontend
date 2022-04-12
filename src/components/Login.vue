@@ -103,6 +103,7 @@ export default {
         else if(typeof response.data.find_id !="undefined"        && !response.data.find_id) this.$message.info("学号/工号填写错误");
         else if(typeof response.data.passwd_correct !="undefined" && !response.data.passwd_correct) this.$message.info("密码错误");
         else if(typeof response.data.repeat_login !="undefined"   && !response.data.repeat_login) this.$message.info("该账号异地登录");
+        else if(typeof response.data.status_approved !="undefined"   && !response.data.status_approved) this.$message.info("已退休或已退学，无登录权限");
         else this.$message.info("登陆失败！");
       }).catch((failResponse) => {console.log(failResponse)});
     }

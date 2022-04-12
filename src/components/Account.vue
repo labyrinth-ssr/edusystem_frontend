@@ -62,12 +62,9 @@ export default {
       this.$router.replace("/");
     },
     change_passwd(){
-      this.dialogVisible=false
       this.dialogVisible=true
     },
     SubmitEdit() {
-      console.log(this.form.email)
-      console.log(this.form.phone_number)
         this.$axios.get('/userinfo/user/altemailandphone?email='+this.form.email+'&phone='+this.form.phone_number).then((resp)=>{
           if(resp.data){
             this.$message("修改成功");
@@ -75,7 +72,6 @@ export default {
           else{
             this.$message("修改失败，请检查表单内容");
           }
-          console.log(resp)
         })
     },
   },

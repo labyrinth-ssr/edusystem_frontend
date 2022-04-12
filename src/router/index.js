@@ -133,14 +133,6 @@ export const asyncRouterMap = [
           }
         ]
       }, 
-      // {
-      //   path: '/adminusers',
-      //   name: '用户管理',
-      //   component: AddUserForm,
-      //   meta: {
-      //     role: ['admin']
-      //   }
-      // },
       {
         path: '/academic',
         name: '教务管理',
