@@ -172,7 +172,8 @@ export default {
         email: "",
         major_department: "",
         major: "",
-        department: ""
+        department: "",
+        status: "",
       },
       formLabelWidth: "120px",
       action:'user_edit',
@@ -270,7 +271,8 @@ export default {
         email: "",
         major_department: "",
         major: "",
-        department: ""
+        department: "",
+        status: "",
       };
     },
     handleChange(value) {
