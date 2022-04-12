@@ -36,7 +36,7 @@
 <!--            dialogFormVisible = false;-->
 <!--            cancel();-->
 <!--          ">取 消</el-button>-->
-        <el-button v-if="action=='admin_add'" type="primary" @click="SubmitAdd">添加/修改</el-button>
+<!--        <el-button v-if="action=='admin_add'" type="primary" @click="SubmitAdd">添加/修改</el-button>-->
 <!--        <el-button v-if="action=='user_edit'" type="primary" @click="SubmitEdit">修改</el-button>-->
 <!--        <el-button v-if="action=='user_edit'" type="primary" @click="change_passwd">修改密码</el-button>-->
 <!--      </div>-->
@@ -46,6 +46,7 @@
 
 <script>
 // import ChangePasswdDialog from '@/components/ChangePasswdDialog.vue';
+import { Message } from "element-ui";
 export default {
 //   components: { ChangePasswdDialog },
     name:'UserForm',
@@ -154,6 +155,7 @@ export default {
         },
       ],
       dialogFormVisible: true,
+
       form: {
         username: "",
         role: "",
@@ -249,17 +251,6 @@ export default {
       console.log(this.$data.form.major)
       console.log(this.$data.form.department)
       console.log(value);
-    },
-    SubmitAdd(){
-      this.$axios.put("userinfo/admin/altuser",this.$data.form)
-          .then((response)=>{
-            console.log(response.data);
-            if(response.data.isOk){
-              ;
-            }
-          }).catch((error)=>{
-            console.log(error)
-      })
     }
   },
 
