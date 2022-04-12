@@ -84,6 +84,7 @@ export default {
         edit: this.myEditable
         },
       handel2:{
+        visible:false,
         text:"修改状态",
         del:this.myHandleDelete
       },
