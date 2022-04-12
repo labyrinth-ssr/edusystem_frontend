@@ -1,6 +1,6 @@
 <template>
 <el-container>
-      <change-passwd-dialog :visible="dialogVisible" @dialogclose='this.dialogVisible=false'/>
+      <change-passwd-dialog :visible="dialogVisible" />
 
   <el-aside width="200px">
     <sidebar class="sidebar-container" />

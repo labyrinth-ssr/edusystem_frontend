@@ -39,7 +39,8 @@ export default new Vuex.Store({
     },
     first_login_func(state, is_first_log) {
       state.first_login = is_first_log
-      window.localStorage.getItem('first_login' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('first_login' || '[]'))
+      window.localStorage.setItem('first_login',JSON.stringify(is_first_log))
+      // window.localStorage.getItem('first_login' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('first_login' || '[]'))
 
       // window.localStorage.setItem('first_login',JSON.stringify(is_first_log))
     }

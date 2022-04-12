@@ -54,6 +54,7 @@ export default {
   mounted(){},
   methods: {
     login() {
+
       this.$axios
       .post("/login", {
         visitor_id: this.loginForm.user_id,
@@ -61,6 +62,7 @@ export default {
         login_url:'127.0.0.1',
       })
       .then((response) => {
+
         console.log(response.data)
         const success_login=response.data.login_approved
         const first_login=(response.data.passwd_check===false)
@@ -93,8 +95,9 @@ export default {
             })
           })
           if(first_login) this.$store.commit('first_login_func',true)
-          var path = this.$route.query.redirect;
-          this.$router.replace({path: path === undefined ? "/" : path});
+          else this.$store.commit('first_login_func',false)
+          // var path = this.$route.query.redirect;
+          this.$router.replace({path:'/'} )
         }
 
         else if(typeof response.data.find_id !="undefined"        && !response.data.find_id) this.$message.info("学号/工号填写错误");
