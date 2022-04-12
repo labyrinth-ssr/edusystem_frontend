@@ -26,7 +26,14 @@ export default {
         ],
         navWidth:180,
         navList:[
-          {path:'/admin/orgmanage',name:'添加学院/专业',icon:"el-icon-circle-plus-outline"}
+          {path:'/department/addform',name:'添加学院/专业',icon:"el-icon-circle-plus-outline",
+          'childres':[
+            {
+              path:'/department/addform',
+              icon: null,
+              name:"添加学院/专业"
+            }
+          ]}
         ]
       },
       handel1:{
@@ -59,6 +66,11 @@ export default {
         console.log(response.data)
         this.clear()
       }).catch( (response)=>{
+        this.$message({
+          type:"error",
+          message: "删除学院失败！"
+        })
+        console.log(response)
         windows.alert("删除学院失败！")
       })
       return undefined
@@ -74,6 +86,10 @@ export default {
         console.log(response.data)
         this.clear()
       }).catch( (response)=>{
+        this.$message({
+          type:"error",
+          message: "删除专业失败！"
+        })
         windows.alert("删除专业失败！")
       })
 

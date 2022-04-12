@@ -66,6 +66,8 @@ export default {
       this.dialogVisible=true
     },
     SubmitEdit() {
+      console.log(this.form.email)
+      console.log(this.form.phone_number)
         this.$axios.get('/userinfo/user/altemailandphone?email='+this.form.email+'&phone='+this.form.phone_number).then((resp)=>{
           if(resp.data){
             this.$message("修改成功");
@@ -73,6 +75,7 @@ export default {
           else{
             this.$message("修改失败，请检查表单内容");
           }
+          console.log(resp)
         })
     },
   },
@@ -81,7 +84,5 @@ export default {
 </script>
 
 <style scoped>
- .el-input{
-   width: 30%;
- }
+
 </style>
