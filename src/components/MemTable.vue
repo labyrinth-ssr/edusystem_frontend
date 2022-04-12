@@ -1,8 +1,61 @@
 <script src="../router/index.js"></script>
 <template>
   <div>
-    <inner-table :table="this.table" :handel1="this.handel1" :handel2="this.handel2">
-    </inner-table>
+    <el-table
+        :data="table.data"
+        style="width: 100%"
+        :stripe = "true"
+        border
+        flex="left">
+      <template v-for="col in table.head">
+        <el-table-column :key="col.prop"
+                         :prop="col.prop"
+                         :label="col.label"
+                         :fixed="col.fix"
+                         :width="col.width">
+        </el-table-column>
+      </template>
+      <el-table-column
+          align="right"
+          :width=table.navWidth
+          fixed = "right">
+        <template slot="header" >
+          <el-menu :default-active="'/index'" router mode="horizontal" background-color="white" text-color="#222"
+                   active-text-color="red" style="min-width: 1300px">
+            <el-submenu>
+              <template slot="title"
+                        style="padding-left:10px">
+                <i class="el-icon-menu"></i>
+                <span slot="title">添加老师/学生</span>
+              </template>
+              <el-menu-item :key = "table.navList[0].path" :index="table.navList[0].path">
+                <template slot="title"
+                          style="padding-left:10px">
+                  <span slot="title">单个添加</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item :key = "table.navList[1].path" :index="table.navList[1].path">
+                <template slot="title"
+                          style="padding-left:10px">
+                  <span slot="title">批量添加</span>
+                </template>
+              </el-menu-item>
+            </el-submenu>
+            <el-menu-item :key = "table.navList.path" :index="table.navList.path">
+              <template slot="title"
+                        style="padding-left:10px">
+                <i class="el-icon-menu"></i>
+                <span slot="title">添加学院/专业</span>
+              </template>
+            </el-menu-item>
+          </el-menu>
+        </template>
+        <template slot-scope="scope">
+          <el-button @click="handleClick(scope.row)" size="middle">{{handel1.text}}</el-button>
+          <el-button :style="{display:handel2.visible}" size="middle" @click="handleDelete(scope.row)">{{handel2.text}}</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
     <el-dialog title="修改学生/教师" :visible.sync="dialogVisible" :close-on-click-modal='false' v-if = "dialogVisible" :modal="false">
       <div>
         <user-form :action_prop="form_op" :formdata_prop="form"/>
@@ -65,8 +118,6 @@ export default {
         ],
         navWidth:180,
         navList:[
-            {path: '/admin', name: '添加学生/教师',icon:"el-icon-circle-plus-outline"
-              ,'children':[
                 {
                   path:'/users/adduserform',
                   icon:null,
@@ -77,7 +128,6 @@ export default {
                   icon: null,
                   name: '批量添加'
                 }
-              ]},
         ]
       },
       handel1:{
@@ -85,7 +135,7 @@ export default {
         edit: this.myEditable
         },
       handel2:{
-        visible:'none',
+        visible:false,
         text:"",
         del:this.myHandleDelete
       },
@@ -122,6 +172,12 @@ export default {
 
       return undefined;
     },
+      handleClick(row){
+        this.handel1.edit(row)
+      },
+      handleDelete(row){
+        this.handel2.del(row)
+      },
     SubmitAdd() {
       this.$axios.put("userinfo/admin/altuser", this.$data.form)
           .then((response) => {

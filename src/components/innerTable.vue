@@ -67,7 +67,7 @@ export default {
     },
     handleDelete(row){
       this.handel2.del(row)
-}
+    }
   }
 
 
