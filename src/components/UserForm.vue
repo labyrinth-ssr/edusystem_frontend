@@ -2,13 +2,13 @@
 <div >
   <el-form :model="form" style="text-align: left" ref="form" :rules="rules" >
         <el-form-item  label="用户角色" :label-width="formLabelWidth" prop="role">
-          <el-select :disabled="action=='user_edit'||action=='admin_add'" v-model="form.role" placeholder="请选择" >
+          <el-select :disabled="action==='user_edit'||action==='admin_add'" v-model="form.role" placeholder="请选择" >
             <el-option v-for="item in options" :key="item.label" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="学号/工号" :label-width="formLabelWidth" prop="user_id">
-          <el-input :disabled="action=='user_edit'||action=='admin_add'" v-model="form.user_id" autocomplete="off"></el-input>
+          <el-input :disabled="action==='user_edit'||action==='admin_add'" v-model="form.user_id" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item  label="姓名" :label-width="formLabelWidth" prop="username">
           <el-input :disabled="action=='user_edit'" v-model="form.username" autocomplete="off" show-word-limit></el-input>
@@ -53,7 +53,6 @@
 
 <script>
 // import ChangePasswdDialog from '@/components/ChangePasswdDialog.vue';
-import { Message } from "element-ui";
 export default {
 //   components: { ChangePasswdDialog },
     name:'UserForm',
