@@ -80,35 +80,12 @@ export default {
         id_number: [
           { required: true, message: "身份证号为必填项", trigger: "blur" },
           {pattern:/^\d{17}[1-9x]$/, message: "身份证号格式错误", trigger: "blur",},
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.id_numberFormat||typeof(this.resp.id_numberFormat)=="undefined"?callback() : callback(new Error("身份证格式错误"));
-            },
-            trigger: "blur",
-          },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.id_numberUnique||typeof(this.resp.id_numberUnique)=="undefined"?callback() : callback(new Error("身份证号已注册"));
-            },
-            trigger: "blur",
-          }
         ],
         role: [{required: true, message: "请输入用户角色", trigger: "change",},],
         user_id: [
           {required: true, message: "请输入学号/工号", trigger: "blur",},
           {validator: validateUserId1, trigger: "blur",},
-          {
-            validator: (rule, value, callback)=>{
-              ((typeof(this.resp.user_idFormat)=="undefined")||this.resp.user_idFormat)?callback() : callback(new Error("学号/工号格式错误"));
-            },
-            trigger: "blur",
-          },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.user_idUnique||typeof(this.resp.user_idUnique)==="undefined"?callback() : callback(new Error("学号/工号已注册"));
-            },
-            trigger: "blur",
-          },
+
         ],
         username: [
           { required: true, message: "请输入姓名", trigger: "blur" },
@@ -117,12 +94,6 @@ export default {
             message: "姓名仅能出现英文字符与中文字符",
             trigger: "blur",
           },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.usernameFormat||typeof(this.resp.usernameFormat)=="undefined"?callback() : callback(new Error("用户姓名格式错误"));
-            },
-            trigger: "blur",
-          }
         ],
         phone_number: [
           {
@@ -130,12 +101,6 @@ export default {
             message: "请输入合法手机号",
             trigger: "blur",
           },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.phone_numberFormat||typeof(this.resp.phone_numberFormat)=="undefined"?callback() : callback(new Error("手机号格式错误"));
-            },
-            trigger: "blur",
-          }
         ],
         email: [
           {
@@ -143,12 +108,6 @@ export default {
             message: "请输入正确的e-mail",
             trigger: "blur",
           },
-          {
-            validator: (rule, value, callback)=>{
-               this.resp.emailFormat||typeof(this.resp.emailFormat)=="undefined"?callback() : callback(new Error("e-mail格式错误"));
-            },
-            trigger: "blur",
-          }
         ],
       },
       options: [

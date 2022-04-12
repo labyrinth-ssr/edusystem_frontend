@@ -12,7 +12,7 @@ import MajorManage from '@/components/MajorManage'
 import MemTable from '@/components/MemTable'
 import AddUserForm from '@/components/AddUserForm'
 import FileUpload from '@/components/FileUpload'
-
+import DepartmentForm from "@/components/DepartmentForm"
 
 
 Vue.use(VueRouter)
@@ -62,7 +62,15 @@ export const asyncRouterMap = [
             meta: {
               role: ['admin']
             }
-          }
+          },
+        {
+            path: '/department/addform',
+            component: DepartmentForm,
+            name:'',
+            meta: {
+                role: ['admin']
+            }
+        }
         ]
       },
       {
