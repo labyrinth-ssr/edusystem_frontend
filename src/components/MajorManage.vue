@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-table
       :data="table.data"
       style="width: 100%"
@@ -30,51 +31,56 @@
         </el-menu>
       </template>
       <template slot-scope="scope">
+        <div>
           <el-button @click="major_edit(scope.row)" size="middle">{{handel1.text}}</el-button>
           <el-button :style="{display:handel2.visible}" size="middle" @click="department_edit(scope.row)">{{handel2.text}}</el-button>
+        </div>
       </template>
     </el-table-column>
 
-  <el-dialog title="学院删除/修改" :visible.sync="dialogVisible_department" :close-on-click-modal='false'>
-            <el-form :model="department_form" style="text-align: left">
-              <el-form-item label="学院名称" prop="department_name">
-                <el-input disabled v-model="department_form.department_name" autocomplete="off"></el-input>
-              </el-form-item>
-              <el-form-item label="重命名名称" prop="department_new">
-                <el-input v-model="department_form.department_new" autocomplete="off" placeholder="请输入新名称"></el-input>
-              </el-form-item>
-            </el-form>
-              <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="admin_del_depart" >
-                  删除学院
-                </el-button>
-                <el-button type="primary" @click="admin_rename_depart">
-                  学院重命名
-                </el-button>
-              </div>
-            </el-dialog>
-  <el-dialog title="专业删除/修改" :visible.sync="dialogVisible_major" :close-on-click-modal='false'>
-    <el-form :model="major_form" style="text-align: left">
-      <el-form-item disabled label="学院名称" prop="department_name">
-        <el-input v-model="major_form.department_name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item disabled label="专业名称" prop="major_name">
-        <el-input v-model="major_form.major_name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="重命名名称" prop="major_new">
-        <el-input v-model="major_form.major_new" autocomplete="off" placeholder="请输入新名称"></el-input>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="admin_del_major" >
-        删除专业
-      </el-button>
-      <el-button type="primary" @click="admin_rename_major">
-        专业重命名
-      </el-button>
-    </div>
-  </el-dialog>
   </el-table>
+  <div>
+    <el-dialog title="学院删除/修改" :visible.sync="dialogVisible_department" v-if = "dialogVisible_department" :close-on-click-modal='false'>
+      <el-form :model="department_form" style="text-align: left">
+        <el-form-item label="学院名称" prop="department_name">
+          <el-input disabled v-model="department_form.department_name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="重命名名称" prop="department_new">
+          <el-input v-model="department_form.department_new" autocomplete="off" placeholder="请输入新名称"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="admin_del_depart" >
+          删除学院
+        </el-button>
+        <el-button type="primary" @click="admin_rename_depart">
+          学院重命名
+        </el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="专业删除/修改" :visible.sync="dialogVisible_major" v-if ='dialogVisible_major' :close-on-click-modal='false'>
+      <el-form :model="major_form" style="text-align: left">
+        <el-form-item label="学院名称" prop="department_name">
+          <el-input disabled v-model="major_form.department_name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="专业名称" prop="major_name">
+          <el-input disabled v-model="major_form.major_name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="重命名名称" prop="major_new">
+          <el-input v-model="major_form.major_new" autocomplete="off" placeholder="请输入新名称"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="admin_del_major" >
+          删除专业
+        </el-button>
+        <el-button type="primary" @click="admin_rename_major">
+          专业重命名
+        </el-button>
+      </div>
+    </el-dialog>
+  </div>
+  </div>
 </template>
 
 
@@ -182,11 +188,12 @@ export default {
         this.$message({type: 'error',message:"新名称与之前形同！"})
         this.department_form.department_new=''
       }else {
+        const formData = new FormData()
+        formData.append("old_department", this.department_form.department_name)
+        formData.append("new_department", this.department_form.department_new)
         this.$axios.put("/org/admin/altdepartment",
-            {
-              "old_department":this.department_form.department_name,
-              "new_department":this.department_form.department_new
-            }).then((response)=>{
+            formData
+            ).then((response)=>{
               if (response.data === true)
               {
                 this.$message({type: 'success',message:"修改成功！"})
@@ -223,12 +230,13 @@ export default {
         this.$message({type: 'error',message:"新名称与之前形同！"})
         this.major_form.major_new=''
       }else {
+        const formData =new FormData()
+        formData.append("department", this.major_form.department_name)
+        formData.append("old_major",this.major_form.major_name)
+        formData.append("new_major",this.major_form.major_new)
         this.$axios.put("/org/admin/altmajor",
-            {
-              department: this.major_form.department_name,
-              old_major:this.major_form.major_name,
-              new_major:this.major_form.major_new
-            }).then((response)=>{
+            formData
+            ).then((response)=>{
           if (response.data === true)
           {
             this.$message({type: 'success',message:"修改成功！"})
