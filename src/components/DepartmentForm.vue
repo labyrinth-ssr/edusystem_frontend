@@ -42,10 +42,7 @@ export default {
     onSubmit() {
       console.log(this.form.major)
       this.$axios
-        .post("/org/admin/addorg",
-            { department:this.form.department,
-              major:this.form.major
-            })
+        .post("/org/admin/addorg?department="+this.form.department +"&major="+this.form.major)
         .then((resp) => {
           if (resp.data === true) {
             this.$message(
