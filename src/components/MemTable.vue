@@ -125,7 +125,7 @@ export default {
     SubmitAdd() {
       this.$axios.put("userinfo/admin/altuser", this.$data.form)
           .then((response) => {
-            this.dialogVisible = "none"
+            this.dialogVisible = false
             console.log(response.data);
             console.log(response.data['isOk'])
             if (response.data['isOk'] === true) {
