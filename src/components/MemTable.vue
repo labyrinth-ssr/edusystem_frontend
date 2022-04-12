@@ -5,6 +5,8 @@
     <el-dialog title="修改学生/教师" :visible.sync="dialogVisible" :close-on-click-modal='false' v-if = "dialogVisible" :modal="false">
       <div>
         <user-form :action_prop="form_op" :formdata_prop="form"/>
+        <el-button  type="primary" @click="SubmitAdd">提交修改</el-button>
+
       </div>
     </el-dialog>
   </div>
@@ -30,7 +32,18 @@ export default {
         id_number: "",
         phone_number: "",
         email: "",
-        major_department: "",
+        major_department: [],
+        major: "",
+        department: ""
+      },
+      raw:{
+        username: "",
+        role: "",
+        user_id: "",
+        id_number: "",
+        phone_number: "",
+        email: "",
+        major_department: [],
         major: "",
         department: ""
       },
@@ -71,6 +84,7 @@ export default {
         edit: this.myEditable
         },
       handel2:{
+        visible:false,
         text:"修改状态",
         del:this.myHandleDelete
       },
@@ -89,13 +103,8 @@ export default {
       this.form_op='admin_add'
       this.dialogVisible=true
       this.form=JSON.parse(JSON.stringify(rows))
-      console.log(rows)
-      this.$axios.post("/userinfo/admin/getusers",{})
-          .then((response) => {
-            console.log(response.data)
-            this.$data.table.data = response.data
-          }).catch((failResponse)=>{console.log(failResponse)});
-      return undefined;
+      this.form.major_department =Array.from([this.rows.department, this.rows.major])
+      this.raw =  JSON.parse( JSON.stringify(this.form) )
     },
     myHandleDelete(rows){
       let temp = rows;
@@ -110,6 +119,51 @@ export default {
       })
 
       return undefined;
+    },
+    SubmitAdd() {
+      this.$axios.put("userinfo/admin/altuser", this.$data.form)
+          .then((response) => {
+            this.dialogVisible = false
+            console.log(response.data);
+            console.log(response.data['isOk'])
+            if (response.data['isOk'] === true) {
+
+              if (JSON.stringify(this.form) === JSON.stringify(this.raw)) {
+
+                this.$message(
+                    {
+                      type: "error",
+                      message: "尚未修改！"
+                    });
+              } else {
+
+                this.$message(
+                    {
+                      type: "success",
+                      message: "修改成功！"
+                    });
+                this.raw =  JSON.parse( JSON.stringify(this.form) )
+              }
+              this.clear();
+            } else {
+              this.$message(
+                  {
+                    type: "error",
+                    message: "修改失败！"
+                  })
+              this.form =  JSON.parse( JSON.stringify(this.raw) )
+            }
+          }).catch((error) => {
+        // this.raw =  JSON.parse( JSON.stringify(this.form) )
+        this.form =  JSON.parse( JSON.stringify(this.raw) )
+        this.$message(
+            {
+              type: "error",
+              message: "请求出错！"
+            })
+        console.log(error)
+
+      })
     }
   }
 
