@@ -1,53 +1,41 @@
 <template>
-<div>
-  <el-button @click="dialogVisible=true">
-    排课管理
-  </el-button>
-  <el-dialog :visible.sync="dialogVisible" :close-on-click-modal='false'>
+  <div>
+    <el-button @click="dialogVisible=true">
+      排课管理
+    </el-button>
+    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal='false'>
       <el-form :model="form" style="text-align: left" ref="form" label-width="120px">
-                  <el-form-item label="课程代码">
-                    <el-select v-model="form.id" placeholder="请选择" >
-    <el-option
-      v-for="item in courses"
-      :key="item.id"
-      :label="item.id"
-      :value="item.id">
-    </el-option>
-  </el-select>
-                      <!-- <el-input v-model="form.number"/> -->
-                  </el-form-item>
-                  <el-form-item label="教室">
-                    <el-select v-model="form.classroom_id" placeholder="请选择" >
-    <el-option
-      v-for="item in classrooms"
-      :key="item.id"
-      :label="item.id"
-      :value="item.id">
-    </el-option>
-  </el-select>
-                  </el-form-item>
-                  <el-form-item label="上课时间">
-                      <el-input v-model="form.class_time"/>
-                  </el-form-item>
+        <el-form-item label="课程代码">
+          <el-select v-model="form.id" placeholder="请选择">
+            <el-option v-for="item in courses" :key="item.id" :label="item.id" :value="item.id">
+            </el-option>
+          </el-select>
+          <!-- <el-input v-model="form.number"/> -->
+        </el-form-item>
+        <el-form-item label="教室">
+          <el-select v-model="form.classroom_id" placeholder="请选择">
+            <el-option v-for="item in classrooms" :key="item.id" :label="item.id" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="上课时间">
+          <el-input v-model="form.class_time" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button  type="primary" @click="arrange_class">修改排课</el-button>
+        <el-button type="primary" @click="arrange_class">修改排课</el-button>
       </div>
-  </el-dialog>
-   <el-table :data="tabledata" style="width: 100%">
-     <el-table-column prop="classroom" label="教室" width="80">
-     </el-table-column>
-     <el-table-column v-for="index in classnum" :key="index" :prop="index+''" :label="'第'+(index+1)+'节'" width="86"/>
-   </el-table>
-   <div style="text-align: center;margin-top: 30px;">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="total"
-        @current-change="current_change">
+    </el-dialog>
+    <el-table :data="tabledata" style="width: 100%">
+      <el-table-column prop="classroom" label="教室" width="80">
+      </el-table-column>
+      <el-table-column v-for="index in classnum" :key="index" :prop="index+''" :label="'第'+(index+1)+'节'" width="86" />
+    </el-table>
+    <div style="text-align: center;margin-top: 30px;">
+      <el-pagination background layout="prev, pager, next" :total="total" @current-change="current_change">
       </el-pagination>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -109,7 +97,6 @@ export default {
         this.form={
           requester_id:this.$store.state.user_id,
           number:'',
-          suffix:1,
           class_time:'', //周次和节次，前者为1-7，后者为1-14
           classroom_id:''
         }

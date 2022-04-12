@@ -112,7 +112,9 @@ export const asyncRouterMap = [
         name: '课程',
         component: Layout,
         redirect: '/courses/table',
-        
+        meta: {
+          role: ['admin','teacher','sel_student']
+        },
         children: [{
             path: '/courses/table',
             name: '课程列表',
