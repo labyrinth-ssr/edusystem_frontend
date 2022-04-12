@@ -21,19 +21,12 @@
                   <el-form-item label="课程介绍" prop="introduction">
                       <el-input v-model="form.introduction" :disabled="judgeDisable"/>
                   </el-form-item>
-                  <el-form-item label="上课时间" prop="class_time">
+                  <!-- <el-form-item label="上课时间" prop="class_time">
                       <el-input v-model="form.class_time" :disabled="judgeDisable2"/>
                   </el-form-item>
                   <el-form-item label="上课教室" prop="classroom_id">
-                      <el-select v-model="form.classroom_id" placeholder="请选择" :disabled="judgeDisable2">
-    <el-option
-      v-for="item in classrooms"
-      :key="item.id"
-      :label="item.id"
-      :value="item.id">
-    </el-option>
-  </el-select>
-                  </el-form-item>
+                      
+                  </el-form-item> -->
                   <el-form-item label="选课容量" prop="max_student">
                       <el-input v-model="form.max_student" :disabled="judgeDisable"/>
                   </el-form-item>
@@ -61,9 +54,7 @@ export default {
         }
     },
     created() {
-          this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
-              this.classrooms=resp.data
-          })
+          
           this.form=this.formdata_prop
 
     },
