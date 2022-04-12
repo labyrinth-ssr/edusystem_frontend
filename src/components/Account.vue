@@ -52,6 +52,9 @@ export default {
         id_number: "",
         phone_number: "",
         email: "",
+        major_department: [],
+        major: "",
+        department: ""
       };
     },
     cancel() {
