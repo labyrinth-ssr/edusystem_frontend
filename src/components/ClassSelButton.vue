@@ -16,19 +16,17 @@ export default {
   name: 'ClassSelButton',
   data() {
     return {
-      class_sel_permit: true
+      class_sel_permit: ''
     }
   },
   methods: {
     changeSel() {
-      console.log({
-          'approved': false
-      })
+      console.log(this.class_sel_permit)
       this.$axios({
         method: 'post',
         url: '/permission/admin/choose_course',
   params: {
-    'approved': true
+    'approved': this.class_sel_permit
   }
 }).then((resp) => {
         console.log(resp.data)

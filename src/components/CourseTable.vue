@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-        <div class="controller-container">
+        <div v-if="role=='admin'||role=='teacher'" class="controller-container">
             <el-button @click="addcourse">
                 单条添加课程
             </el-button>
@@ -9,7 +9,7 @@
             </el-button>
         </div>
         <el-table :data="tableData" height="600" style="width: 100%">
-            <el-table-column prop="number" label="课程编号" width="80">
+            <el-table-column prop="id" label="课程编号" width="80">
             </el-table-column>
             <el-table-column prop="name" label="课程名" width="80">
             </el-table-column>
@@ -83,7 +83,6 @@ data() {
         tableData: [],
         form:{
             number: "",
-            suffix:1,
             name: "",
             point: '',
             classes_per_week: '',
@@ -92,7 +91,9 @@ data() {
             introduction: "",
             department: "",
             class_time:'',
-            classroom_id:''
+            classroom_id:'',
+            id:'',
+            suffix:1
         },
         form_op:'add',
         dialogVisible:false,
@@ -146,33 +147,34 @@ data() {
             introduction: "",
             department: "",
             class_time:'',
-            classroom_id:''
+            classroom_id:'',
         }
         },
       handleEdit(index, row) {
         this.form_op='edit'
         this.dialogVisible=true
         row.suffix=1
-        this.form=JSON.parse(JSON.stringify(row))
+        this.form=row
       },
       handleDelete(index, rows,row) {
         console.log(this.$store.state.user_id);
-        console.log({
-                    requester_id:this.$store.state.user_id,
-                    del_keyword:'teacher',// id, number, department, teacher
-                    number:row.number,
-                    suffix:2,
-                    department:'',
-                    teacher:row.teacher_id
-                })
+        // console.log({
+        //             requester_id:this.$store.state.user_id,
+        //             del_keyword:'teacher',// id, number, department, teacher
+        //             number:row.number,
+        //             suffix:1,
+        //             department:'',
+        //             teacher:row.teacher_id
+        //         })
         this.$axios.delete('/course/admin_teacher/del', {
                 data:{
                     requester_id:this.$store.state.user_id,
                     del_keyword:'number',// id, number, department, teacher
                     number:row.number,
-                    suffix:2,
+                    suffix:1,
                     department:'',
-                    teacher:''
+                    teacher:'',
+            suffix:1
                 }
             }).then((resp)=>{
               console.log(resp.data)
@@ -197,41 +199,77 @@ data() {
           this.empty_form()
           this.dialogVisible=true
       },
-      admin_teacher_add_course(){
-          console.log(this.form)
-          if(this.role=='teacher'){
-              this.form.teacher_id=this.$store.state.user_id
-          }
-          this.$axios.post('/course/admin_teacher/add',{
-              requester_id:this.$store.state.user_id,
-              courseInfo:this.form
-          }).then((resp)=>{
-              console.log(resp.data)
-              if (resp.data.submitted) {
-            this.$message("添加成功");
-            this.dialogVisible=false
-            this.get_table()
-          } else {
-            this.$message("提交失败，请检查表单内容");
-          }
-          })
-      },
-      admin_teacher_edit_course(){
-          console.log(this.form)
-          this.$axios.put('/course/admin_teacher/alt',{
-              requester_id:this.$store.state.user_id,
-              courseInfo:this.form
-          }).then((resp)=>{
-              console.log(resp.data)
-              if (resp.data.submitted) {
-            this.$message("添加成功");
-            this.dialogVisible=false
-            this.get_table()
-          } else {
-            this.$message("提交失败，请检查表单内容");
-          }
-          })
-      },
+      admin_teacher_add_course() {
+              console.log(this.form)
+              if (this.role == 'teacher') {
+                  this.form.teacher_id = this.$store.state.user_id
+              }
+              this.$axios.post('/course/admin_teacher/add', {
+                  requester_id: this.$store.state.user_id,
+                  courseInfo: this.form
+              }).then((resp) => {
+                  console.log(resp.data)
+                  if (resp.data.submitted) {
+                      const arr_form = {
+                          requester_id: this.$store.state.user_id,
+                          number: this.form.number,
+                          class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
+                          classroom_id: this.form.classroom_id,
+                        suffix:1
+                      }
+                      console.log(arr_form)
+                      this.$axios.post('/class_table/admin/arrange', arr_form).then((resp) => {
+                          if (resp.data.isOk) {
+                              this.$message("添加成功");
+                              this.dialogVisible = false
+                              this.get_table()
+                          }else{
+                          console.log(resp)
+
+                      this.$message("课程时间或地点填写错误");
+                          }
+                      })
+
+                  } else {
+                      this.$message("提交失败，请检查表单内容");
+                  }
+              })
+          },
+          admin_teacher_edit_course() {
+              console.log(this.form)
+              this.$axios.put('/course/admin_teacher/alt', {
+                  requester_id: this.$store.state.user_id,
+                  courseInfo: this.form
+              }).then((resp) => {
+                  console.log(resp.data)
+                  if (resp.data.submitted) {
+                      const arr_form = {
+                          requester_id: this.$store.state.user_id,
+                          number: this.form.number,
+                          class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
+                          classroom_id: this.form.classroom_id,
+                        suffix:1
+
+                      }
+                      console.log(arr_form)
+
+                      this.$axios.post('/class_table/admin/arrange', arr_form).then((resp) => {
+                          console.log(resp)
+                          if (resp.data.isOk) {
+                              this.$message("修改成功");
+                              this.dialogVisible = false
+                              this.get_table()
+                          }
+                          else{
+                      this.$message("课程时间或地点填写错误");
+                          }
+                      })
+                  } else {
+                      this.$message("提交失败，请检查表单内容");
+                  }
+              })
+
+          },
       confirm_form(){
         // this.$axios.post('/course')
         this.empty_form
