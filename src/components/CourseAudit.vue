@@ -19,7 +19,7 @@
             </template>
             </el-table-column>
             <el-table-column label="操作" width="180" >
-                <template slot-scope="scope" v-if="!processed">
+                <template slot-scope="scope" v-if="scope.row.handle_result=='processing'">
                     <el-button size="mini" @click="handleApprove(scope.$index, scope.row)">通过</el-button>
                     <el-button size="mini" type="danger" @click="handleReject(scope.$index, scope.row)">驳回</el-button>
                 </template>
@@ -38,16 +38,7 @@ export default {
   components: { CourseForm },
   name:'CourseAudit',
 mounted (){
-      this.$axios.get('/requests/courses/admin/view/all')
-      .then((resp)=>{
-        console.log(resp.data)
-        if(resp.data.handle_result=='processing'){
-          this.processed=false
-        }else{
-          this.processed=true
-        }
-          this.tableData=resp.data
-      })
+      this.get_table()
   },
 data() {
       return {
@@ -58,26 +49,52 @@ data() {
       }
     },
     methods: {
+      get_table(){
+this.$axios.get('/requests/courses/admin/view/all')
+      .then((resp)=>{
+        console.log(resp.data)
+        if(resp.data.handle_result=='processing'){
+          this.processed=false
+        }else{
+          this.processed=true
+        }
+          this.tableData=resp.data
+      })
+      },
       handleApprove(index, row) {
-        row.handle_result='approved'
         this.$axios.post('/requests/courses/admin/permit',{
           handler_id: "root", 
           request_id: row.id, 
           approve: true 
         }).then((resp)=>{
           console.log(resp)
+          if(resp.data.isOk){
+            this.get_table()
           row.handler_id=this.$store.state.user_id
+        row.handle_result='approved'
+            this.$message('已审批通过')
+          }
+          else{
+            this.$message('审批操作失败')
+          }
         })
       },
       handleReject(index, row) {
-        row.handle_result='rejected'
         this.$axios.post('/requests/courses/admin/permit',{
           handler_id: "root", 
           request_id: row.id, 
           approve: false 
         }).then((resp)=>{
           console.log(resp)
+          if(resp.data.isOk){
+            this.get_table()
           row.handler_id=this.$store.state.user_id
+        row.handle_result='rejected'
+            this.$message('已审批拒绝')
+          }
+          else{
+            this.$message('审批操作失败')
+          }
         })
       },
       requestDetail(info){

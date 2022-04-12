@@ -7,6 +7,7 @@ import CourseAudit from '@/components/CourseAudit'
 import ClassSelbutton from '@/components/ClassSelButton'
 import Account from '@/components/Account'
 import ClassroomTable from '@/components/Classtable'
+import ClassroomTable0 from '@/components/Classtable0'
 import MajorManage from '@/components/MajorManage'
 import MemTable from '@/components/MemTable'
 import AddUserForm from '@/components/AddUserForm'
@@ -149,6 +150,11 @@ export const asyncRouterMap = [
             path: '/academic/classselbutton',
             name: '权限开关',
             component: ClassSelbutton,
+          },
+          {
+            path: '/academic/classroomtable0',
+            name: '课程表',
+            component: ClassroomTable0
           }
         ]
       },

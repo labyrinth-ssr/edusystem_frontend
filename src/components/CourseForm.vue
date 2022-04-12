@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" style="text-align: left" ref="form" :rules="rules">
+  <el-form :model="form" style="text-align: left" ref="form" :rules="rules" label-width="80px">
                   <el-form-item label="课程名" prop="name">
                       <el-input v-model="form.name" :disabled="judgeDisable2"/>
                   </el-form-item>
@@ -25,7 +25,14 @@
                       <el-input v-model="form.class_time" :disabled="judgeDisable2"/>
                   </el-form-item>
                   <el-form-item label="上课教室" prop="classroom_id">
-                      <el-input v-model="form.classroom_id" :disabled="judgeDisable2"/>
+                      <el-select v-model="form.classroom_id" placeholder="请选择" :disabled="judgeDisable2">
+    <el-option
+      v-for="item in classrooms"
+      :key="item.id"
+      :label="item.id"
+      :value="item.id">
+    </el-option>
+  </el-select>
                   </el-form-item>
                   <el-form-item label="选课容量" prop="max_student">
                       <el-input v-model="form.max_student" :disabled="judgeDisable"/>
@@ -54,7 +61,11 @@ export default {
         }
     },
     created() {
+          this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+              this.classrooms=resp.data
+          })
           this.form=this.formdata_prop
+
     },
     data() {
         return {
@@ -63,12 +74,18 @@ export default {
             form: this.formdata_prop,
             rules:{
                 
-            }
+            },
+            classrooms:[]
         }
     }
 }
 </script>
 
-<style>
-
+<style scoped>
+.el-input {
+    position: relative;
+    font-size: 14px;
+    display: inline-block;
+    width: 90%;
+}
 </style>

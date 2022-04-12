@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="display:flex;">
         <el-form>
             <el-form-item>
         <el-dropdown @command="select_sec">
@@ -10,19 +10,6 @@
                 <el-dropdown-item v-for="index in classNum" :key="index" :command="index">{{index+1}}</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
-        <!-- <el-time-select placeholder="起始时间" v-model="startTime[0]" :picker-options="{
-      start: '08:30',
-      step: '00:15',
-      end: '22:00'
-    }" @change="post_time">
-        </el-time-select>
-        <el-time-select placeholder="起始时间" v-model="endTime[0]" :picker-options="{
-      start: '08:30',
-      step: '00:15',
-      end: '22:00',
-      minTime: startTime[0]
-    }" @change="post_time">
-        </el-time-select> -->
         <el-button type="primary" @click="set_classtime">
             修改上课时间
         </el-button>
@@ -80,7 +67,6 @@ export default {
         classNum:[...(new Array(15)).keys()],
         classroomList:[/* {id:'H4101'},{id:'H4102'},{id:'H4103'} */],
         section:0,
-        display_section:0,
         classroom_add:'',
         tabledata:[]
       }
@@ -90,14 +76,22 @@ export default {
           
           this.classroomList=resp.data
       })
-    //   this.$axios.get('/classtime/admin/getsectionnum').then((resp)=>{
-    //       this.classNum=[...(new Array(resp.data)).keys()]
-    //   })
       this.$axios.get('/classtime/admin/getclasstime').then((resp)=>{
           this.tabledata=resp.data
       })
     },
     methods:{
+        clear_class(){
+            this.startTime= []
+        this.endTime= []
+        this.section=0
+        },
+        clear_classroom(){
+            this.classroom_add=''
+        },
+        update_info(){
+
+        },
       post_time(){
           if(this.startTime!=''&&this.endTime!=''&&this.section!=0){
               console.log(this.startTime,this.endTime)
@@ -110,47 +104,67 @@ export default {
       },
       select_sec(command){
           this.section=command+1
-          this.display_section=this.section-1
           console.log(this.section-1)
       },
       add_classroom(){
           this.$axios.get('/classroom/admin/addclassroom/'+this.classroom_add).then((resp)=>{
           console.log(resp)
-      })
-      this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+          if (resp.data) {
+                          this.$message("修改成功")
+                          this.clear_classroom()
+                                this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
           
           this.classroomList=resp.data
       })
+                      } else {
+                          this.$message("修改失败")
+                      }
+      })
+
       },
       set_classtime() {
-          if (this.startTime != '' && this.endTime != '' && this.section != 0) {
-              console.log(this.startTime, this.endTime)
-              var time=''
-              this.startTime.forEach((element, index) => { 
-                  if(index!=(this.startTime.length-1)){
-                  time+=element+'-'+this.endTime[index]+' '
-                  }
-                  else{
-                  time+=element+'-'+this.endTime[index]
-                  }
-               })
-               console.log(time)
-              this.$axios.post('/classtime/admin/setclasstime', null, {
-                  params: {
-                      'sectionInt': this.section,
-                      'time': time
-                  }
-              }).then((resp) => {
-                  console.log(resp.data)
-              })
-          }
+              if (this.startTime != '' && this.endTime != '' && this.section != 0) {
+                  console.log(this.startTime, this.endTime)
+                  var time = ''
+                  this.startTime.forEach((element, index) => {
+                      if (index != (this.startTime.length - 1)) {
+                          time += element + '-' + this.endTime[index] + ' '
+                      } else {
+                          time += element + '-' + this.endTime[index]
+                      }
+                  })
+                  console.log(time)
+                  this.$axios.post('/classtime/admin/setclasstime', null, {
+                      params: {
+                          'sectionInt': this.section,
+                          'time': time
+                      }
+                  }).then((resp) => {
+                      console.log(resp.data)
+                      if (resp.data) {
+                          this.$message("修改成功")
+                          this.clear_class()
+                          this.$axios.get('/classtime/admin/getclasstime').then((resp)=>{
+          this.tabledata=resp.data
+      })
+                      } else {
+                          this.$message("修改失败")
+                      }
+                  })
+              } else {
+                  this.$message("输入不完整")
+              }
       }
     }
 }
 </script>
 
-<style>
-.el-date-editor.el-input{
-    width:180px
+<style scoped>
+.el-table{
+    flex: 0 0 260px;
 }
+.el-form{
+    flex:0 0 60%;
+}
+
 </style>

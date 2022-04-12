@@ -4,12 +4,27 @@
     排课管理
   </el-button>
   <el-dialog :visible.sync="dialogVisible" :close-on-click-modal='false'>
-      <el-form :model="form" style="text-align: left" ref="form" >
-                  <el-form-item label="课程编号">
-                      <el-input v-model="form.number"/>
+      <el-form :model="form" style="text-align: left" ref="form" label-width="120px">
+                  <el-form-item label="课程代码">
+                    <el-select v-model="form.id" placeholder="请选择" >
+    <el-option
+      v-for="item in courses"
+      :key="item.id"
+      :label="item.id"
+      :value="item.id">
+    </el-option>
+  </el-select>
+                      <!-- <el-input v-model="form.number"/> -->
                   </el-form-item>
                   <el-form-item label="教室">
-                      <el-input v-model="form.classroom_id"/>
+                    <el-select v-model="form.classroom_id" placeholder="请选择" >
+    <el-option
+      v-for="item in classrooms"
+      :key="item.id"
+      :label="item.id"
+      :value="item.id">
+    </el-option>
+  </el-select>
                   </el-form-item>
                   <el-form-item label="上课时间">
                       <el-input v-model="form.class_time"/>
@@ -37,7 +52,7 @@
 
 <script>
 export default {
-    name:'ClassroomTable',
+    name:'ClassroomTable0',
     data() {
       return{
         dialogVisible:false,
@@ -47,15 +62,24 @@ export default {
         classnum:[...(new Array(14)).keys()],
         total:70,
         form:{
+          id:'',
           requester_id:this.$store.state.user_id,
           number:'',
           suffix:1,
           class_time:'', //周次和节次，前者为1-7，后者为1-14
           classroom_id:''
-        }
+        },
+        classrooms:[],
+        courses:[]
       }
     },
     created(){
+      this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+              this.classrooms=resp.data
+          })
+          this.$axios.get('/course/common/view/all').then((resp)=>{
+              this.courses=resp.data
+          })
       this.$axios.get('/class_table/common/timetable').then((resp)=>{
         console.log(resp.data)
         const respdata=Object.values(resp.data)
@@ -74,7 +98,6 @@ export default {
         });
           this.tabledata=this.multabledata[this.page]
           console.log(this.multabledata)
-
       })
     },
     methods:{
@@ -93,6 +116,10 @@ export default {
       },
       arrange_class(){
         console.log(this.form)
+        var copy=this.form.id.split('.')
+        this.form.number=copy[0]
+        this.form.suffix=parseInt(copy[1]);
+        console.log(this.form.suffix)
         this.$axios.post('/class_table/admin/arrange',this.form).then((resp)=>{
           console.log(resp.data)
           if(resp.data.isOk){

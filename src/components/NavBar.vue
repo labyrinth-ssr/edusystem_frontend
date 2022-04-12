@@ -4,7 +4,7 @@
   <el-dropdown @command="userCommand">
     <i class="el-icon-arrow-down el-icon--right"></i>
   <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item v-if="role=='teacher'||role=='student'" command="getAccount">账户信息</el-dropdown-item>
+    <el-dropdown-item v-if="role=='teacher'||role=='student'||role=='sel_student'" command="getAccount">账户信息</el-dropdown-item>
     <el-dropdown-item command="relogin">重新登录</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>

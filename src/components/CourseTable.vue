@@ -177,7 +177,14 @@ data() {
             }).then((resp)=>{
               console.log(resp.data)
               if (resp.data.submitted) {
+                  if (this.role=='admin'){
             this.$message("删除成功");
+
+                  }
+                  else{
+            this.$message("成功提交删除申请");
+
+                  }
             this.get_table()
           } else {
             this.$message("没有删除权限");
