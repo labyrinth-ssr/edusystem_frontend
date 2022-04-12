@@ -19,19 +19,24 @@ export default {
     return {
       dialogVisible:false,
     role:this.$store.state.role,
-      form: {
+      form:{
         username: "",
         role: "",
         user_id: "",
         id_number: "",
         phone_number: "",
         email: "",
+        major_department: [],
+        major: "",
+        department: ""
       },
     };
   },
   created(){
     this.$axios.get('/userinfo/common/getuserinfo').then((resp)=>{
+      console.log(resp.data);
       this.form=resp.data
+      this.form.major_department=Array.from([resp.data.department,resp.data.major])
     })
   },
   methods: {
