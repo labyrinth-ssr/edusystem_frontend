@@ -154,18 +154,10 @@ data() {
         this.form_op='edit'
         this.dialogVisible=true
         row.suffix=1
-        this.form=row
+        this.form={...row}
       },
       handleDelete(index, rows,row) {
         console.log(this.$store.state.user_id);
-        // console.log({
-        //             requester_id:this.$store.state.user_id,
-        //             del_keyword:'teacher',// id, number, department, teacher
-        //             number:row.number,
-        //             suffix:1,
-        //             department:'',
-        //             teacher:row.teacher_id
-        //         })
         this.$axios.delete('/course/admin_teacher/del', {
             data: {
                 requester_id: this.$store.state.user_id,
@@ -180,10 +172,8 @@ data() {
             if (resp.data.submitted) {
                 if (this.role == 'admin') {
                     this.$message("删除成功");
-
                 } else {
                     this.$message("成功提交删除申请");
-
                 }
                 this.get_table()
             } else {
