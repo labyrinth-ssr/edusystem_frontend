@@ -41,7 +41,7 @@
       start: '08:30',
       step: '00:15',
       end: '22:00',
-      minTime: endTime[item-1]
+      minTime: endTime[item-2]
 
     }" @change="post_time">
                 </el-time-select>
@@ -49,7 +49,7 @@
       start: '08:30',
       step: '00:15',
       end: '22:00',
-      minTime: startTime[item]
+      minTime: startTime[item-1]
     }" @change="post_time">
                 </el-time-select>
             </div>
