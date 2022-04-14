@@ -61,6 +61,12 @@
     float: right;
         margin-top: 34px;
   }
+  span{
+    height: 100%;
+position: absolute;
+top: 50%;
+transform: translateY(-50%);
+}
 
 </style>
 

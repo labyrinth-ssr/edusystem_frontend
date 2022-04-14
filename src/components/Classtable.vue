@@ -17,9 +17,16 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="classroom_edit" placeholder="请输入要修改的教室名" style="width:180px"></el-input>
+                    <el-input v-model="classroom_edit.oldname" placeholder="待修改教室" style="width:110px"></el-input>
+                    <el-input v-model="classroom_edit.newname" placeholder="修改为" style="width:110px"></el-input>
                     <el-button type="primary" @click="edit_classroom">
                         修改教室
+                    </el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="classroom_delete" placeholder="请输入要删除的教室名" style="width:180px"></el-input>
+                    <el-button type="primary" @click="delete_classroom">
+                        删除教室
                     </el-button>
                 </el-form-item>
                 <el-form-item>
@@ -80,7 +87,12 @@ export default {
         classroomList:[/* {id:'H4101'},{id:'H4102'},{id:'H4103'} */],
         section:13,
         classroom_add:'',
-        tabledata:[]
+        tabledata:[],
+        classroom_edit:{
+            oldname:'',
+            newname:''
+        },
+        classroom_delete:''
       }
     },
     created(){
@@ -95,37 +107,56 @@ export default {
               this.startTime.push(split_time[0])
               this.endTime.push(split_time[1])
           })
-          console.log
+        //   console.log
       })
     },
     methods:{
+        edit_classroom() {
+            const formData = new FormData()
+            formData.append('old_name', this.classroom_edit.oldname)
+            formData.append('new_name', this.classroom_edit.newname)
+            this.$axios.put('/classroom/admin/altclassroom', formData).then((resp) => {
+                if (resp.data) {this.$message({
+                    message: '修改成功',
+                    type: 'success'
+                });
+                this.classroom_edit={
+            oldname:'',
+            newname:''
+        }
+        this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+          this.classroomList=resp.data
+          })
+                }
+                else this.$message.error('修改失败');
+            })
+        },
         clear_class(){
         this.startTime= []
         this.endTime= []
-        this.section=0
         },
         clear_classroom(){
             this.classroom_add=''
         },
         update_info(){
-
         },
-        post_time(){
-          if(this.startTime!=''&&this.endTime!=''&&this.section!=0){
-              console.log(this.startTime,this.endTime)
-//             this.$axios.post('/classtime/admin/setclasstime',null,{params: {
-//     'sectionInt': this.section,'time':this.startTime+'-'+this.endTime
-//   }}).then((resp)=>{
-//             console.log(resp.data)
-//       })
+        delete_classroom(){
+            const formData = new FormData()
+            formData.append('classroom', this.classroom_delete)
+            this.$axios.delete('/classroom/admin/delclassroom/',{data:formData}).then((resp)=>{
+          if (resp.data) {
+          this.$message("删除成功")
+          this.classroom_delete=''
+          this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+          this.classroomList=resp.data
+          })
+          } else {
+          this.$message("删除失败")
           }
-      },
-    //   select_sec(command){
-    //       this.section=command+1
-    //       console.log(this.section-1)
-    //   },
+          })
+        },
       add_classroom(){
-          this.$axios.get('/classroom/admin/addclassroom/'+this.classroom_add).then((resp)=>{
+          this.$axios.get('/classroom/admin/addclassroom/',{params:{classroom:this.classroom_add}}).then((resp)=>{
           console.log(resp)
           if (resp.data) {
           this.$message("添加成功")
@@ -164,7 +195,7 @@ export default {
           this.tabledata=resp.data
       })
                       } else {
-                          this.$message("修改失败")
+                          this.$message("修改失败，请检查时间是否冲突")
                       }
                   })
               } else {
