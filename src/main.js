@@ -17,7 +17,8 @@ var routeflag=false
 
 router.beforeEach((to, from, next) => {
       axios.get('/pagecheck').then((resp) => {
-        if (resp) {
+        console.log(resp)
+        if (resp.data) {
           if (to.path === '/login') {
             next();
           } else if (routeflag){
@@ -43,7 +44,6 @@ router.beforeEach((to, from, next) => {
         }
       })
       })
-
 
 new Vue({
   el: '#app',// el 配置项指实例负责管理的区域；#app 指 id="app" 的dom标签里的所有内容

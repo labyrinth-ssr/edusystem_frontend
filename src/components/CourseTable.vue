@@ -1,14 +1,14 @@
 <template>
     <div class="app-container">
         <div v-if="role=='admin'||role=='teacher'" class="controller-container">
-            <el-button @click="addcourse">
+            <el-button type="primary" @click="addcourse" class="up-button" style="margin-bottom:15px;">
                 单条添加课程
             </el-button>
-            <el-button @click="uploaddialog">
+            <el-button type="primary" @click="uploaddialog" class="up-button" style="margin-bottom:15px;">
                 批量添加课程
             </el-button>
         </div>
-        <el-table :data="tableData" height="600" style="width: 100%">
+        <el-table :data="tableData" height="572" style="width: 100%">
             <el-table-column prop="id" label="课程代码" width="80">
             </el-table-column>
             <el-table-column prop="name" label="课程名" width="80">
@@ -190,7 +190,6 @@ data() {
           this.dialogVisible=true
       },
       admin_teacher_add_course() {
-              console.log(this.form)
               if (this.role == 'teacher') {
                   this.form.teacher_id = this.$store.state.user_id
               }
@@ -203,27 +202,29 @@ data() {
                   console.log(this.trigger)
                   console.log(resp.data)
                   if (resp.data.submitted) {
-                      if(this.role=='admin'){
-const arr_form = {
-                          requester_id: this.$store.state.user_id,
-                          number: this.form.number,
-                          class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
-                          classroom_id: this.form.classroom_id,
-                        suffix:resp.data.suffix
-                      }
-                      console.log(arr_form)
-                      this.$axios.post('/class_table/admin/arrange', arr_form).then((resp) => {
-                          if (resp.data.isOk) {
-                              this.$message("添加成功");
-                              this.dialogVisible = false
-                              this.get_table()
-                          }else{
-                          console.log(resp)
+                    //   if(this.role=='admin'){
+                    //     const arr_form = {
+                    //       requester_id: this.$store.state.user_id,
+                    //       number: this.form.number,
+                    //       class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
+                    //       classroom_id: this.form.classroom_id,
+                    //       suffix:resp.data.suffix
+                    //   }
+                    //   console.log(arr_form)
+                    //   this.$axios.post('/class_table/admin/arrange', arr_form).then((resp) => {
+                    //       if (resp.data.isOk) {
+                    //       console.log(resp.data)
 
-                      this.$message("课程时间或地点填写错误");
-                          }
-                      })
-                      }
+                    //           this.$message("添加成功");
+                    //           this.dialogVisible = false
+                    //           this.get_table()
+                    //       }else{
+                    //       console.log(resp.data)
+                    //     this.$message("课程时间或地点填写错误");
+                    //       }
+                    //   })
+                    //   }
+                              this.$message("添加成功");
                   } else {
                       this.$message("提交失败，请检查表单内容");
                   }
@@ -240,31 +241,33 @@ const arr_form = {
                   this.resp=resp
                   this.trigger+=1;
                   if (resp.data.submitted) {
-                      if(this.role=='admin'){
+                    //   if(this.role=='admin'){
 
-                      const arr_form = {
-                          requester_id: this.$store.state.user_id,
-                          number: this.form.number,
-                          class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
-                          classroom_id: this.form.classroom_id,
-                        suffix:parseInt(this.form.id.split('.')[1])
-                      }
-                      console.log(arr_form)
+                    //   const arr_form = {
+                    //       requester_id: this.$store.state.user_id,
+                    //       number: this.form.number,
+                    //       class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
+                    //       classroom_id: this.form.classroom_id,
+                    //     suffix:parseInt(this.form.id.split('.')[1])
+                    //   }
+                    //   console.log(arr_form)
 
-                      this.$axios.post('/class_table/admin/arrange', arr_form).then((resp) => {
-                          console.log(resp)
-                          if (resp.data.isOk) {
-                              this.$message("修改成功");
-                              this.dialogVisible = false
-                              this.get_table()
-                          }
-                          else{
-                      this.$message("课程时间或地点填写错误");
-                          }
-                      })}else{
+                    //   this.$axios.post('/class_table/admin/arrange', arr_form).then((resp) => {
+                    //       console.log(resp)
+                    //       if (resp.data.isOk) {
+                    //           this.$message("修改成功");
+                    //           this.dialogVisible = false
+                    //           this.get_table()
+                    //       }
+                    //       else{
+                    //   this.$message("课程时间或地点填写错误");
+                    //       }
+                    //   })
+                    //   }
+                    //   else{
                           this.$message("申请修改成功");
                               this.dialogVisible = false
-                      }
+                    //   }
                   } else {
                       this.$message("提交失败，请检查表单内容");
                   }
@@ -293,7 +296,7 @@ const arr_form = {
         formData.append('requester_id', this.$store.state.user_id)
           this.$axios.post('/upload/csv/admin/batch_add_course',formData/* ,{params:formData} */).then((resp)=>{
               console.log(resp.data)
-                            if(!resp.data.infoFormat.classes_per_week) this.$message('课程时间错误')
+              if(!resp.data.infoFormat.classes_per_week) this.$message('课程时间错误')
               else if(!resp.data.infoFormat.department) this.$message('学院错误')
               else if(!resp.data.infoFormat.introduction) this.$message('课程介绍错误')
               else if(!resp.data.infoFormat.max_student) this.$message('可容纳学生数错误')

@@ -159,6 +159,24 @@ export default {
             },
             trigger: "blur",
           }
+            ],
+            classroom_id:[
+                {
+                    required: true,
+            validator: (rule, value, callback)=>{
+               this.resp.classroom_id||typeof(this.resp.classroom_id)=="undefined"?callback() : callback(new Error("教室填写错误"));
+            },
+            trigger: "blur",
+          }
+            ],
+            class_time:[
+                {
+                    required: true,
+            validator: (rule, value, callback)=>{
+               this.resp.class_time||typeof(this.resp.class_time)=="undefined"?callback() : callback(new Error("上课时间填写错误"));
+            },
+            trigger: "blur",
+          }
             ]
             },
             classrooms:[]

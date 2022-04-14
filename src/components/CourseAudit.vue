@@ -1,24 +1,27 @@
 <template>
-    <div class="app-container">
-        <el-table :data="tableData" height="600" style="width: 100%">
-            <el-table-column prop="requester_id" label="请求教师id" width="180">
+    <div class="app-container" style="text-align:center;">
+        <el-table :data="tableData" height="620" style="width:90%;">
+            <el-table-column prop="requester_id" label="请求教师id" >
             </el-table-column>
-            <el-table-column prop="request_class" label="请求类型" width="180">
+            <el-table-column prop="request_class" label="请求类型" >
+              <template slot-scope="scope">
+            <el-tag size="medium" :type="tag_color_reqtype(scope.row.request_class)" effect="plain">{{ get_request_type(scope.row.request_class) }}</el-tag>
+            </template>
             </el-table-column>
-            <el-table-column prop="request_content" label="请求内容" width="180">
+            <el-table-column prop="request_content" label="请求内容" >
                 <template slot-scope="scope">
                   <el-link :underline="false" @click="requestDetail(scope.row.request_content)">详情</el-link>
             <!-- {{scope.row.request_content}} -->
             </template>
             </el-table-column>
-            <el-table-column prop="handler_id" label="处理人" width="180">
+            <el-table-column prop="handler_id" label="处理人" >
             </el-table-column>
-            <el-table-column prop="point" label="状态" width="180">
+            <el-table-column prop="point" label="状态" >
             <template slot-scope="scope">
-            <el-tag size="medium">{{ scope.row.handle_result }}</el-tag>
+            <el-tag size="medium" :type="tag_color(scope.row.handle_result)">{{ scope.row.handle_result }}</el-tag>
             </template>
             </el-table-column>
-            <el-table-column label="操作" width="180" >
+            <el-table-column label="操作"  >
                 <template slot-scope="scope" v-if="scope.row.handle_result=='processing'">
                     <el-button size="mini" @click="handleApprove(scope.$index, scope.row)">通过</el-button>
                     <el-button size="mini" type="danger" @click="handleReject(scope.$index, scope.row)">驳回</el-button>
@@ -49,6 +52,31 @@ data() {
       }
     },
     methods: {
+      tag_color(val){
+        if(val=='processing'){
+          return 'primary'
+        }
+        else if(val=='rejected'){
+          return 'danger'
+        }
+        else if(val=='approved'){
+          return 'success'
+        }
+      },
+      tag_color_reqtype(val){
+        if(val=='UpdateCourseRequest'){
+          return 'primary'
+        }
+        else if(val=='DeleteCourseRequest'){
+          return 'danger'
+        }
+        else if(val=='AddCourseRequest'){
+          return 'success'
+        }
+      },
+      get_request_type(val){
+return val.split(/(?=[A-Z])/)[0]
+      },
       get_table(){
 this.$axios.get('/requests/courses/admin/view/all')
       .then((resp)=>{
@@ -58,7 +86,7 @@ this.$axios.get('/requests/courses/admin/view/all')
         }else{
           this.processed=true
         }
-          this.tableData=resp.data
+          this.tableData=resp.data.reverse()
       })
       },
       handleApprove(index, row) {

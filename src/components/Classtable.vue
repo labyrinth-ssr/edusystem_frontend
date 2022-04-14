@@ -37,7 +37,7 @@
         </div>
         <div id="time_input_container" class="container">
             <div v-for="item in section" :key="item">
-                <el-time-select placeholder="开始时间" v-model="startTime[item]" :picker-options="{
+                <el-time-select placeholder="开始时间" v-model="startTime[item-1]" :picker-options="{
       start: '08:30',
       step: '00:15',
       end: '22:00',
@@ -45,7 +45,7 @@
 
     }" @change="post_time">
                 </el-time-select>
-                <el-time-select placeholder="结束时间" v-model="endTime[item]" :picker-options="{
+                <el-time-select placeholder="结束时间" v-model="endTime[item-1]" :picker-options="{
       start: '08:30',
       step: '00:15',
       end: '22:00',
@@ -89,6 +89,13 @@ export default {
       })
       this.$axios.get('/classtime/admin/getclasstime').then((resp)=>{
           this.tabledata=resp.data
+          console.log(resp.data)
+          resp.data.forEach((ele,index)=>{
+              const split_time= ele.time.split('-')
+              this.startTime.push(split_time[0])
+              this.endTime.push(split_time[1])
+          })
+          console.log
       })
     },
     methods:{

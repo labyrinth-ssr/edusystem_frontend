@@ -47,7 +47,7 @@ export default {
 
 <style scoped>
   .el-header{
-    background-color: aliceblue;
+    background-color: #9ecfdd;
   }
   .el-container{
     height: 100%;

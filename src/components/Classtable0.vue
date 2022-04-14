@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button @click="dialogVisible=true">
+    <el-button type="primary" @click="dialogVisible=true" class="up-button" style="margin-bottom:15px;">
       排课管理
     </el-button>
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal='false'>
@@ -127,5 +127,7 @@ export default {
 </script>
 
 <style>
-
+.up-button{
+  margin-bottom: 15px;
+}
 </style>

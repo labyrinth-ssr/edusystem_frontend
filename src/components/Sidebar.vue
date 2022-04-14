@@ -1,6 +1,6 @@
 <template>
-  <el-menu :default-active="'/home'" router background-color="white" text-color="#222"
-    active-text-color="red" >
+  <el-menu :default-active="'/home'" router background-color="#5B7DB1" text-color="white" 
+    active-text-color="black" >
     <inner-menu :navList="this.navList"></inner-menu>
   </el-menu>
 </template>

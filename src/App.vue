@@ -11,7 +11,8 @@ export default {
 
 <style >
 body {
-  background-image: linear-gradient(to right, #b7ddff 0%, #8ee1ff 100%);
+  /* background-image: linear-gradient(to right, #b7ddff 0%, #8ee1ff 100%); */
+  background-color: #F7E2E2;
   background-size: 100% 100vh;
   margin: 0px;
   height: 100%;
@@ -22,6 +23,29 @@ html{
 }
 #app{
   height: 100%;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.15);
+  transition: color 0.2s ease;
+}
+.el-table{
+  border-radius: 20px;
+}
+.up-button{
+  margin-bottom: 15px;
 }
 /* #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
