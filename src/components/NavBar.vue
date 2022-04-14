@@ -64,7 +64,7 @@
   span{
     height: 100%;
 position: absolute;
-top: 50%;
+top: 52%;
 transform: translateY(-50%);
 }
 
