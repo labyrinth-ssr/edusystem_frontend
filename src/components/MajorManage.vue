@@ -168,7 +168,34 @@ export default {
       this.$axios.delete("org/admin/deldepartment",{
         data:formData
       }).then( (response)=>{
+        const res = response.data
         console.log(response.data)
+        if(res === 0){
+          this.$message({
+            type:"success",
+            message: "删除学院成功！"
+          })
+        }else if(res === 1){
+          this.$message({
+            type:"error",
+            message: "删除学院失败！"
+          })
+        }else if(res === 2){
+          this.$message({
+            type:"error",
+            message: "用户表中含有要删除学院信息！"
+          })
+        }else if(res === 3){
+          this.$message({
+            type:"error",
+            message: "课程表中含有要删除学院信息！"
+          })
+        }else if(res === 4){
+          this.$message({
+            type:"error",
+            message: "用户表与课程表中含有要删除学院信息！"
+          })
+        }
         this.clear()
       }).catch( (response)=>{
         this.$message({
@@ -197,6 +224,8 @@ export default {
               if (response.data === true)
               {
                 this.$message({type: 'success',message:"修改成功！"})
+                this.department_form.department_name = this.department_form.department_new
+                this.department_form.department_new = ''
                 this.clear()
               }
             }).catch((response)=>{
@@ -211,9 +240,28 @@ export default {
       this.$axios.delete("/org/admin/delmajor",{
         data:formData
       }).then( (response)=>{
+        const res = response.data
+        if(res === 0)
+        {
+          this.$message({
+            type:"success",
+            message: "删除专业成功！"
+          })
+        }else if(res === 1){
+          this.$message({
+            type:"error",
+            message: "删除专业失败！"
+          })
+        }else if(res === 2){
+          this.$message({
+            type:"error",
+            message: "用户表含有要删除的专业信息！"
+          })
+        }
         console.log(response.data)
         this.clear()
       }).catch( (response)=>{
+        console.log(response.data)
         this.$message({
           type:"error",
           message: "删除专业失败！"
@@ -240,6 +288,8 @@ export default {
           if (response.data === true)
           {
             this.$message({type: 'success',message:"修改成功！"})
+            this.major_form.major_name = this.major_form.major_new
+            this.major_form.major_new =''
             this.clear()
           }
         }).catch((response)=>{
