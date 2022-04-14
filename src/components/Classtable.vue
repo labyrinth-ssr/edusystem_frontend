@@ -50,14 +50,14 @@
       end: '22:00',
       minTime: endTime[item-2]
 
-    }" @change="post_time">
+    }" >
                 </el-time-select>
                 <el-time-select placeholder="结束时间" v-model="endTime[item-1]" :picker-options="{
       start: '08:30',
       step: '00:15',
       end: '22:00',
       minTime: startTime[item-1]
-    }" @change="post_time">
+    }" >
                 </el-time-select>
             </div>
             <div id="button_container">
