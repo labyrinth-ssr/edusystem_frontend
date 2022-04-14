@@ -38,16 +38,6 @@
       </el-select>
     </el-form-item>
       </el-form>
-<!--      <div slot="footer" class="dialog-footer" style="text-align: center">-->
-<!--        <el-button v-if="action=='admin_add'" @click="-->
-<!--            dialogFormVisible = false;-->
-<!--            cancel();-->
-<!--          ">取 消</el-button>-->
-<!--        <el-button v-if="action=='admin_add'" type="primary" @click="SubmitAdd">添加/修改</el-button>-->
-<!--        <el-button v-if="action=='user_edit'" type="primary" @click="SubmitEdit">修改</el-button>-->
-<!--        <el-button v-if="action=='user_edit'" type="primary" @click="change_passwd">修改密码</el-button>-->
-<!--      </div>-->
-<!--      <change-passwd-dialog :visible="dialogVisible" @dialogclose='dialogclose'/>-->
 </div>
 </template>
 

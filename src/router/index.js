@@ -17,25 +17,20 @@ import DepartmentForm from "@/components/DepartmentForm"
 
 Vue.use(VueRouter)
 
-// const originalPush = VueRouter.prototype.push
-// const originalReplace = VueRouter.prototype.replace
-// // push
-// VueRouter.prototype.push = function push (location, onResolve, onReject) {
-//   if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
-//   return originalPush.call(this, location).catch(err => err)
-// }
-// // replace
-// VueRouter.prototype.replace = function push (location, onResolve, onReject) {
-//   if (onResolve || onReject) return originalReplace.call(this, location, onResolve, onReject)
-//   return originalReplace.call(this, location).catch(err => err)
-// }
-
 export const constantRouterMap = [
   {
     path: '/login',
     component: Login,
     name:'登录'
-  }
+  },
+  // {
+  //   path: '/',
+  //   name: '首页',
+  //   component: Layout,
+  //   meta: {
+  //     role: ['admin','teacher','student','sel_student']
+  //   }
+  // },
 ]
 
 export const asyncRouterMap = [

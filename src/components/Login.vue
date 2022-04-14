@@ -1,41 +1,23 @@
 <template>
-<div>
-  <el-form class="login-container" label-position="left" label-width="0px">
-    <h3 class="login_title">系统登录</h3>
-    <el-form-item>
-      <el-input
-        type="text"
-        v-model="loginForm.user_id"
-        auto-complete="off"
-        placeholder="账号"
-        class="grid-content"
-        style="width: 100%"
-      ></el-input>
-    </el-form-item>
-    <br />
-    <el-form-item>
-      <el-input
-        type="password"
-        v-model="loginForm.password"
-        :show-password="true"
-        auto-complete="off"
-        placeholder="密码"
-        style="width: 100%"
-      ></el-input>
-    </el-form-item>
-    <br />
-    <el-form-item STYLE="width: 100%;text-align:center">
-      <el-button
-        type="primary"
-        style="width: 50%; background: #505458; border: none"
-        round
-        v-on:click="login"
-        class="Typography"
-        >登录</el-button
-      >
-    </el-form-item>
-  </el-form>
-</div>
+  <div>
+    <el-form class="login-container" label-position="left" label-width="0px">
+      <h3 class="login_title">系统登录</h3>
+      <el-form-item>
+        <el-input type="text" v-model="loginForm.user_id" auto-complete="off" placeholder="账号" class="grid-content"
+          style="width: 100%"></el-input>
+      </el-form-item>
+      <br />
+      <el-form-item>
+        <el-input type="password" v-model="loginForm.password" :show-password="true" auto-complete="off"
+          placeholder="密码" style="width: 100%"></el-input>
+      </el-form-item>
+      <br />
+      <el-form-item STYLE="width: 100%;text-align:center">
+        <el-button type="primary" style="width: 50%; background: #505458; border: none" round v-on:click="login"
+          class="Typography">登录</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 <script>
 export default {
@@ -54,7 +36,6 @@ export default {
   mounted(){},
   methods: {
     login() {
-
       this.$axios
       .post("/login", {
         visitor_id: this.loginForm.user_id,
@@ -68,13 +49,6 @@ export default {
         const first_login=(response.data.passwd_check===false)
         if (success_login) {
           this.$store.commit("login", this.loginForm.user_id)
-          if(response.data.role=='student'||response.data.role=='teacher'){
-            this.$axios.get('/userinfo/common/getuserinfo').then((resp)=>{
-              if(resp.data.status=='quit' ){
-          this.$store.commit("role",'rejected')
-              }
-            })
-          }
           if(response.data.role=='student'){
             this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
               if(resp.data){
@@ -93,11 +67,13 @@ export default {
               console.log(route)
               this.$router.addRoute(route) // 动态添加可访问路由表
             })
-          })
-          if(first_login) this.$store.commit('first_login_func',true)
+            if(first_login) this.$store.commit('first_login_func',true)
           else this.$store.commit('first_login_func',false)
           // var path = this.$route.query.redirect;
-          this.$router.replace({path:'/'} )
+          var path = this.$route.query.redirect;
+          this.$router.replace({path: path === "/" || path === undefined ? "/" : path});
+          })
+          
         }
 
         else if(typeof response.data.find_id !="undefined"        && !response.data.find_id) this.$message.info("学号/工号填写错误");

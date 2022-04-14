@@ -39,8 +39,8 @@
                 </template>
             </el-table-column>
         </el-table>
-          <el-dialog title="添加课程" :visible.sync="dialogVisible" :close-on-click-modal='false'>
-              <course-form :action_prop="form_op" :formdata_prop="form"/>
+          <el-dialog title="添加课程" :visible.sync="dialogVisible" :close-on-click-modal='false' @close="close">
+              <course-form :action_prop="form_op" :formdata_prop="form" :resp_prop="resp" :trigger_prop="trigger"/>
               <div slot="footer" class="dialog-footer">
                   <el-button @click="test">
                       取消
@@ -79,6 +79,8 @@ mounted (){
   },
 data() {
       return {
+          trigger:0,
+          resp:{},
         fileList: [],
         tableData: [],
         form:{
@@ -196,6 +198,9 @@ data() {
                   requester_id: this.$store.state.user_id,
                   courseInfo: this.form
               }).then((resp) => {
+                  this.resp=resp.data.courseInfoFormat
+                  this.trigger+=1;
+                  console.log(this.trigger)
                   console.log(resp.data)
                   if (resp.data.submitted) {
                       if(this.role=='admin'){
@@ -232,6 +237,8 @@ const arr_form = {
                   courseInfo: this.form
               }).then((resp) => {
                   console.log(resp.data)
+                  this.resp=resp
+                  this.trigger+=1;
                   if (resp.data.submitted) {
                       if(this.role=='admin'){
 
@@ -286,10 +293,23 @@ const arr_form = {
         formData.append('requester_id', this.$store.state.user_id)
           this.$axios.post('/upload/csv/admin/batch_add_course',formData/* ,{params:formData} */).then((resp)=>{
               console.log(resp.data)
+                            if(!resp.data.infoFormat.classes_per_week) this.$message('课程时间错误')
+              else if(!resp.data.infoFormat.department) this.$message('学院错误')
+              else if(!resp.data.infoFormat.introduction) this.$message('课程介绍错误')
+              else if(!resp.data.infoFormat.max_student) this.$message('可容纳学生数错误')
+              else if(!resp.data.infoFormat.name) this.$message('课程名错误')
+              else if(!resp.data.infoFormat.number) this.$message('课程编号错误')
+              else if(!resp.data.infoFormat.suffix) this.$message('课程后缀错误')
+              else if(!resp.data.infoFormat.teacher_id) this.$message('教师id错误')
+              else if(!resp.data.infoFormat.point) this.$message('学分错误')
           })
       },
       uploaddialog(){
           this.dialogVisible2=true
+      },
+      close(){
+          console.log('close')
+          this.resp={}
       }
     }
 }

@@ -26,6 +26,9 @@ export default {
       },
       submitUpload(){
           console.log(this.fileList)
+          if(this.fileList.length==0){
+            this.$message('缺少文件')
+          }
         //   this.$axios.post('/upload/csv/admin/batch_add_course',null,{params:{
         //       requester_id:this.$store.state.user_id,
         //       file:this.fileList[0].raw
