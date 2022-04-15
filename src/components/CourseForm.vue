@@ -77,7 +77,7 @@ export default {
         }
     },
     created() {
-          this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+          this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
               this.classrooms=resp.data
           })
           this.form=this.formdata_prop
