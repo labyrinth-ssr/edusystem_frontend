@@ -49,16 +49,16 @@ export default {
         const first_login=(response.data.passwd_check===false)
         if (success_login) {
           this.$store.commit("login", this.loginForm.user_id)
-          if(response.data.role=='student'){
-            this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
-              if(resp.data){
-          this.$store.commit("role",'sel_student')
-              }
-              else{
-          this.$store.commit("role",'student')
-              }
-            })
-          }
+          // if(response.data.role=='student'){
+          //   this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
+          //     if(resp.data){
+          // this.$store.commit("role",'sel_student')
+          //     }
+          //     else{
+          // this.$store.commit("role",'student')
+          //     }
+          //   })
+          // }
 
           this.$store.commit("role",response.data.role)
           this.$store.dispatch('GenerateRoutes', this.$store.state.role).then(() => { // 生成可访问的路由表

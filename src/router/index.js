@@ -28,7 +28,7 @@ export const constantRouterMap = [
   //   name: '首页',
   //   component: Layout,
   //   meta: {
-  //     role: ['admin','teacher','student','sel_student']
+  //     role: ['admin','teacher','student']
   //   }
   // },
 ]
@@ -39,7 +39,7 @@ export const asyncRouterMap = [
         name: '首页',
         component: Layout,
         meta: {
-          role: ['admin','teacher','student','sel_student']
+          role: ['admin','teacher','student']
         }
       },
       {
@@ -108,14 +108,14 @@ export const asyncRouterMap = [
         component: Layout,
         redirect: '/courses/table',
         meta: {
-          role: ['admin','teacher','sel_student']
+          role: ['admin','teacher','student']
         },
         children: [{
             path: '/courses/table',
             name: '课程列表',
             component: CourseTable,
             meta: {
-              role: ['admin','teacher','sel_student']
+              role: ['admin','teacher','student']
             }
           },
           {
@@ -167,7 +167,7 @@ export const asyncRouterMap = [
     }],
     meta: {
       requireAuth: true,
-      role:['teacher','student','sel_student']
+      role:['teacher','student']
     }
   }
 ]

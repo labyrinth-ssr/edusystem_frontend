@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div class="app-container" v-if="authorized">
         <div v-if="role=='admin'||role=='teacher'" class="controller-container">
             <el-button type="primary" @click="addcourse" class="up-button" style="margin-bottom:15px;">
                 单条添加课程
@@ -31,7 +31,7 @@
             </el-table-column>
             <el-table-column label="操作" width="180">
                 <template slot-scope="scope">
-                    <el-button size="mini" v-if="role=='sel_student'">选课</el-button>
+                    <el-button size="mini" v-if="role=='student'">选课</el-button>
                     <div v-else>
                     <el-button size="mini"  v-if="edit_render(scope.row)" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button size="mini"  v-if="edit_render(scope.row)" type="danger" @click.native.prevent="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
@@ -75,10 +75,20 @@ export default {
   components: { CourseForm },
   name:'CourseTable',
 mounted (){
-      this.get_table()
+    this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
+        console.log(resp.data)
+              if(!resp.data){
+                  this.authorized=false
+                  this.$message('没有选课权限')
+              }
+              else {
+                  this.get_table()
+              }
+            })
   },
 data() {
       return {
+          authorized:true,
           trigger:0,
           resp:{},
         fileList: [],
@@ -113,7 +123,7 @@ data() {
             return this.role=='admin'||(this.role=='teacher'&&row.teacher_id==this.$store.state.user_id)
         },
         get_table() {
-            if (this.role == 'sel_student') {
+            if (this.role == 'student') {
                 this.$axios.get('/userinfo/common/getuserinfo').then((resp) => {
                     console.log(resp.data)
                     const department = resp.data.department
@@ -133,7 +143,6 @@ data() {
                 this.$axios.get('/course/common/view/all')
                     .then((resp) => {
                         this.tableData = resp.data
-
                     })
             }
         },
