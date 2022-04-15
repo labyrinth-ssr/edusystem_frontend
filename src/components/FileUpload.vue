@@ -61,7 +61,8 @@ export default {
               }
               if(dict.id_numberFormat !== true){
                 str+=("存在身份证号格式错误!\n")
-              }if(dict.emailFormat !== true){
+              }
+              if(dict.emailFormat !== true){
                 str+=("存在邮件格式错误!\n")
               }
               if(dict.phone_numberFormat!==true){
