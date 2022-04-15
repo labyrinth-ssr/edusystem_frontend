@@ -296,7 +296,17 @@ data() {
         formData.append('requester_id', this.$store.state.user_id)
           this.$axios.post('/upload/csv/admin/batch_add_course',formData/* ,{params:formData} */).then((resp)=>{
               console.log(resp.data)
-              if(!resp.data.infoFormat.classes_per_week) this.$message('课程时间错误')
+              
+              if(resp.data.isOK)
+                  this.$message({message:"批量添加成功",type:'success'})
+              else if(!resp.data.authorized)
+                  this.$message({message:"没有权限",type:'error'})
+              else if(!resp.data.fileOK)
+                  this.$message({message:"没有文件",type:'error'})
+                  else if(!resp.data.unique)
+                  this.$message({message:"重复添加课程",type:'error'})
+                  else{
+                        if(!resp.data.infoFormat.classes_per_week) this.$message('课程时间错误')
               else if(!resp.data.infoFormat.department) this.$message('学院错误')
               else if(!resp.data.infoFormat.introduction) this.$message('课程介绍错误')
               else if(!resp.data.infoFormat.max_student) this.$message('可容纳学生数错误')
@@ -305,6 +315,8 @@ data() {
               else if(!resp.data.infoFormat.suffix) this.$message('课程后缀错误')
               else if(!resp.data.infoFormat.teacher_id) this.$message('教师id错误')
               else if(!resp.data.infoFormat.point) this.$message('学分错误')
+                  }
+              
           })
       },
       uploaddialog(){

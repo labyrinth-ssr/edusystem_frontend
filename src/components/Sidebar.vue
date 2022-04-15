@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import store from '@/store'
+// import store from '@/store'
 import InnerMenu from './innerMenu.vue'
 
   export default {
@@ -18,7 +18,7 @@ import InnerMenu from './innerMenu.vue'
 },
     data () {
       return{
-        navList:store.state.routers,
+        navList:this.$store.state.routers,
       }
       // if(this.$store.state.role=='admin'){
       // return {

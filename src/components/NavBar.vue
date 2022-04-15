@@ -62,9 +62,8 @@
         margin-top: 34px;
   }
   span{
-    height: 100%;
 position: absolute;
-top: 52%;
+top: 4%;
 transform: translateY(-50%);
 }
 

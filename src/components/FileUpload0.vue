@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import  API_CONFIG from "../../vue.config.js"
+// import  API_CONFIG from "../../vue.config.js"
 export default {
   name: "FileUpload",
   uploadUrl: "/userinfo/admin/addusers_csv",
@@ -44,10 +44,10 @@ export default {
     }
   },
   mounted() {
-    console.log("api==",API_CONFIG.devServer.proxy['/api'].target)
-    this.http = API_CONFIG.devServer.proxy['/api'].target
-    this.$data.action = "/userinfo/admin/addusers_csv"
-    console.log(this.$data.action)
+    // console.log("api==",API_CONFIG.devServer.proxy['/api'].target)
+    // this.http = API_CONFIG.devServer.proxy['/api'].target
+    // this.$data.action = "/userinfo/admin/addusers_csv"
+    // console.log(this.$data.action)
 
   }
 }
