@@ -11,6 +11,8 @@
         <el-table :data="tableData" height="572" style="width: 100%">
             <el-table-column prop="id" label="课程代码" width="80">
             </el-table-column>
+            <el-table-column prop="number" label="课程编号" width="80">
+            </el-table-column>
             <el-table-column prop="name" label="课程名" width="80">
             </el-table-column>
             <el-table-column prop="department" label="开课院系" width="80">
@@ -19,7 +21,7 @@
             </el-table-column>
             <el-table-column prop="point" label="学分" width="80">
             </el-table-column>
-            <el-table-column prop="teacher_id" label="任课教师id" width="180">
+            <el-table-column prop="teacher_id" label="任课教师id" width="100">
             </el-table-column>
             <el-table-column prop="introduction" label="课程介绍" width="180">
             </el-table-column>
@@ -29,7 +31,7 @@
             </el-table-column>
             <el-table-column prop="max_student" label="任课容量" width="80">
             </el-table-column>
-            <el-table-column label="操作" width="180">
+            <el-table-column label="操作" width="170">
                 <template slot-scope="scope">
                     <el-button size="mini" v-if="role=='student'">选课</el-button>
                     <div v-else>
@@ -39,7 +41,7 @@
                 </template>
             </el-table-column>
         </el-table>
-          <el-dialog title="添加课程" :visible.sync="dialogVisible" :close-on-click-modal='false' @close="close">
+          <el-dialog :title="form_title" :visible.sync="dialogVisible" :close-on-click-modal='false' @close="close">
               <course-form :action_prop="form_op" :formdata_prop="form" :resp_prop="resp" :trigger_prop="trigger"/>
               <div slot="footer" class="dialog-footer">
                   <el-button @click="test">
@@ -85,6 +87,11 @@ mounted (){
                   this.get_table()
               }
             })
+  },
+  computed:{
+      form_title:function(){
+          return this.form_op=='add'?'添加课程':'修改课程';
+      }
   },
 data() {
       return {
