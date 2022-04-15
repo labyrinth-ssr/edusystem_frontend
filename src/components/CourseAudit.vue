@@ -11,7 +11,6 @@
             <el-table-column prop="request_content" label="请求内容" >
                 <template slot-scope="scope">
                   <el-link :underline="false" @click="requestDetail(scope.row.request_content)" type="primary">详情</el-link>
-            <!-- {{scope.row.request_content}} -->
             </template>
             </el-table-column>
             <el-table-column prop="handler_id" label="处理人" >
