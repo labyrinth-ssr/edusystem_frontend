@@ -65,6 +65,14 @@ export default {
       this.dialogVisible=true
     },
     SubmitEdit() {
+      console.log(this.form)
+      if(this.form.email===null){
+        this.form.email=''
+      }
+      if(this.form.phone_number===null){
+        this.form.phone_number=''
+      }
+
         this.$axios.get('/userinfo/user/altemailandphone',{params:{email:this.form.email,phone:this.form.phone_number}}).then((resp)=>{
           if(resp.data){
             this.$message("修改成功");

@@ -193,6 +193,11 @@ export default {
                           this.clear_class()
                           this.$axios.get('/classtime/admin/getclasstime').then((resp)=>{
           this.tabledata=resp.data
+          resp.data.forEach((ele,index)=>{
+              const split_time= ele.time.split('-')
+              this.startTime.push(split_time[0])
+              this.endTime.push(split_time[1])
+          })
       })
                       } else {
                           this.$message("修改失败，请检查时间是否冲突")
