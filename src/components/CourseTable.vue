@@ -202,28 +202,6 @@ data() {
                   console.log(this.trigger)
                   console.log(resp.data)
                   if (resp.data.submitted) {
-                    //   if(this.role=='admin'){
-                    //     const arr_form = {
-                    //       requester_id: this.$store.state.user_id,
-                    //       number: this.form.number,
-                    //       class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
-                    //       classroom_id: this.form.classroom_id,
-                    //       suffix:resp.data.suffix
-                    //   }
-                    //   console.log(arr_form)
-                    //   this.$axios.post('/class_table/admin/arrange', arr_form).then((resp) => {
-                    //       if (resp.data.isOk) {
-                    //       console.log(resp.data)
-
-                    //           this.$message("添加成功");
-                    //           this.dialogVisible = false
-                    //           this.get_table()
-                    //       }else{
-                    //       console.log(resp.data)
-                    //     this.$message("课程时间或地点填写错误");
-                    //       }
-                    //   })
-                    //   }
                               this.$message("添加成功");
                   } else {
                       this.$message("提交失败，请检查表单内容");

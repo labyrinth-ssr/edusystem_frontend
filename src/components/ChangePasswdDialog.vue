@@ -110,7 +110,7 @@ export default {
         this.$message.info("提交失败")
         return
       }
-      this.$axios.post("/change_passwd", {
+      this.$axios.put("/userinfo/common/altpasswd", {
           visitor_id: this.changePasswd.user_id,
           old_passwd: this.changePasswd.oldPassword,
           new_passwd: this.changePasswd.newPassword
