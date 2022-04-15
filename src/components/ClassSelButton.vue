@@ -19,6 +19,12 @@ export default {
       class_sel_permit: ''
     }
   },
+  created(){
+this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
+  console.log(resp.data)
+              this.class_sel_permit=resp.data
+  })
+  },
   methods: {
     changeSel() {
       console.log(this.class_sel_permit)
