@@ -66,7 +66,7 @@ export default {
       this.$axios.get('/classtime/admin/getsectionnum').then((resp)=>{
               this.classnum=[...(new Array(resp.data)).keys()]
           })
-      this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+      this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
               this.classrooms=resp.data
           })
           this.$axios.get('/course/common/view/all').then((resp)=>{

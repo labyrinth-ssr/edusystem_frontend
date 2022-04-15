@@ -286,22 +286,34 @@ data() {
               
               if(resp.data.isOK)
                   this.$message({message:"批量添加成功",type:'success'})
+                  else if(!resp.data.fileOK)
+                  this.$message({message:"没有文件",type:'error'})
               else if(!resp.data.authorized)
                   this.$message({message:"没有权限",type:'error'})
-              else if(!resp.data.fileOK)
-                  this.$message({message:"没有文件",type:'error'})
+              else if(!resp.data.notNull)
+                  this.$message({message:"文件中无合法课程信息",type:'error'})
                   else if(!resp.data.unique)
                   this.$message({message:"重复添加课程",type:'error'})
-                  else{
-                        if(!resp.data.infoFormat.classes_per_week) this.$message('课程时间错误')
-              else if(!resp.data.infoFormat.department) this.$message('学院错误')
-              else if(!resp.data.infoFormat.introduction) this.$message('课程介绍错误')
-              else if(!resp.data.infoFormat.max_student) this.$message('可容纳学生数错误')
-              else if(!resp.data.infoFormat.name) this.$message('课程名错误')
-              else if(!resp.data.infoFormat.number) this.$message('课程编号错误')
-              else if(!resp.data.infoFormat.suffix) this.$message('课程后缀错误')
-              else if(!resp.data.infoFormat.teacher_id) this.$message('教师id错误')
-              else if(!resp.data.infoFormat.point) this.$message('学分错误')
+                
+                  else {
+                      const error_batch = resp.data.error_batch;
+                      var error_message = ""
+                      if (!resp.data.infoFormat.classes_per_week) error_message = '课程时间错误'
+                      else if (!resp.data.infoFormat.department) error_message = '学院错误'
+                      else if (!resp.data.infoFormat.introduction) error_message = '课程介绍错误'
+                      else if (!resp.data.infoFormat.max_student) error_message = '可容纳学生数错误'
+                      else if (!resp.data.infoFormat.name) error_message = '课程名错误'
+                      else if (!resp.data.infoFormat.number) error_message = '课程编号错误'
+                      else if (!resp.data.infoFormat.suffix) error_message = '课程后缀错误'
+                      else if (!resp.data.infoFormat.teacher_id) error_message = '教师id错误'
+                      else if (!resp.data.infoFormat.point) error_message = '学分错误'
+                      else if (!resp.data.infoFormat.class_time) error_message = '课程时间错误'
+                      else if (!resp.data.infoFormat.classroom_id) error_message = '教室错误'
+                      const message='错误编号：' + error_batch + '\n错误类型：' + error_message;
+                      this.$message({
+                          message: message,
+                          type : "error"
+                      })
                   }
               
           })

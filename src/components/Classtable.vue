@@ -30,7 +30,12 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-dropdown>
+                    <el-table :data="classroomList" style="width: 130px">
+            <el-table-column prop="id" label="教室" width="130">
+            </el-table-column>
+            
+        </el-table>
+                    <!-- <el-dropdown>
                         <span class="el-dropdown-link">
                             教室列表<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
@@ -38,7 +43,7 @@
                             <el-dropdown-item v-for="item in classroomList" :key="item.id">{{item.id}}
                             </el-dropdown-item>
                         </el-dropdown-menu>
-                    </el-dropdown>
+                    </el-dropdown> -->
                 </el-form-item>
             </el-form>
         </div>
@@ -96,7 +101,7 @@ export default {
       }
     },
     created(){
-      this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+      this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classroomList=resp.data
       })
       this.$axios.get('/classtime/admin/getclasstime').then((resp)=>{
@@ -124,7 +129,7 @@ export default {
             oldname:'',
             newname:''
         }
-        this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+        this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classroomList=resp.data
           })
                 }
@@ -147,7 +152,7 @@ export default {
           if (resp.data) {
           this.$message("删除成功")
           this.classroom_delete=''
-          this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+          this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classroomList=resp.data
           })
           } else {
@@ -161,7 +166,7 @@ export default {
           if (resp.data) {
           this.$message("添加成功")
           this.clear_classroom()
-          this.$axios.get('/classroom/admin/getclassrooms').then((resp)=>{
+          this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classroomList=resp.data
           })
           } else {
