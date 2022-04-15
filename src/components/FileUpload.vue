@@ -1,7 +1,7 @@
 <template>
 <div>
   <el-upload action="fakeaction" :auto-upload="false" :on-change="fileChange" :file-list="fileList">
-                  选取文件
+                  <el-link type="primary">选取文件</el-link>
               </el-upload>
               <el-button type="primary" size="small" @click="submitUpload">上传</el-button>
 </div>
