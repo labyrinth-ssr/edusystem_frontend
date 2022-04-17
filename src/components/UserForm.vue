@@ -132,6 +132,15 @@ export default {
   watch:{
       formdata_prop:function(newval){
           this.form=newval
+              if(this.role=='teacher'||this.role=='student'){
+   this.major_department_options=[{
+          value: this.formdata_prop.major_department[0],
+          label: this.formdata_prop.major_department[0],
+          children: [{
+            value: this.formdata_prop.major_department[1],
+            label: this.formdata_prop.major_department[1]}]}]
+            
+    }
     },
     action_prop:function(newval){
           this.action=newval
@@ -184,6 +193,18 @@ export default {
     })
 
     this.form=this.formdata_prop
+    if(this.role=='teacher'||this.role=='student'){
+   this.major_department_options=[{
+          value: this.formdata_prop.major_department[0],
+          label: this.formdata_prop.major_department[0],
+          children: [{
+            value: this.formdata_prop.major_department[1],
+            label: this.formdata_prop.major_department[1]}]}]
+            
+    }
+ 
+    console.log(this.major_department_options)
+
     if(this.$store.state.role==='admin')
     {
       this.action=this.action_prop
@@ -196,13 +217,15 @@ export default {
             this.status_list = Array.from(response.data)
             console.log(response.data)
           })
-    }else if (this.form.role == "student"){
+    }
+    else if (this.form.role == "student"){
       this.$axios.get("/userinfo/admin/getStatusList/student")
           .then((response)=>{
             this.status_list = response.data.slice()
             console.log(response.data)
           })
-    }else if(this.form.role == "admin"){
+    }
+    else if(this.form.role == "admin"){
       this.$axios.get("/userinfo/admin/getStatusList/admin")
           .then((response)=>{
             this.status_list = Array.from(response.data)
