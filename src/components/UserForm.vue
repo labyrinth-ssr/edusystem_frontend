@@ -42,9 +42,7 @@
 </template>
 
 <script>
-// import ChangePasswdDialog from '@/components/ChangePasswdDialog.vue';
 export default {
-//   components: { ChangePasswdDialog },
     name:'UserForm',
     props:['formdata_prop','action_prop'],
     data() {
@@ -65,7 +63,7 @@ export default {
     };
     return {
       role:this.$store.state.role,
-      rules: {
+      rules: {//TODO:这边为什么后端校验消失了？后端接口问题？
         id_number: [
           { required: true, message: "身份证号为必填项", trigger: "blur" },
           {pattern:/^\d{17}[1-9x]$/, message: "身份证号格式错误", trigger: "blur",},
@@ -74,7 +72,6 @@ export default {
         user_id: [
           {required: true, message: "请输入学号/工号", trigger: "blur",},
           {validator: validateUserId1, trigger: "blur",},
-
         ],
         username: [
           { required: true, message: "请输入姓名", trigger: "blur" },
@@ -109,22 +106,9 @@ export default {
           label: "学生",
         },
       ],
-      dialogFormVisible: true,
-
-      form: {
-        username: "",
-        role: "",
-        user_id: "",
-        id_number: "",
-        phone_number: "",
-        email: "",
-        major_department: "",
-        major: "",
-        department: "",
-        status: "",
-      },
+      form: this.formdata_prop,
       formLabelWidth: "120px",
-      action:'user_edit',
+      action:this.action_prop,
       major_department_options:[],
       status_list:[]
     };
@@ -132,26 +116,15 @@ export default {
   watch:{
       formdata_prop:function(newval){
           this.form=newval
-              if(this.role=='teacher'||this.role=='student'){
-   this.major_department_options=[{
-          value: this.formdata_prop.major_department[0],
-          label: this.formdata_prop.major_department[0],
-          children: [{
-            value: this.formdata_prop.major_department[1],
-            label: this.formdata_prop.major_department[1]}]}]
-            
-    }
     },
     action_prop:function(newval){
           this.action=newval
-      console.log(newval)
     }
   },
   created(){
-    console.log(this.formdata_prop)
-    this.$axios.get("/org/admin/getorgs",{})
+    this.$axios.get("/org/common/getorgs")
         .then(response => {
-          console.log(response.data)
+          //TODO:这边希望有机会能删掉
           var res = {}
           var res2 = []
           response.data.forEach(element => {
@@ -170,46 +143,11 @@ export default {
               children: res[key].children
             })
           })
-          console.log(res2)
-          // const list = Array.from(response.data).map(item1 =>({
-          //     value: item1.department,
-          //     label: item1.department,
-          //     children:
-          //     Array.from(response.data).map((item)=> {
-          //         if(item.department === item1.department)
-          //         {
-          //           return({
-          //             value: item.major,
-          //             label: item.major
-          //           })
-          //         }
-          //       })
-          // }));
-          // console.log(list)
           this.major_department_options = res2
 
         }).catch((error) => {
       console.log(error)
     })
-
-    this.form=this.formdata_prop
-    if(this.role=='teacher'||this.role=='student'){
-   this.major_department_options=[{
-          value: this.formdata_prop.major_department[0],
-          label: this.formdata_prop.major_department[0],
-          children: [{
-            value: this.formdata_prop.major_department[1],
-            label: this.formdata_prop.major_department[1]}]}]
-            
-    }
- 
-    console.log(this.major_department_options)
-
-    if(this.$store.state.role==='admin')
-    {
-      this.action=this.action_prop
-    }
-    console.log("act=",this.action_prop)
     this.form.major_department=Array.from([this.form.department, this.form.major])
     if (this.form.role =="teacher"){
       this.$axios.get("/userinfo/admin/getStatusList/teacher",)
@@ -232,11 +170,6 @@ export default {
             console.log(response.data)
           })
     }
-    if(this.$store.state.role!=='admin')
-    {
-      this.action = 'user_edit'
-    }
-    console.log(this.status_list)
   },
   methods: {
     clearUserForm() {
@@ -253,12 +186,9 @@ export default {
         status: "",
       };
     },
-    handleChange(value) {
+    handleChange() {
       this.$data.form.major = this.$data.form.major_department[1];
       this.$data.form.department = this.$data.form.major_department[0];
-      console.log(this.$data.form.major)
-      console.log(this.$data.form.department)
-      console.log(value);
     }
   },
 

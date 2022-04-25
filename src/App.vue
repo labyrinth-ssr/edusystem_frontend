@@ -12,7 +12,9 @@ export default {
 <style >
 body {
   /* background-image: linear-gradient(to right, #b7ddff 0%, #8ee1ff 100%); */
-  background-color: #f7eded;
+  /* background-color: #f7eded; */
+  /* background-image: linear-gradient(to right, #4facfe 0%, #8ee1ff 100%); */
+    background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%); 
   background-size: 100% 100vh;
   margin: 0px;
   height: 100%;
@@ -54,11 +56,7 @@ html{
   text-align: left;
   color: #2c3e50;
 }
-body {
-  /* background-image: #FFCCCC; */
-  /* linear-gradient(to top, #fff1eb 0%, #ace0f9 100%); */
-  background-size: 100% 100vh;
-}
+
 /*
 nav {
   padding: 30px;

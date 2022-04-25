@@ -49,7 +49,7 @@
 export default {
   name: "AddUserForm",
   created () {
-    this.$axios.get("/org/admin/getorgs",{})
+    this.$axios.get("/org/common/getorgs",{})
         .then(response => {
           console.log(response.data)
           var res = {}

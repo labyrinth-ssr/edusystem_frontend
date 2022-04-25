@@ -134,7 +134,7 @@ export default {
   },
   methods: {
     clear(){
-      this.$axios.get("/org/admin/getorgs",{})
+      this.$axios.get("/org/common/getorgs",{})
           .then((response) => {
             console.log(response.data)
             this.$data.table.data = response.data

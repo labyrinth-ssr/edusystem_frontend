@@ -42,7 +42,7 @@
             </el-table-column>
         </el-table>
           <el-dialog :title="form_title" :visible.sync="dialogVisible" :close-on-click-modal='false' @close="close">
-              <course-form :action_prop="form_op" :formdata_prop="form" :resp_prop="resp" :trigger_prop="trigger"/>
+              <course-form :action_prop="form_op" :formdata_prop="form" :resp_prop="resp.data" :trigger_prop="trigger"/>
               <div slot="footer" class="dialog-footer">
                   <el-button @click="test">
                       取消
@@ -235,33 +235,8 @@ data() {
                   this.resp=resp
                   this.trigger+=1;
                   if (resp.data.submitted) {
-                    //   if(this.role=='admin'){
-
-                    //   const arr_form = {
-                    //       requester_id: this.$store.state.user_id,
-                    //       number: this.form.number,
-                    //       class_time: this.form.class_time, //周次和节次，前者为1-7，后者为1-14
-                    //       classroom_id: this.form.classroom_id,
-                    //     suffix:parseInt(this.form.id.split('.')[1])
-                    //   }
-                    //   console.log(arr_form)
-
-                    //   this.$axios.post('/class_table/admin/arrange', arr_form).then((resp) => {
-                    //       console.log(resp)
-                    //       if (resp.data.isOk) {
-                    //           this.$message("修改成功");
-                    //           this.dialogVisible = false
-                    //           this.get_table()
-                    //       }
-                    //       else{
-                    //   this.$message("课程时间或地点填写错误");
-                    //       }
-                    //   })
-                    //   }
-                    //   else{
                           this.$message("申请修改成功");
                               this.dialogVisible = false
-                    //   }
                   } else {
                       this.$message("提交失败，请检查表单内容");
                   }

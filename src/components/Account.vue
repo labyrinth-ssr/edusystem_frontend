@@ -1,6 +1,6 @@
 <template>
 <div >
-  <user-form :formdata_prop="form"/>
+  <user-form :formdata_prop="form" :action_prop="form_action"/>
       <div slot="footer" class="dialog-footer" style="text-align: center">
         <el-button  type="primary" @click="SubmitEdit">修改个人信息</el-button>
         <el-button  type="primary" @click="change_passwd">修改密码</el-button>
@@ -18,7 +18,7 @@ export default {
  data() {
     return {
       dialogVisible:false,
-    role:this.$store.state.role,
+      role:this.$store.state.role,
       form:{
         username: "",
         role: "",
@@ -30,18 +30,17 @@ export default {
         major: "",
         department: ""
       },
+      form_action:'user_edit'
     };
   },
   created(){
     this.$axios.get('/userinfo/common/getuserinfo').then((resp)=>{
-      console.log(resp.data);
       this.form=resp.data
       this.form.major_department=Array.from([resp.data.department,resp.data.major])
     })
   },
   methods: {
     dialogclose(){
-      console.log('dialog close')
       this.dialogVisible=false
     },
     clear() {
@@ -57,22 +56,18 @@ export default {
         department: ""
       };
     },
-    cancel() {
-      this.clear();
-      this.$router.replace("/");
-    },
     change_passwd(){
       this.dialogVisible=true
     },
     SubmitEdit() {
       console.log(this.form)
+      //TODO:这边希望有机会能删掉
       if(this.form.email===null){
         this.form.email=''
       }
       if(this.form.phone_number===null){
         this.form.phone_number=''
       }
-
         this.$axios.get('/userinfo/user/altemailandphone',{params:{email:this.form.email,phone:this.form.phone_number}}).then((resp)=>{
           if(resp.data){
             this.$message("修改成功");

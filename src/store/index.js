@@ -54,7 +54,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    GenerateRoutes({ commit }, data1,data2) {
+    GenerateRoutes({ commit }, data1) {
       return new Promise(resolve => {
         const role = data1;
         const accessedRouters = asyncRouterMap.filter(v => {

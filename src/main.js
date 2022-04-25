@@ -32,6 +32,8 @@ router.beforeEach((to, from, next) => {
                   store.state.addRouters.forEach((route)=>{
                     router.addRoute(route) // 动态添加可访问路由表
                   })
+                  console.log(to)
+                  console.log({ ...to, replace: true })
                   next({ ...to, replace: true }) // hack方法 确保addRoute已完成 ,set the replace: true so the navigation will not leave a history record
                 })
           }
