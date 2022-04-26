@@ -5,7 +5,7 @@ const Mock = require('mockjs')
 const Random = Mock.Random
 
 // mock新闻数据，包括新闻标题title、内容content、创建时间createdTime
-function produceCoursesData() {
+function produceCoursesData1() {
   let coursesList = []
   for (let i = 0; i < 5; i++) {
     let newcoursesObject = {
@@ -25,6 +25,8 @@ function produceCoursesData() {
   }
   return coursesList
 }
+
+
 
 function producerequestData() {
   let requestList = []

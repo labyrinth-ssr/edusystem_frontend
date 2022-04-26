@@ -13,6 +13,9 @@ import MemTable from '@/components/MemTable'
 import AddUserForm from '@/components/AddUserForm'
 import FileUpload from '@/components/FileUpload'
 import DepartmentForm from "@/components/DepartmentForm"
+import CourseSelect from "@/components/CourseSelect"
+
+
 
 
 Vue.use(VueRouter)
@@ -115,7 +118,7 @@ export const asyncRouterMap = [
             name: '课程列表',
             component: CourseTable,
             meta: {
-              role: ['admin','teacher','student']
+              role: ['admin','teacher']
             }
           },
           {
@@ -124,6 +127,13 @@ export const asyncRouterMap = [
             component: CourseAudit,
             meta: {
               role: ['admin']
+            }
+          },{
+            path: '/courses/select',
+            name: '选课',
+            component: CourseSelect,
+            meta: {
+              role: ['student']
             }
           }
         ]
