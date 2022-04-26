@@ -1,5 +1,5 @@
 <template>
-   <el-table :data="tableData" height="572" style="width: 100%">
+   <el-table :data="tableData" height="572" style="width: 100%" @row-click="row_click" :row-style="row_style" highlight-current-row>
             <el-table-column prop="id" label="课程代码" width="80">
             </el-table-column>
             <el-table-column prop="number" label="课程编号" width="80">
@@ -35,11 +35,28 @@ export default {
     name:'CourseTableSingle',
     data(){
         return{
+            highlight_rowid:'',
             // status:'',
             // tableData:[]
         }
     },
     methods:{
+        row_style({row, rowIndex}){
+            if(rowIndex==this.highlight_rowid){
+                return "background-color:aliceblue";
+            }
+        },
+        row_click(row){
+            console.log(row)
+            this.highlight_rowid=row.index;
+            var table_hightlight=[]
+            row.class_time.split(',').forEach(ele => {
+                ele.split('-')
+                table_hightlight.push({col:ele.split('-')[0],row:ele.split('-')[1]})
+            });
+            console.log(table_hightlight)
+            this.$emit('click_row',table_hightlight);
+        }
 
     },
     props:['status','tableData']
