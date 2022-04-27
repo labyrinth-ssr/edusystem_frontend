@@ -22,11 +22,11 @@
     </el-table>
     <el-tabs type="border-card" class="subpage">
       <el-tab-pane label="可选课程"
-        ><course-table-single :tableData="can_select_courses" status="unselect"/>
+        ><course-table-single :tableData="can_select_courses" @click_row="highlight_toselect_cell" status="unselect" :selected_data="selected_courses" :learned_data="learned_courses"/>
       </el-tab-pane>
       <el-tab-pane label="已选课程"
         ><course-table-single
-          @click_row="highlight_cell"
+          @click_row="highlight_selected_cell"
           :tableData="selected_courses"
           status="selected"
         />
@@ -54,26 +54,41 @@ export default {
       studentId: this.$store.state.user_id,
       selected_table: [],
       section_num: 13,
-      highlight_pos: [],
+      highlight_selected: [],
+      highlight_toselect: [],
+
     };
   },
   methods: {
-    highlight_cell(posList) {
-      this.highlight_pos = posList;
+    highlight_toselect_cell(posList){
+      this.highlight_toselect = posList;
+    },
+    highlight_selected_cell(posList) {
+      this.highlight_selected = posList;
     },
     row_style() {
       return { height: "0px" };
     },
     getCellStyle(cell) {
-      if (this.highlight_pos.length != 0) {
-        for (const pos of this.highlight_pos) {
+      if (this.highlight_selected.length != 0||this.highlight_toselect.length!=0) {
+         var bg_color='',border='';
+        for (const pos of this.highlight_selected) {
           if (
             (cell.rowIndex + 1 )+ "" == pos.row &&
             cell.columnIndex + "" == pos.col
           ) {
-            return { "background-color": "antiquewhite", padding: "0px" };
+            bg_color='antiquewhite'
           } 
         }
+        for (const pos of this.highlight_toselect) {
+          if (
+            (cell.rowIndex + 1 )+ "" == pos.row &&
+            cell.columnIndex + "" == pos.col
+          ) {
+            border="solid #96e27d"
+          } 
+        }
+        return {"background-color": bg_color, "padding": "0px","border": border}
       }
       return { padding: "0px" };
       // return {padding:'0px'}
@@ -109,7 +124,7 @@ export default {
       });
     },
   },
-  mounted() {
+  created() {
     //TODO：先get permission
     const selected_condition = {
       studentId: this.studentId,
