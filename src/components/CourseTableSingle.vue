@@ -1,55 +1,49 @@
 <template>
-   <el-table  :data="row_search()" style="width: 100%" @row-click="row_click" :row-style="row_style" :cell-style="{padding:'0px'}" highlight-current-row>
-            <el-table-column prop="id" label="课程代码" width="130">
-                <template slot="header" slot-scope="scope">
-            <el-input
-                v-model="course_id"
-                size="mini"
-                placeholder="课程代码"/>
-                </template>
-            </el-table-column>
-            <el-table-column prop="number" label="课程编号" width="80">
-            </el-table-column>
-            <el-table-column prop="name" label="课程名" width="130">
-                <template slot="header" slot-scope="scope">
-            <el-input
-                v-model="course_name"
-                size="mini"
-                placeholder="课程名"/>
-                </template>
-            </el-table-column>
-            <el-table-column prop="department" label="开课院系" width="80">
-            </el-table-column>
-            <el-table-column prop="classes_per_week" label="学时" width="80">
-            </el-table-column>
-            <el-table-column prop="point" label="学分" width="80">
-            </el-table-column>
-            <el-table-column prop="teacher_name" label="任课教师" width="100">
-                <template slot="header" slot-scope="scope">
-                <el-input
-                v-model="course_teacher"
-                size="mini"
-                placeholder="教师"/>
-                </template>
-            </el-table-column>
-            <el-table-column prop="introduction" label="课程介绍">
-            </el-table-column>
-            <el-table-column prop="class_time" label="上课时间" :filters="classtime_list"
-      :filter-method="classtimeFilterHandler" width="180">
-            </el-table-column>
-            <el-table-column prop="classroom_id" label="上课地点" :filters="classroom_list"
-      :filter-method="classroomFilterHandler" width="100">
-            </el-table-column>
-            <el-table-column prop="display_num" label="任课容量" width="80" :key="componentKey">
-            </el-table-column>
-            <el-table-column label="操作" >
-                <template slot-scope="scope">
-                    <el-link :underline="true" @click="selectCourse(scope.row)" v-if="status=='unselect'&&canSelect(scope.row)" type="primary">选课</el-link>
-                    <div v-else>{{scope.row.message}}</div>
-                    <el-link :underline="true" @click="cancelCourse(scope.row)" v-if="status=='selected'" type="primary">退选</el-link>
-                </template>
-            </el-table-column>
-        </el-table>
+    <el-table :data="row_search()" style="width: 100%" @row-click="row_click" :row-style="row_style"
+        :cell-style="{padding:'0px'}" highlight-current-row>
+        <el-table-column prop="id" label="课程代码" width="130" v-if="status=='unselect'">
+            <template slot="header" slot-scope="scope">
+                <el-input v-model="course_id" size="mini" placeholder="课程代码" />
+            </template>
+        </el-table-column>
+        <el-table-column prop="id" label="课程代码" width="130" v-else />
+        <el-table-column prop="number" label="课程编号" width="80" />
+        <el-table-column prop="name" label="课程名" width="130" v-if="status=='unselect'">
+            <template slot="header" slot-scope="scope">
+                <el-input v-model="course_name" size="mini" placeholder="课程名" />
+            </template>
+        </el-table-column>
+        <el-table-column prop="name" label="课程名" width="130" v-else />
+        <el-table-column prop="department" label="开课院系" width="80" />
+        <el-table-column prop="classes_per_week" label="学时" width="80" />
+        <el-table-column prop="point" label="学分" width="80" />
+        <el-table-column prop="teacher_name" label="任课教师" width="100" v-if="status=='unselect'">
+            <template slot="header" slot-scope="scope">
+                <el-input v-model="course_teacher" size="mini" placeholder="教师" />
+            </template>
+        </el-table-column>
+        <el-table-column prop="teacher_name" label="任课教师" width="100" v-else />
+        <el-table-column prop="semester" label="修课学期" v-if="status=='learned'" width="130" :filters="semester_list"
+            :filter-method="semesterFilterHandler" />
+        <el-table-column prop="introduction" label="课程介绍" />
+        <el-table-column prop="class_time" label="上课时间" :filters="classtime_list"
+            :filter-method="classtimeFilterHandler" width="180" v-if="status=='unselect'" />
+        <el-table-column prop="class_time" label="上课时间" width="180" v-else-if="status=='selected'" />
+        <el-table-column prop="classroom_id" label="上课地点" v-if="status=='unselect'" :filters="classroom_list"
+            :filter-method="classroomFilterHandler" width="100" />
+            <el-table-column prop="classroom_id" label="上课地点" v-else-if="status=='selected'" width="100" />
+        <el-table-column prop="display_num" label="任课容量" v-if="status!='learned'" width="80" :key="componentKey" />
+        <el-table-column label="操作" v-if="status!='learned'">
+            <template slot-scope="scope">
+                <el-link :underline="true" @click="selectCourse(scope.row)"
+                    v-if="status=='unselect'&&canSelect(scope.row)" type="primary">选课</el-link>
+                <div v-else>{{scope.row.message}}</div>
+                <el-link :underline="true" @click="cancelCourse(scope.row)" v-if="status=='selected'" type="primary">退选
+                </el-link>
+            </template>
+        </el-table-column>
+
+    </el-table>
 </template>
 
 <script>
@@ -67,6 +61,7 @@ export default {
             user_department:'',
             display_data:[],
             componentKey:0,
+            semester_list:this.format_semester(this.tableData)
         }
     },
     //什么时候
@@ -74,6 +69,8 @@ export default {
             tableData: function (val) { //监听props中的属性
                 this.classtime_list = this.format_time(val);
                 this.classroom_list=this.format_classroom(val);
+                this.semester_list=this.format_semester(val);
+
                 val.forEach((course)=>{
                     const formData = new FormData()
                     formData.append('courseId', course.id)
@@ -85,7 +82,6 @@ export default {
                         course.display_num=(resp.data)+'/'+(course.max_student)
                         console.log(course.selected_num)
                         this.componentKey+=1
-                        //这个似乎很影响效率。。。。改变key强制重新渲染已选人数那一栏
                     })
                 })
             },
@@ -93,11 +89,6 @@ export default {
                 this.seltime_list = this.format_timelist(val);
             },
         },
-    computed:{
-        // noselect_message:function (row){
-        //     return row.me
-        // }
-    },
     created(){
         //课程时间filter：字符串匹配？无法使用级联...
         //多选时间段后，只要部分匹配即可
@@ -115,6 +106,8 @@ export default {
             }
             this.$axios.post('/course_sel/student/add_course_sel',sel_data).then((resp)=>{
                 this.$message({message:resp.data.ok,type:'success'})
+            this.$emit('updatePage');
+
             }
             )
         },
@@ -126,6 +119,8 @@ export default {
             console.log(cancel_data)
             this.$axios.post('/course_sel/student/del_course_sel',cancel_data).then((resp)=>{
                 this.$message({message:resp.data,type:'success'})
+            this.$emit('updatePage');
+
             }
             )
 
@@ -157,6 +152,13 @@ export default {
         })
         return Array.from(classroom_set,(ele)=>{return {text:ele,value:ele}});
         },
+        format_semester(data){
+        var semester_set=new Set();
+        data.forEach((ele)=>{
+                semester_set.add(ele.semester)
+        })
+        return Array.from(semester_set,(ele)=>{return {text:ele,value:ele}});
+        },
         canSelect(row){
             var noconflict=true;
             const row_time=row.class_time.split(',');
@@ -184,6 +186,9 @@ export default {
         classroomFilterHandler(value, row, column) {
         return row['classroom_id'] === value;
       },
+      semesterFilterHandler(value, row, column) {
+        return row['semester'] === value;
+      },
         row_style({row, rowIndex}){
             return { height: "0px" };
         },
@@ -198,10 +203,8 @@ export default {
             console.log(table_hightlight)
             this.$emit('click_row',table_hightlight);
         }
-
     },
     props:['status','tableData','selected_data','learned_data','semester','student_id','stage']
-
 }
 </script>
 

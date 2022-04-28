@@ -1,38 +1,26 @@
 <template>
   <div>
-    <el-table
-      border
-      :data="selected_table"
-      style="width: 100%"
-      :cell-style="getCellStyle"
-      :row-style="row_style"
-    >
+    <el-table border :data="selected_table" style="width: 100%" :cell-style="getCellStyle" :row-style="row_style">
       <el-table-column prop="sectionId" label="节次" width="80">
       </el-table-column>
-      <el-table-column
-        v-for="index in day_num"
-        :key="index"
-        :prop="index + ''"
-        :label="'星期' + index"
-      >
+      <el-table-column v-for="index in day_num" :key="index" :prop="index + ''" :label="'星期' + index">
         <template slot-scope="scope">
           {{ scope.row[index + ""].name }}
         </template>
       </el-table-column>
     </el-table>
     <el-tabs type="border-card" class="subpage">
-      <el-tab-pane label="可选课程"
-        ><course-table-single :tableData="can_select_courses" @click_row="highlight_toselect_cell" status="unselect" :selected_data="selected_courses" :learned_data="learned_courses" :semester="semester" :student_id="studentId" :stage="stage"/>
+      <el-tab-pane label="可选课程">
+        <course-table-single :tableData="can_select_courses" @click_row="highlight_toselect_cell" status="unselect"
+          :selected_data="selected_courses" :learned_data="learned_courses" :semester="semester" :student_id="studentId"
+          :stage="stage" @updatePage="updatePage"/>
       </el-tab-pane>
-      <el-tab-pane label="已选课程"
-        ><course-table-single
-          @click_row="highlight_selected_cell"
-          :tableData="selected_courses"
-          status="selected" :semester="semester" :student_id="studentId"
-        />
+      <el-tab-pane label="已选课程">
+        <course-table-single @click_row="highlight_selected_cell" :tableData="selected_courses" status="selected"
+          :semester="semester" :student_id="studentId" @updatePage="updatePage"/>
       </el-tab-pane>
-      <el-tab-pane label="已修课程"
-        ><course-table-single :tableData="learned_courses" />
+      <el-tab-pane label="已修课程">
+        <course-table-single :tableData="learned_courses" status="learned"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -59,6 +47,36 @@ export default {
     };
   },
   methods: {
+    updatePage(){
+          const selected_condition = {
+      studentId: this.studentId,
+      semester: this.semester,
+      status: this.stage-1,//stage1 预选（0）stage2 已选（1）
+    };
+    this.$axios
+      .post("/course_sel/common/get_course/by_course_sel", selected_condition)
+      .then((resp) => {
+        this.selected_courses = resp.data;
+        this.formattable()
+      });
+
+      const can_select_condition = {
+      getCourseSelRequest: {
+studentId: this.studentId
+}, 
+positiveSemester: this.semester
+    };
+    this.$axios
+      .post(
+        "/course_sel/common/get_course/by_course_sel_complement",
+        can_select_condition
+      )
+      .then((resp) => {
+        console.log(resp.data);
+
+        this.can_select_courses = resp.data;
+      });
+    },
     highlight_toselect_cell(posList){
       this.highlight_toselect = posList;
     },
@@ -95,6 +113,7 @@ export default {
     // })
 
     formattable() {
+        this.selected_table=[]
 
       for (let i = 1; i <= this.section_num; i++) {
         this.selected_table.push({
@@ -149,13 +168,15 @@ this.$axios.all([getSemester(), getStage()])
       });
     const learned_condition = {
       studentId: this.studentId,
-      semester: this.semester,
       status: 2,
     };
+    console.log(learned_condition)
     this.$axios
       .post("/course_sel/common/get_course/by_course_sel", learned_condition)
       .then((resp) => {
         this.learned_courses = resp.data;
+    console.log(this.learned_courses)
+
       });
     const can_select_condition = {
       getCourseSelRequest: {
