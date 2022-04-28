@@ -28,7 +28,7 @@
         ><course-table-single
           @click_row="highlight_selected_cell"
           :tableData="selected_courses"
-          status="selected" :semester="semester"
+          status="selected" :semester="semester" :student_id="studentId"
         />
       </el-tab-pane>
       <el-tab-pane label="已修课程"

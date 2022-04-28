@@ -46,7 +46,7 @@
                 <template slot-scope="scope">
                     <el-link :underline="true" @click="selectCourse(scope.row)" v-if="status=='unselect'&&canSelect(scope.row)" type="primary">选课</el-link>
                     <div v-else>{{scope.row.message}}</div>
-                    <el-link :underline="true"  v-if="status=='selected'" type="primary">退选</el-link>
+                    <el-link :underline="true" @click="cancelCourse(scope.row)" v-if="status=='selected'" type="primary">退选</el-link>
                 </template>
             </el-table-column>
         </el-table>
@@ -117,6 +117,18 @@ export default {
                 this.$message({message:resp.data.ok,type:'success'})
             }
             )
+        },
+        cancelCourse(row){
+            const cancel_data={
+                courseId: row.id, 
+                studentId: this.student_id
+            }
+            console.log(cancel_data)
+            this.$axios.post('/course_sel/student/del_course_sel',cancel_data).then((resp)=>{
+                this.$message({message:resp.data,type:'success'})
+            }
+            )
+
         },
         format_timelist(data){
         var time_set=new Set();
