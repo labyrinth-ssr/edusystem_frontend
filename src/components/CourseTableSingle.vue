@@ -1,5 +1,5 @@
 <template>
-   <el-table :data="row_search()" style="width: 100%" @row-click="row_click" :row-style="row_style" :cell-style="{padding:'0px'}" highlight-current-row>
+   <el-table  :data="row_search()" style="width: 100%" @row-click="row_click" :row-style="row_style" :cell-style="{padding:'0px'}" highlight-current-row>
             <el-table-column prop="id" label="课程代码" width="130">
                 <template slot="header" slot-scope="scope">
             <el-input
@@ -24,7 +24,7 @@
             </el-table-column>
             <el-table-column prop="point" label="学分" width="80">
             </el-table-column>
-            <el-table-column prop="teacher_id" label="任课教师id" width="100">
+            <el-table-column prop="teacher_name" label="任课教师" width="100">
                 <template slot="header" slot-scope="scope">
                 <el-input
                 v-model="course_teacher"
@@ -40,11 +40,12 @@
             <el-table-column prop="classroom_id" label="上课地点" :filters="classroom_list"
       :filter-method="classroomFilterHandler" width="100">
             </el-table-column>
-            <el-table-column prop="max_student" label="任课容量" width="80">
+            <el-table-column prop="display_num" label="任课容量" width="80" :key="componentKey">
             </el-table-column>
             <el-table-column label="操作" >
                 <template slot-scope="scope">
-                    <el-link :underline="true"  v-if="status=='unselect'&&canSelect(scope.row)" type="primary">选课</el-link>
+                    <el-link :underline="true" @click="selectCourse(scope.row)" v-if="status=='unselect'&&canSelect(scope.row)" type="primary">选课</el-link>
+                    <div v-else>{{scope.row.message}}</div>
                     <el-link :underline="true"  v-if="status=='selected'" type="primary">退选</el-link>
                 </template>
             </el-table-column>
@@ -57,13 +58,15 @@ export default {
     data(){
         return{
             highlight_rowid:'',
-            classroom_list:[],
-            classtime_list:[],
+            classroom_list:this.format_classroom(this.tableData),
+            classtime_list:this.format_time(this.tableData),
             seltime_list:[],
             course_id:'',
             course_name:'',
             course_teacher:'',
             user_department:'',
+            display_data:[],
+            componentKey:0,
         }
     },
     //什么时候
@@ -71,38 +74,50 @@ export default {
             tableData: function (val) { //监听props中的属性
                 this.classtime_list = this.format_time(val);
                 this.classroom_list=this.format_classroom(val);
+                val.forEach((course)=>{
+                    const formData = new FormData()
+                    formData.append('courseId', course.id)
+                    formData.append('semester', this.semester)
+                    this.$axios.post('/course_sel/common/count/by_course_id_and_semester',formData).then((resp)=>{
+                        console.log(course.id,this.semester)
+                        console.log(resp.data)
+                        course.selected_num=resp.data
+                        course.display_num=(resp.data)+'/'+(course.max_student)
+                        console.log(course.selected_num)
+                        this.componentKey+=1
+                        //这个似乎很影响效率。。。。改变key强制重新渲染已选人数那一栏
+                    })
+                })
             },
             selected_data:function(val){
                 this.seltime_list = this.format_timelist(val);
             },
         },
-    mounted(){
-        console.log(this.tableData)
-
-        // .filter(data => !course_id || data.id.toLowerCase().includes(course_id.toLowerCase()))
-        //init filter list
-
-            console.log(this.classroom_list)
+    computed:{
+        // noselect_message:function (row){
+        //     return row.me
+        // }
+    },
+    created(){
         //课程时间filter：字符串匹配？无法使用级联...
         //多选时间段后，只要部分匹配即可
         this.format_time(this.classroom_list,this.tableData)
-        console.log(this.classroom_list)
-        // var classtime_set=new Set();
-        // this.tableData.forEach((ele)=>{
-        //     console.log(ele.class_time.split(','))
-        //     ele.class_time.split(',').forEach((time)=>{
-        //         classtime_set.add(time)
-        //     })
-        // })
-        // this.classtime_list=Array.from(classtime_set,(ele)=>{return {text:ele,value:ele}})
-
         this.$axios.get('/userinfo/common/getuserinfo').then((resp) => {
                     this.user_department = resp.data.department
-                    
                 })
-        
+
     },
     methods:{
+        selectCourse(row){
+            const sel_data={
+                courseId: row.id, 
+                studentId: this.student_id
+            }
+            this.$axios.post('/course_sel/student/add_course_sel',sel_data).then((resp)=>{
+                this.$message({message:resp.data.ok,type:'success'})
+            }
+            )
+        },
         format_timelist(data){
         var time_set=new Set();
         data.forEach((ele)=>{
@@ -132,29 +147,29 @@ export default {
         },
         canSelect(row){
             var noconflict=true;
-            console.log(row.class_time)
             const row_time=row.class_time.split(',');
             row_time.forEach((time)=>{
                 if(this.seltime_list.indexOf(time)!=-1){
                     noconflict=false;
                 }
             })
-            console.log(noconflict)
-            return (row.department==this.user_department)&&( Array.from(this.selected_data,x=>x.number).indexOf(row.number)==-1)&&noconflict
+            if(row.department!=this.user_department) row.message='专业受限'
+            else if(Array.from(this.selected_data,x=>x.number).indexOf(row.number)!=-1) row.message='已选同编号课程'
+            else if(!noconflict) row.message='时间冲突'
+            else if(this.stage==2&&row.selected_num>=row.max_student) row.message='人数受限'
+
+            return (row.department==this.user_department)&&( Array.from(this.selected_data,x=>x.number).indexOf(row.number)==-1)&&noconflict&&(!(this.stage==2&&row.selected_num>=row.max_student))
         },
         row_search(){
             console.log(this.tableData)
             return this.tableData.filter(data =>( !this.course_id || data.id.toLowerCase().includes(this.course_id.toLowerCase()) )&&
             ( !this.course_name || data.name.toLowerCase().includes(this.course_name.toLowerCase()) )&&
-            ( !this.course_teacher || data.teacher_id.toLowerCase().includes(this.course_teacher.toLowerCase()) ))
+            ( !this.course_teacher || data.teacher_name.toLowerCase().includes(this.course_teacher.toLowerCase()) ))
         },
         classtimeFilterHandler(value, row, column) {
-        // const property = column['property'];
         return row['class_time'].indexOf(value)!=-1;
       },
         classroomFilterHandler(value, row, column) {
-        // const property = column['property'];
-        
         return row['classroom_id'] === value;
       },
         row_style({row, rowIndex}){
@@ -173,7 +188,7 @@ export default {
         }
 
     },
-    props:['status','tableData','selected_data','learned_data']
+    props:['status','tableData','selected_data','learned_data','semester','student_id','stage']
 
 }
 </script>
