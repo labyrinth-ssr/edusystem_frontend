@@ -14,7 +14,8 @@ import AddUserForm from '@/components/AddUserForm'
 import FileUpload from '@/components/FileUpload'
 import DepartmentForm from "@/components/DepartmentForm"
 import CourseSelect from "@/components/CourseSelect"
-
+import  MyCourseSelect from "@/components/MyCourse"
+import MyCourse from "@/components/MyCourse";
 
 
 
@@ -113,7 +114,16 @@ export const asyncRouterMap = [
         meta: {
           role: ['admin','teacher','student']
         },
-        children: [{
+        children: [
+            {
+            path: '/courses/mycourse',
+            name: '我的课程',
+            component:MyCourse,
+            meta: {
+                role: ['teacher','student']
+                }
+            },
+            {
             path: '/courses/table',
             name: '课程列表',
             component: CourseTable,

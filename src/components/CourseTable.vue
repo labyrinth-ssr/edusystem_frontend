@@ -112,6 +112,7 @@ data() {
             class_time:'',
             classroom_id:'',
             id:'',
+            allowed_major:'',
             suffix:1
         },
         form_op:'add',
@@ -209,6 +210,20 @@ data() {
               if (this.role == 'teacher') {
                   this.form.teacher_id = this.$store.state.user_id
               }
+              let str = ''
+              if(this.form.course_sort ==="专业课")
+              {
+                str = this.form.acceptMajor[1].toString();
+              }else if(this.form.course_sort ==="面向部分专业课")
+              {
+                for (let i = 0; i < this.form.acceptMajor.length; i++) {
+                  str += this.form.acceptMajor[i][1] + ',';
+                }
+                  str = str.substring(0, str.length - 1)
+              }
+              this.form.allowed_major = str;
+
+              console.log(this.form)
               this.$axios.post('/course/admin_teacher/add', {
                   requester_id: this.$store.state.user_id,
                   courseInfo: this.form
