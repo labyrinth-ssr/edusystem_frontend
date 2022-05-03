@@ -1,14 +1,44 @@
 <template>
     <div class="app-container" v-if="authorized">
-        <div v-if="role=='admin'||role=='teacher'" class="controller-container">
+      <div>
+        <el-form label="条件搜索" class="filter">
+          <el-form-item label="关键字筛选" prop="search">
+            <el-input
+                v-model="search"
+                placeholder="输入关键字搜索"
+                size="small"
+                style="width:200px;margin-right:2%;"/>
+          </el-form-item>
+          <el-form-item label="上课时间" prop="class_time">
+            <el-cascader size="small" style="width:200px;margin-right:2%;"
+                         v-model="rawTime"
+                         clearable
+                         :options="time_options"
+                         :props="{expandTrigger :'hover'}"
+                         @change="changeT"></el-cascader>
+          </el-form-item>
+          <el-form-item label="上课教室" prop="classroom_id">
+            <el-select v-model="classroom_id" size="small" clearable placeholder="请选择教室" style="width:200px;margin-right:2%;">
+              <el-option v-for="item in classrooms" :key="item.id" :label="item.id" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <span v-if="role=='admin'||role=='teacher'" class="controller-container side">
             <el-button type="primary" @click="addcourse" class="up-button" style="margin-bottom:15px;">
                 单条添加课程
             </el-button>
             <el-button type="primary" @click="uploaddialog" class="up-button" style="margin-bottom:15px;">
                 批量添加课程
             </el-button>
-        </div>
-        <el-table :data="tableData" height="572" style="width: 100%">
+        </span>
+      </div>
+
+        <el-table :data="tableData.filter(data => (!search || data.name.toLowerCase().includes(search.toLowerCase())||
+        data.id.toLowerCase().includes(search.toLowerCase())||
+        data.teacher_id.toLowerCase().includes(search.toLowerCase()))
+        && (!classroom_id || data.classroom_id.toLowerCase().includes(classroom_id.toLowerCase()))
+        &&(!filterTime || data.class_time.toLowerCase().includes(filterTime.toLowerCase())))" height="572" style="width: 100%">
             <el-table-column prop="id" label="课程代码" width="80">
             </el-table-column>
             <el-table-column prop="number" label="课程编号" width="80">
@@ -77,6 +107,10 @@ export default {
   components: { CourseForm },
   name:'CourseTable',
 mounted (){
+  this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
+    this.classrooms=resp.data
+    console.log(resp.data)
+  })
     this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
         console.log(resp.data)
               if(!resp.data){
@@ -87,14 +121,37 @@ mounted (){
                   this.get_table()
               }
             })
+    let res = []
+    let res2 =[]
+    for (let i = 0; i < 13; i++){
+      res.push({
+        label: i+1,
+        value: i+1
+      })
+    }
+    for (let i = 1; i <= 5;i++){
+      res2.push({
+        label: i,
+        value: i,
+        children:res
+      })
+    }
+    this.time_options = res2
   },
   computed:{
       form_title:function(){
           return this.form_op=='add'?'添加课程':'修改课程';
-      }
+      },
   },
 data() {
       return {
+        filterTime:'',
+        rawTime:'',
+        classrooms:[],
+        time_options:[],
+        classroom_id:'',
+        class_time:'',
+        search:'',
           authorized:true,
           trigger:0,
           resp:{},
@@ -122,6 +179,19 @@ data() {
       }
     },
     methods: {
+        changeT(){
+
+
+            let res='';
+            if(this.rawTime.length>0){
+              res +=this.rawTime[0];
+              res += '-';
+              res += this.rawTime[1];
+            }
+            this.filterTime= res;
+            console.log(this.filterTime)
+            console.log(this.rawTime)
+        },
         test(){
             console.log(this.tableData)
             console.log(this.form)
@@ -343,6 +413,17 @@ data() {
 </script>
 
 <style>
-
+.filter{
+  vertical-align: middle;
+  position: sticky;
+  position: -webkit-sticky; /* Safari */
+  z-index: 100;
+  display: inline-flex;
+  justify-content: space-around;
+}
+.side{
+  margin-top:40px;
+  float:right;
+}
 </style>
 
