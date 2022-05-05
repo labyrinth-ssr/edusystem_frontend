@@ -86,7 +86,20 @@ this.$axios.get('/requests/courses/admin/view/all')
           this.processed=true
         }
           this.tableData=resp.data.reverse()
+          this.course_sort_f();
       })
+      },
+      course_sort_f(){
+        for(let i = 0; i <this.tableData.length; i++){
+          if(this.tableData[i].allowed_major ===null){
+            this.tableData[i].course_sort = "通用课程"
+          }else if(this.tableData[i].allowed_major.toLowerCase().includes(",".toLowerCase())){
+            this.tableData[i].course_sort = "面向部分专业课"
+          }else {
+            this.tableData[i].course_sort = "专业课"
+          }
+        }
+
       },
       handleApprove(index, row) {
         this.$axios.post('/requests/courses/admin/permit',{

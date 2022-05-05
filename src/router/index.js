@@ -16,7 +16,7 @@ import DepartmentForm from "@/components/DepartmentForm"
 import CourseSelect from "@/components/CourseSelect"
 import  MyCourseSelect from "@/components/MyCourse"
 import MyCourse from "@/components/MyCourse";
-
+import OneCourse from "@/components/OneCourse";
 
 
 Vue.use(VueRouter)
@@ -121,6 +121,14 @@ export const asyncRouterMap = [
             component:MyCourse,
             meta: {
                 role: ['teacher','student']
+                }
+            },
+            {
+                path: '/courses/mycourseView',
+                name: '',
+                component:OneCourse,
+                meta: {
+                    role: ['teacher','student','admin']
                 }
             },
             {

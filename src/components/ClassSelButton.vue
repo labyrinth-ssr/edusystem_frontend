@@ -34,7 +34,7 @@ export default {
       console.log(resp.data)
       this.class_sel_permit=resp.data
     });
-    this.$axios.get('/permission/admin/current_semester').then((resp)=>{
+    this.$axios.get('/permission/common/current_semester').then((resp)=>{
       console.log(resp.data)
       this.term = resp.data;
     })

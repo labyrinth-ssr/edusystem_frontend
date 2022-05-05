@@ -45,8 +45,12 @@
             </el-table-column>
             <el-table-column prop="name" label="课程名" width="80">
             </el-table-column>
+          <el-table-column prop="course_sort" label="课程类型" width="80">
+          </el-table-column>
             <el-table-column prop="department" label="开课院系" width="80">
             </el-table-column>
+          <el-table-column prop="acceptMajor_dis" label="选课专业" width="80">
+          </el-table-column>
             <el-table-column prop="classes_per_week" label="学时" width="80">
             </el-table-column>
             <el-table-column prop="point" label="学分" width="80">
@@ -107,6 +111,9 @@ export default {
   components: { CourseForm },
   name:'CourseTable',
 mounted (){
+  this.$axios.get("/org/common/getorgs").then((resp)=>{
+    this.department=resp.data
+  })
   this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
     this.classrooms=resp.data
     console.log(resp.data)
@@ -137,6 +144,7 @@ mounted (){
       })
     }
     this.time_options = res2
+
   },
   computed:{
       form_title:function(){
@@ -145,6 +153,7 @@ mounted (){
   },
 data() {
       return {
+        department:[],
         filterTime:'',
         rawTime:'',
         classrooms:[],
@@ -213,6 +222,7 @@ data() {
                         }
                     }).then((resp) => {
                         this.tableData = resp.data
+                        this.course_sort_f()
 
                     })
                 })
@@ -220,9 +230,52 @@ data() {
             } else {
                 this.$axios.get('/course/common/view/all')
                     .then((resp) => {
-                        this.tableData = resp.data
+                      this.tableData = resp.data
+                      console.log(resp.data)
+                      this.course_sort_f()
                     })
             }
+        },
+        course_sort_f(){
+
+          var that = this;
+          for(let i = 0; i <this.tableData.length; i++){
+
+            if(this.tableData[i].allowed_major ===null){
+              this.tableData[i].course_sort = "通用课程"
+              this.tableData[i].acceptMajor ="不限专业"
+              this.tableData[i].acceptMajor_dis ="不限专业"
+            }else if(this.tableData[i].allowed_major.toLowerCase().includes(",".toLowerCase())){
+              this.tableData[i].course_sort = "面向部分专业课"
+              console.log(this.tableData[i].allowed_major.split(','))
+              const acceptMajor = this.tableData[i].allowed_major.split(',').map(function (item,index,arr){
+                const temp = item
+                console.log(item)
+                console.log(that.department)
+                const t0 = that.department.find(element=>element.id == temp);
+                console.log(t0)
+                return t0
+              },that)
+              this.tableData[i].acceptMajor_dis = acceptMajor.map(function(item){
+                return item.department.toString() +'/'+item.major.toString()
+              }).join('; ')
+              this.tableData[i].acceptMajor = acceptMajor.map(function(item){
+                return [item.department, item.major]
+              })
+              console.log(this.tableData[i].acceptMajor);
+            }else {
+              this.tableData[i].course_sort = "专业课"
+              var temp = this.tableData[i].allowed_major;
+              // this.tableData[i].acceptMajor ;
+              console.log(that.department)
+              console.log(temp)
+              const t1 =  that.department.find(element=>element.id == temp);
+              console.log(t1)
+              this.tableData[i].acceptMajor_dis = t1.department.toString()+'/' +t1.major.toString()
+              this.tableData[i].acceptMajor = [t1.department, t1.major]
+            }
+          }
+
         },
         empty_form(){
             this.form={

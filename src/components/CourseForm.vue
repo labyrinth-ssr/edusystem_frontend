@@ -1,6 +1,7 @@
 <script src="../store/index.js"></script>
 <template>
-    <el-form :model="form" style="text-align: left" ref="form" :rules="rules" label-width="80px">
+    <el-form :model="form" style="text-align: left" ref="form" :rules="rules"
+             label-position="right" label-width="80px">
         <el-form-item label="课程名" prop="name">
             <el-input v-model="form.name" :disabled="judgeDisable2" />
         </el-form-item>
@@ -65,8 +66,14 @@
             </el-select>
         </el-form-item>
         <el-form-item label="选课容量" prop="max_student">
-            <el-input v-model="form.max_student" :disabled="judgeDisable" />
-          #得到所有教室选课容量并判断
+          <el-input-number v-model="form.max_student" :disabled="judgeDisable" :min="1"
+                           :max="typeof(form.classroom_id)=='undefined'?1: classrooms.find(function(item, index, arr){
+          if(item.id === form.classroom_id){
+          return item;
+          }
+          },classrooms).space"
+          ></el-input-number>
+<!--            <el-input v-model="form.max_student" :disabled="judgeDisable" text="number" max="100"/>-->
         </el-form-item>
     </el-form>
 </template>
@@ -85,13 +92,6 @@ export default {
     time_loop:function(){
       this.form.class_time=[['']]
       return this.form.point==''?1:parseInt(this.form.point)
-      // if (this.form.point==''){
-      // return [...(new Array(1).keys())]
-      // }
-      // else{
-      // return [...(new Array(parseInt(this.form.point))).keys()]
-
-      // }
     },
 
   },
@@ -125,6 +125,7 @@ export default {
     created() {
       this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classrooms=resp.data
+        console.log(this.classrooms)
       })
       this.$axios.get("/org/common/getorgs").then((resp)=>{
         this.departments=resp.data
@@ -166,6 +167,7 @@ export default {
         
         return {
           rawTime:[['']],
+          classrooms:[],
           time_options:this.gen_time_options(),
           departments:[],
           course_options:[
@@ -192,7 +194,7 @@ export default {
               {
                 required: true,
                 validator: (rule, value, callback)=>{
-                   this.resp.name||typeof(this.resp.name)=="undefined"?callback() : callback(new Error("课程名填写错误"));
+                   typeof(this.resp)=='undefined'||this.resp.name||typeof(this.resp.name)=="undefined"?callback() : callback(new Error("课程名填写错误"));
                 },
                 trigger: "blur",
               }
@@ -201,7 +203,7 @@ export default {
               {
                 required: true,
                 validator: (rule, value, callback)=>{
-                  this.resp.number||typeof(this.resp.number)=="undefined"?callback() : callback(new Error("课程编号填写错误"));
+                  typeof(this.resp)=='undefined'||this.resp.number||typeof(this.resp.number)=="undefined"?callback() : callback(new Error("课程编号填写错误"));
                 },
                 trigger: "blur",
               }
@@ -209,7 +211,7 @@ export default {
             department:[
               { required: true,
                 validator: (rule, value, callback)=>{
-                  this.resp.department||typeof(this.resp.department)=="undefined"?callback() : callback(new Error("学院填写错误"));
+                  typeof(this.resp)=='undefined'||this.resp.department||typeof(this.resp.department)=="undefined"?callback() : callback(new Error("学院填写错误"));
                 },
                 trigger: "change",
               }
@@ -220,7 +222,7 @@ export default {
                 required: true,
                 trigger: "change",
                 validator: (rule, value, callback)=>{
-                  this.resp.course_sort||typeof(this.resp.course_sort)=="undefined"?callback() : callback(new Error("课程类型为空"));
+                  typeof(this.resp)=='undefined'||this.resp.course_sort||typeof(this.resp.course_sort)=="undefined"?callback() : callback(new Error("课程类型为空"));
                 },
               }
             ],
@@ -229,7 +231,7 @@ export default {
             classes_per_week:[
               { required: true,
                 validator: (rule, value, callback)=>{
-                  this.resp.classes_per_week||typeof(this.resp.classes_per_week)=="undefined"?callback() : callback(new Error("周课时填写错误"));
+                  typeof(this.resp)=='undefined'||this.resp.classes_per_week||typeof(this.resp.classes_per_week)=="undefined"?callback() : callback(new Error("周课时填写错误"));
                 },
                 trigger: "blur",
               }
@@ -237,7 +239,7 @@ export default {
             point:[
               {required: true,
               validator: (rule, value, callback)=>{
-                this.resp.point||typeof(this.resp.point)=="undefined"?callback() : callback(new Error("学分填写错误"));
+                typeof(this.resp)=='undefined'||this.resp.point||typeof(this.resp.point)=="undefined"?callback() : callback(new Error("学分填写错误"));
               },
               trigger: "blur",
               }
@@ -246,7 +248,7 @@ export default {
             {
                 required: true,
                 validator: (rule, value, callback)=>{
-                   this.resp.teacher_id||typeof(this.resp.teacher_id)=="undefined"?callback() : callback(new Error("教师id填写错误"));
+                  typeof(this.resp)=='undefined'||this.resp.teacher_id||typeof(this.resp.teacher_id)=="undefined"?callback() : callback(new Error("教师id填写错误"));
                 },
                 trigger: "blur",
               }
@@ -254,7 +256,7 @@ export default {
             introduction:[
               {
                 validator: (rule, value, callback)=>{
-                  this.resp.introduction||typeof(this.resp.introduction)=="undefined"?callback() : callback(new Error("课程介绍填写错误"));
+                  typeof(this.resp)=='undefined'||this.resp.introduction||typeof(this.resp.introduction)=="undefined"?callback() : callback(new Error("课程介绍填写错误"));
                 },
                 trigger: "blur",
               }
@@ -263,7 +265,19 @@ export default {
               {
                 required: true,
                 validator: (rule, value, callback)=>{
-                   this.resp.max_student||typeof(this.resp.max_student)=="undefined"?callback() : callback(new Error("最大学生数填写错误"));
+                  typeof(this.resp)=='undefined'||this.resp.max_student||typeof(this.resp.max_student)=="undefined"?callback() : callback(new Error("最大学生数填写错误"));
+                },
+                trigger: "blur",
+              },
+              {
+                required: true,
+                validator:(rule, value, callback)=>{
+                  const _this =this;
+                  typeof(this.form.classroom_id)=="undefined"||this.form.max_student<= this.classrooms.find(function(item, index, arr){
+                    if(item.id === _this.form.classroom_id){
+                      return item;
+                    }
+                  },this.classrooms).space?callback() : callback(new Error("教室容量不足！"))
                 },
                 trigger: "blur",
               }
@@ -272,7 +286,7 @@ export default {
             {
                 required: true,
                 validator: (rule, value, callback)=>{
-                   this.resp.classroom_id||typeof(this.resp.classroom_id)=="undefined"?callback() : callback(new Error("教室填写错误"));
+                  typeof(this.resp)=='undefined'||this.resp.classroom_id||typeof(this.resp.classroom_id)=="undefined"?callback() : callback(new Error("教室填写错误"));
                 },
                 trigger: "change",
               }
@@ -289,13 +303,12 @@ export default {
               {
                 required: true,
                 validator: (rule, value, callback)=>{
-                 this.resp.class_time||typeof(this.resp.class_time)=="undefined"?callback() : callback(new Error("上课时间填写错误"));
+                  typeof(this.resp)=='undefined'||this.resp.class_time||typeof(this.resp.class_time)=="undefined"?callback() : callback(new Error("上课时间填写错误"));
                 },
                 trigger: "change",
               }
             ]
           },
-          classrooms:[],
         }
     },
     methods: {
