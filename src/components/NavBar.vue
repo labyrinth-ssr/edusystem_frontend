@@ -1,3 +1,5 @@
+<script src="../router/index.js"></script>
+<script src="../store/index.js"></script>
 <template>
 <div>
   <span>用户名:{{this.$store.state.user_id}},身份:{{this.$store.state.role}}</span>
