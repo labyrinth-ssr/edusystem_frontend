@@ -184,29 +184,6 @@ export const asyncRouterMap = [
         ]
       },
   {
-<<<<<<< HEAD
-    path: '/admin/orgmanage',
-    name: 'OrgManage',
-    component: MajorManage,
-  },
-  {
-    path: '/user/changepasswd',
-    name: 'ChangePasswd',
-    component: changePasswdDialog,
-    // meta: {
-    //   requireAuth: true
-    // }
-  },
-  {
-    path: '/admin/getusers',
-    name: 'Notice_A_test',
-    component: Notice_A_test
-  },
-  {
-    path: '/admin/upload',
-    name: "fileUpload",
-    component: FileUpload
-=======
     path: '/user',
     name: '个人中心',
     component: Layout,
@@ -220,7 +197,6 @@ export const asyncRouterMap = [
       requireAuth: true,
       role:['teacher','student']
     }
->>>>>>> 36a2b848bd8a97152a40f9c21b7198da82c6e535
   }
 ]
 
