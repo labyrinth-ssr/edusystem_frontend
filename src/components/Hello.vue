@@ -22,11 +22,11 @@ d(・ω・d) 微分！
 
 <script>
   export default {
-    name: 'AppIndex',
-    created(){
-      if(this.$store.state.first_login){
-        this.$router.replace('/user/changepasswd')
-      }
-    }
+    name: 'Hello',
+    // created(){
+    //   if(this.$store.state.first_login){
+    //     this.$router.replace('/user/changepasswd')
+    //   }
+    // }
   }
 </script>

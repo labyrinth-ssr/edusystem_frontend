@@ -39,3 +39,48 @@ get直接传参的安全问题
 美化info
 直接使用user_id作为token的安全性问题，使用cookie还是localStorage?目前在前端使用localStorage。不点击刷新页面时存储着user_id，first_login（即权限信息）
 登录时无角色选择框，而是通过user_id长度判断role后传给后端。
+
+---
+2022-4-7 
+TODO:layout
+16:10
+在layout里装什么？直接 done:16:53
+18:44
+mockjs,md,我人没了，我不理解！
+22:04 时间完全没掌握好，失败，应该使用v-for
+路由使用permission list
+权限控制
+用户profile
+13:25
+table 行内编辑
+
+form：
+teacher
+admin
+
+add
+edit
+watch
+
+17:00:权限管理
+17:55 课程表
+19:09
+md 动态路由wcnm
+
+---
+4-9
+修改密码
+userform 是否需要复用？
+先完成功能 再重构。
+
+---
+我真的会被耗死就是说。
+新增课程
+拿出一个表格的信息。
+
+---
+4-13:
+改路由 权限
+
+---
+责任的模糊性。
