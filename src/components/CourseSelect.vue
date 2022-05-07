@@ -37,7 +37,7 @@ export default {
       can_select_courses: [],
       selected_courses: [],
       learned_courses: [],
-      semester: "2022.1",
+      semester: "",
       stage: 1,
       studentId: this.$store.state.user_id,
       selected_table: [],
@@ -146,7 +146,7 @@ positiveSemester: this.semester
 }
 
 var getStage=()=> {
-  return this.$axios.get('/permission/common/choose_course_stage');
+  return this.$axios.get('/permission/common/check_choose_course');
 }
 
 this.$axios.all([getSemester(), getStage()])
