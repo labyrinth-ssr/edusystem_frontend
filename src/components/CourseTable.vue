@@ -23,6 +23,16 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="学期" prop="term_filter">
+<!--              <span class="demonstration">年</span>-->
+<!--              <el-date-picker-->
+<!--                  size="small"-->
+<!--                  v-model="term_filter"-->
+<!--                  type="year"-->
+<!--                  placeholder="选择年">-->
+<!--              </el-date-picker>-->
+            <el-quarter-picker size="small" v-model="value" placeholder="选择学期" @change ="term_change"/>
+          </el-form-item>
         </el-form>
         <span v-if="role=='admin'||role=='teacher'" class="controller-container side">
             <el-button type="primary" @click="addcourse" class="up-button" style="margin-bottom:15px;">
@@ -108,8 +118,9 @@
 <script>
 
 import CourseForm from './CourseForm.vue'
+import ElQuarterPicker from './ElQuarterPicker.vue'
 export default {
-  components: { CourseForm },
+  components: { CourseForm ,ElQuarterPicker},
   name:'CourseTable',
 mounted (){
   this.$axios.get("/org/common/getorgs").then((resp)=>{
@@ -154,6 +165,9 @@ mounted (){
   },
 data() {
       return {
+        value:'',
+        current_term:'',
+        term_filter:'',
         department:[],
         filterTime:'',
         rawTime:'',
@@ -189,6 +203,20 @@ data() {
       }
     },
     methods: {
+        term_change(){
+         console.log(this.value)
+          let temp = this.value.split('-');
+          temp = temp[0] +'.' + parseInt(temp[1]).toString();
+          console.log(temp)
+          let data0 = new FormData();
+          data0.append('semester_id','temp')
+          this.$axios.get('/course/common/view/by_semester', {params:data0})
+              .then((resp1)=>{
+                this.tableData = resp1.data;
+              }).catch((error)=>{
+                console.log(error)
+          })
+        },
         changeT(){
 
 
