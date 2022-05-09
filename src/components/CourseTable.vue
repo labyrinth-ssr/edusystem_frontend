@@ -34,12 +34,13 @@
         </span>
       </div>
 
-        <el-table :data="tableData.filter(data => (!search || data.name.toLowerCase().includes(search.toLowerCase())||
+        <el-table @row-click="courseView" :data="tableData.filter(data => (!search || data.name.toLowerCase().includes(search.toLowerCase())||
         data.id.toLowerCase().includes(search.toLowerCase())||
         data.teacher_id.toLowerCase().includes(search.toLowerCase()))
         && (!classroom_id || data.classroom_id.toLowerCase().includes(classroom_id.toLowerCase()))
-        &&(!filterTime || data.class_time.toLowerCase().includes(filterTime.toLowerCase())))" height="572" style="width: 100%">
-            <el-table-column prop="id" label="课程代码" width="80">
+        &&(!filterTime || data.class_time.toLowerCase().includes(filterTime.toLowerCase())))" height="572" style="width: 100%"
+        >
+            <el-table-column prop="id" label="课程代码" width="80"  >
             </el-table-column>
             <el-table-column prop="number" label="课程编号" width="80">
             </el-table-column>
@@ -69,8 +70,8 @@
                 <template slot-scope="scope">
                     <el-button size="mini" v-if="role=='student'">选课</el-button>
                     <div v-else>
-                    <el-button size="mini"  v-if="edit_render(scope.row)" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="mini"  v-if="edit_render(scope.row)" type="danger" @click.native.prevent="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
+                    <el-button size="mini"  v-if="edit_render(scope.row)" @click.stop="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button size="mini"  v-if="edit_render(scope.row)" type="danger" @click.native.prevent.stop="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -276,6 +277,11 @@ data() {
             }
           }
 
+        },
+        courseView(row, column, $event){
+            console.log(row)
+            this.$store.state.courseInfo = row;
+            this.$router.push('/courses/mycourseView');
         },
         empty_form(){
             this.form={

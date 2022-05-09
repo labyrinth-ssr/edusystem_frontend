@@ -66,7 +66,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="选课容量" prop="max_student">
-          <el-input-number v-model="form.max_student" :disabled="judgeDisable" :min="1"
+          <el-input-number v-model="form.max_student" :disabled="judgeDisable2" :min="1"
                            :max="typeof(form.classroom_id)=='undefined'?1: classrooms.find(function(item, index, arr){
           if(item.id === form.classroom_id){
           return item;

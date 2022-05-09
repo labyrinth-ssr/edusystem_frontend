@@ -124,7 +124,7 @@ export const asyncRouterMap = [
                 }
             },
             {
-                path: '/courses/mycourseView/:courseId',
+                path: '/courses/mycourseView',
                 name: '',
                 component:OneCourse,
                 meta: {

@@ -45,18 +45,11 @@ export default {
   },
   methods:{
     myCourseView($event){
+
       let Href = $event.target.innerText.split('-')[0];
-      console.log(Href)
-      this.$router.push({
-        name
-      })
-      const {target} = this.$router.resolve({
-        path:'/courses/mycourseView/${courseId}',
-        // params:{
-        //   courseId:Href
-        // }
-      });
-      window.open(target,'_blank');
+      this.$store.state.courseInfo = this.myCourseList.find(item=>item.id == Href);
+      console.log(this.$store.state.courseInfo)
+      this.$router.push('/courses/mycourseView');
     }
   }
 }
