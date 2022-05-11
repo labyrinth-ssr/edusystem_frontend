@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       term:'',
-      class_sel_permit: 0
+      class_sel_permit: this.$store.state.course_sel_stage
     }
   },
   created(){
@@ -34,11 +34,6 @@ export default {
       console.log(resp.data)
       this.class_sel_permit=resp.data
     });
-    this.$axios.get('/permission/common/current_semester').then((resp)=>{
-      console.log(resp.data)
-      this.term = resp.data;
-    })
-
   },
   methods: {
     changeSel() {
@@ -54,6 +49,7 @@ export default {
               type:'success',
               message:"修改成功！"
             })
+            this.$store.state.course_sel_stage = this.class_sel_permit;
             console.log(resp.data)
           }).catch((error)=>{
             console.log(error)

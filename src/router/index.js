@@ -17,7 +17,7 @@ import CourseSelect from "@/components/CourseSelect"
 import  MyCourseSelect from "@/components/MyCourse"
 import MyCourse from "@/components/MyCourse";
 import OneCourse from "@/components/OneCourse";
-
+import ApplyFromStu from "@/components/ApplyFromStu"
 
 Vue.use(VueRouter)
 
@@ -153,7 +153,14 @@ export const asyncRouterMap = [
             meta: {
               role: ['student']
             }
-          }
+          },{
+                path: '/courses/ApplyFormStu',
+                name: '学生选课申请',
+                component: ApplyFromStu,
+                meta: {
+                    role: ['student','admin']
+                }
+            }
         ]
       }, 
       {

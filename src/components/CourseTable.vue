@@ -1,3 +1,4 @@
+<script src="../store/index.js"></script>
 <template>
     <div class="app-container" v-if="authorized">
       <div>
@@ -208,9 +209,7 @@ data() {
           let temp = this.value.split('-');
           temp = temp[0] +'.' + parseInt(temp[1]).toString();
           console.log(temp)
-          let data0 = new FormData();
-          data0.append('semester_id','temp')
-          this.$axios.get('/course/common/view/by_semester', {params:data0})
+          this.$axios.post('/course_sel/common/get_course/by_course_sel', {semester:temp})
               .then((resp1)=>{
                 this.tableData = resp1.data;
               }).catch((error)=>{

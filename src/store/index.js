@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { asyncRouterMap, constantRouterMap } from '../router/index.js';
+import current from "element-ui/packages/table/src/store/current";
 
 
 Vue.use(Vuex)
@@ -31,7 +32,10 @@ export default new Vuex.Store({
     role:
     // 'student'
       window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]')),
-    courseInfo:{}
+    courseInfo:{},
+    currentTerm:'',
+    termsPerY: 4,
+    course_sel_stage:0
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {

@@ -59,6 +59,12 @@
             @change="time_select"></el-cascader>
             <!-- <el-input v-model="form.class_time" :disabled="judgeDisable2" /> -->
         </el-form-item>
+        <el-form-item label="开课学期" prop="courseTerm">
+          <el-cascader size="small" style="width:80px;margin-right:2%;"
+                       v-model="form.courseTerm"
+                       :options="term_options">
+          </el-cascader>
+        </el-form-item>
         <el-form-item label="上课教室" prop="classroom_id">
             <el-select v-model="form.classroom_id" placeholder="请选择" :disabled="judgeDisable2">
                 <el-option v-for="item in classrooms" :key="item.id" :label="item.id" :value="item.id">
@@ -78,6 +84,8 @@
     </el-form>
 </template>
 <script>
+import {str} from "mockjs/src/mock/random/basic";
+
 export default {
     name: 'CourseForm',
     props: ['formdata_prop', 'action_prop','resp_prop','trigger_prop'],
@@ -162,6 +170,21 @@ export default {
           }).catch((error) => {
         console.log(error)
       })
+      let temp_term =[];
+      let temp0 = this.$store.state.currentTerm.split('.')[1]-1;
+      let temp1 = this.$store.state.currentTerm.split('.')[0];
+      for(let i = 0; i < 3;i++){
+        temp0 ++;
+        if( temp0 > this.$store.state.termsPerY){
+          temp0 = temp0 - this.$store.state.termsPerY;
+          temp1 ++;
+        }
+        temp_term.push({
+          label: str(temp1) +'.'+str(temp0),
+          value: str(temp1) +'.'+str(temp0)
+        })
+      }
+      this.time_options = temp_term;
     },
     data() {
         
@@ -170,6 +193,7 @@ export default {
           classrooms:[],
           time_options:this.gen_time_options(),
           departments:[],
+          term_options:[],
           course_options:[
             {
               label:"通用课程",
@@ -190,6 +214,13 @@ export default {
             form: this.formdata_prop,
             resp:this.resp_prop,
             rules:{
+            courseTerm:[
+              {
+                required: true,
+                type: String,
+                trigger: "blur"
+              }
+            ],
             name:[
               {
                 required: true,
