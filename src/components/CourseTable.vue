@@ -1,3 +1,4 @@
+<script src="../store/index.js"></script>
 <template>
     <div class="app-container" v-if="authorized">
       <div>
@@ -23,6 +24,16 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="学期" prop="term_filter">
+<!--              <span class="demonstration">年</span>-->
+<!--              <el-date-picker-->
+<!--                  size="small"-->
+<!--                  v-model="term_filter"-->
+<!--                  type="year"-->
+<!--                  placeholder="选择年">-->
+<!--              </el-date-picker>-->
+            <el-quarter-picker size="small" v-model="value" placeholder="选择学期" @change ="term_change"/>
+          </el-form-item>
         </el-form>
         <span v-if="role=='admin'||role=='teacher'" class="controller-container side">
             <el-button type="primary" @click="addcourse" class="up-button" style="margin-bottom:15px;">
@@ -34,12 +45,13 @@
         </span>
       </div>
 
-        <el-table :data="tableData.filter(data => (!search || data.name.toLowerCase().includes(search.toLowerCase())||
+        <el-table @row-click="courseView" :data="tableData.filter(data => (!search || data.name.toLowerCase().includes(search.toLowerCase())||
         data.id.toLowerCase().includes(search.toLowerCase())||
         data.teacher_id.toLowerCase().includes(search.toLowerCase()))
         && (!classroom_id || data.classroom_id.toLowerCase().includes(classroom_id.toLowerCase()))
-        &&(!filterTime || data.class_time.toLowerCase().includes(filterTime.toLowerCase())))" height="572" style="width: 100%">
-            <el-table-column prop="id" label="课程代码" width="80">
+        &&(!filterTime || data.class_time.toLowerCase().includes(filterTime.toLowerCase())))" height="572" style="width: 100%"
+        >
+            <el-table-column prop="id" label="课程代码" width="80"  >
             </el-table-column>
             <el-table-column prop="number" label="课程编号" width="80">
             </el-table-column>
@@ -69,8 +81,8 @@
                 <template slot-scope="scope">
                     <el-button size="mini" v-if="role=='student'">选课</el-button>
                     <div v-else>
-                    <el-button size="mini"  v-if="edit_render(scope.row)" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="mini"  v-if="edit_render(scope.row)" type="danger" @click.native.prevent="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
+                    <el-button size="mini"  v-if="edit_render(scope.row)" @click.stop="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button size="mini"  v-if="edit_render(scope.row)" type="danger" @click.native.prevent.stop="handleDelete(scope.$index, tableData,scope.row)">删除</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -107,8 +119,9 @@
 <script>
 
 import CourseForm from './CourseForm.vue'
+import ElQuarterPicker from './ElQuarterPicker.vue'
 export default {
-  components: { CourseForm },
+  components: { CourseForm ,ElQuarterPicker},
   name:'CourseTable',
 mounted (){
   this.$axios.get("/org/common/getorgs").then((resp)=>{
@@ -153,6 +166,9 @@ mounted (){
   },
 data() {
       return {
+        value:'',
+        current_term:'',
+        term_filter:'',
         department:[],
         filterTime:'',
         rawTime:'',
@@ -188,6 +204,18 @@ data() {
       }
     },
     methods: {
+        term_change(){
+         console.log(this.value)
+          let temp = this.value.split('-');
+          temp = temp[0] +'.' + parseInt(temp[1]).toString();
+          console.log(temp)
+          this.$axios.post('/course_sel/common/get_course/by_course_sel', {semester:temp})
+              .then((resp1)=>{
+                this.tableData = resp1.data;
+              }).catch((error)=>{
+                console.log(error)
+          })
+        },
         changeT(){
 
 
@@ -276,6 +304,11 @@ data() {
             }
           }
 
+        },
+        courseView(row, column, $event){
+            console.log(row)
+            this.$store.state.courseInfo = row;
+            this.$router.push('/courses/mycourseView');
         },
         empty_form(){
             this.form={
