@@ -50,7 +50,7 @@
         <el-input v-model="form.introduction" :disabled="judgeDisable" />
       </el-form-item>
       <el-form-item label="上课时间" prop="class_time">
-        <el-cascader v-for="i in time_loop" :key="i" size="small" style="width:80px;margin-right:2%;"
+        <el-cascader v-for="i in time_loop" :key="i" size="small" style="width:100px;margin-right:2%;"
                      :disabled="judgeDisable2"
                      v-model="rawTime[i-1]"
                      :options="time_options"
@@ -58,9 +58,11 @@
                      @change="time_select"></el-cascader>
       </el-form-item>
       <el-form-item label="开课学期" prop="courseTerm">
-        <el-cascader size="small" style="width:80px;margin-right:2%;"
+        <el-cascader size="small" style="width:100px;margin-right:2%;"
                      v-model="form.courseTerm"
-                     :options="term_options">
+                     :options="term_options"
+                      :props="{ multiple:'true'}"
+                      @change="event=>{console.log(form.courseTerm)}">
         </el-cascader>
       </el-form-item>
       <el-form-item label="上课教室" prop="classroom_id">
@@ -371,6 +373,7 @@ export default {
           this.format_time()
         }
         console.log(this.rawTime)
+        this.format_time()
       },
       format_time(){
         this.form.class_time=''

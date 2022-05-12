@@ -25,13 +25,6 @@
             </el-select>
           </el-form-item>
           <el-form-item label="学期" prop="term_filter">
-<!--              <span class="demonstration">年</span>-->
-<!--              <el-date-picker-->
-<!--                  size="small"-->
-<!--                  v-model="term_filter"-->
-<!--                  type="year"-->
-<!--                  placeholder="选择年">-->
-<!--              </el-date-picker>-->
             <el-quarter-picker size="small" v-model="value" placeholder="选择学期" @change ="term_change"/>
           </el-form-item>
         </el-form>
@@ -209,8 +202,6 @@ data() {
           })
         },
         changeT(){
-
-
             let res='';
             if(this.rawTime.length>0){
               res +=this.rawTime[0];
@@ -351,8 +342,14 @@ data() {
                 }
                   str = str.substring(0, str.length - 1)
               }
+              console.log(this.form.class_time)
               this.form.allowed_major = str;
+              console.log(this.form.courseTerm)
 
+              //NOTICE :A bad insert!!
+
+              this.form.class_time='2-3'
+              this.form.semester = this.form.courseTerm.join(',')
               console.log(this.form)
               this.$axios.post('/course/admin_teacher/add', {
                   requester_id: this.$store.state.user_id,

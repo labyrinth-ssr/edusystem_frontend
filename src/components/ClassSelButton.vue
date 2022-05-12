@@ -1,7 +1,17 @@
 <template>
 <div>
   <h3>当前学期</h3>
-  <h4>{{term}}</h4>
+  <h4>{{currentTerm }}</h4>
+  <el-form>
+    <el-form-item label="选择学期">
+      <el-quarter-picker size="small" v-model="term_value" placeholder="选择学期" @change ="term_change"/>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" size="small" @click="termEdit">修改学期</el-button>
+    </el-form-item>
+  </el-form>
+  <el-button @click="termGo">学期向前进</el-button>
+  <el-button @click="termBack">学期向后退</el-button>
   <h3>学生选课</h3>
   <template>
     <el-radio-group v-model="class_sel_permit" @change="changeSel">
@@ -10,39 +20,60 @@
       <el-radio :label="2">第二轮选课</el-radio>
     </el-radio-group>
   </template>
-<!--  <el-switch-->
-<!--  v-model="class_sel_permit"-->
-<!--  active-text="允许"-->
-<!--  inactive-text="禁止"-->
-<!--  @change="changeSel"-->
-<!--  >-->
-<!--</el-switch>-->
 </div>
 </template>
 
 <script>
+import ElQuarterPicker from './ElQuarterPicker.vue'
 export default {
+  components:{ElQuarterPicker},
   name: 'ClassSelButton',
   data() {
     return {
-      term:this.$store.state.currentTerm,
-      class_sel_permit: this.$store.state.course_sel_stage
+      term_value:'' ,
+      currentTerm :'',
+      class_sel_permit: ''
     }
   },
-  created(){
-    this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
-      console.log(resp.data)
-      this.class_sel_permit=resp.data
-    });
+  mounted(){
+    this.$axios.get("/permission/common/current_semester")
+        .then((resp)=>{
+          this.currentTerm = resp.data.toString()
+          console.log(this.currentTerm)
+
+          this.term_value=this.currentTerm.split('.')[0]+'-0'+
+              this.currentTerm.split('.')[1]
+          console.log(this.term_value)
+        }).catch((error)=>{
+      console.log(error)
+    })
+    this.flush();
   },
   methods: {
+    flush(){
+      this.$axios.get("/permission/common/current_semester")
+          .then((resp)=>{
+            this.currentTerm = resp.data.toString()
+            this.term_value=this.currentTerm.split('.')[0]+'-0'+
+                this.currentTerm.split('.')[1]
+            console.log(this.term_value)
+          }).catch((error)=>{
+            console.log(error)
+      })
+      this.$axios.get("/permission/common/check_choose_course")
+          .then((resp)=>{
+            this.class_sel_permit= resp.data
+          }).catch((error)=>{
+        console.log(error)
+      })
+    },
     changeSel() {
       console.log(this.class_sel_permit)
       this.$axios({
         method: 'post',
         url: '/permission/admin/choose_course',
         params: {
-          'stage': this.class_sel_permit,
+          stage: this.class_sel_permit,
         }
       }).then((resp) => {
         console.log(resp.data)
@@ -51,19 +82,73 @@ export default {
             type:'success',
             message:"修改成功！"
           })
-          this.$store.state.course_sel_stage = this.class_sel_permit;
+          this.flush();
         }else {
           this.$message({
             type:'error',
             message:"修改失败！"
           })
         }
-
-          }).catch((error)=>{
+      }).catch((error)=>{
             console.log(error)
       })
-        }
+      this.$axios.get("/permission/common/check_choose_course").then((response)=>{
+        console.log("选课阶段:"+response.data)
+      })
+    },
+    termGo(){
+      let temp1 = Number(this.currentTerm) + 0.1
+      if(parseInt(temp1.toString().split('.')[1]) > this.$store.state.termsPerY){
+        temp1 += 0.6;
       }
+      this.$axios.post("/permission/admin/set_semester?semester="+temp1.toString()).then((resp)=>{
+        console.log(resp.data)
+        if(resp.data){
+          this.$axios.get('/permission/common/current_semester').then((resp)=>{
+            this.$store.state.currentTerm=resp.data
+            console.log("学期:"+ this.$store.state.currentTerm)
+          });
+        }
+        this.flush();
+      })
+    },termBack(){
+      let temp1 = Number(this.currentTerm) - 0.1
+      if(parseInt(temp1.toString().split('.')[1]) == 0){
+        temp1 -= 0.6;
+      }
+      this.$axios.post("/permission/admin/set_semester?semester="+temp1.toString()).then((resp)=>{
+        console.log(resp.data)
+        if(resp.data){
+          this.$axios.get('/permission/common/current_semester').then((resp)=>{
+            this.$store.state.currentTerm=resp.data
+            console.log("学期:"+ this.$store.state.currentTerm)
+          });
+        }
+        this.flush()
+      })
+    },
+    termEdit(){
+
+    },
+    term_change() {
+      console.log(this.$store.state.currentTerm)
+      console.log(this.term_value)
+      let  temp=this.term_value.split('-');
+      temp = temp[0] +'.' + parseInt(temp[1]).toString();
+      if(Number(temp) < Number(this.$store.state.currentTerm)){
+        this.$message({
+          type:"warning",
+          message:"你正在回退学期，请注意！"
+        })
+      }
+      if(Number(temp) >Number(this.$store.state.currentTerm) + 0.1){
+        this.$message({
+          type:"warning",
+          message:"你正在跳过一些学期，请注意！"
+        })
+      }
+    }
+  }
 }
 </script>
 
