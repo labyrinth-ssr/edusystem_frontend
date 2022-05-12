@@ -57,6 +57,8 @@ export default {
           this.$store.commit("role",response.data.role)
           this.$axios.get('/permission/common/current_semester').then((resp)=>{
             this.$store.state.currentTerm=resp.data
+          this.$store.commit("login", {user_id:this.loginForm.user_id,term:resp.data})
+
             console.log("学期:"+ resp.data)
           });
           this.$axios.get("/permission/common/check_choose_course").then((response)=>{

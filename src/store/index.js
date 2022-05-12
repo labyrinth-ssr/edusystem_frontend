@@ -24,7 +24,7 @@ export default new Vuex.Store({
     // 'student'
       window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]')),
     courseInfo:{},
-    currentTerm:'',
+    currentTerm:window.localStorage.getItem('term' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('term' || '[]')),
     termsPerY: 4,
     course_sel_stage:0
   },
@@ -33,9 +33,12 @@ export default new Vuex.Store({
       state.addRouters = routers;
       state.routers = constantRouterMap.concat(routers);
     },
-    login(state, user_id) {
+    login(state, {user_id,term}) {
       state.user_id = user_id
+      state.currentTerm=term
       window.localStorage.setItem('user_id', JSON.stringify(user_id))
+      window.localStorage.setItem('term', JSON.stringify(term))
+
     },
     role(state, role) {
       state.role = role

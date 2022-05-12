@@ -1,4 +1,3 @@
-<script src="../store/index.js"></script>
 <template>
   <div>
     <el-form :v-model="form" style="text-align: left" ref="form" :rules="rules"
@@ -134,6 +133,7 @@ export default {
         }
     },
     created() {
+      console.log(this.form)
       this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classrooms=resp.data
         console.log(this.classrooms)
@@ -174,14 +174,16 @@ export default {
         console.log(error)
       })
       let temp_term =[];
-      let temp0 = this.$store.state.currentTerm.split('.')[1]-1;
-      let temp1 = this.$store.state.currentTerm.split('.')[0];
+      console.log(this.$store.state.currentTerm.toString())
+      let temp0 = (this.$store.state.currentTerm.toString()).split('.')[1]-1;
+      let temp1 = (this.$store.state.currentTerm.toString()).split('.')[0];
       for(let i = 0; i < 3;i++){
         temp0 ++;
         if( temp0 > this.$store.state.termsPerY){
           temp0 = temp0 - this.$store.state.termsPerY;
           temp1 ++;
         }
+        console.log(temp1,temp0)
         temp_term.push({
           label: str(temp1) +'.'+str(temp0),
           value: str(temp1) +'.'+str(temp0)

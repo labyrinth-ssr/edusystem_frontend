@@ -331,10 +331,10 @@ data() {
         this.get_table()
       },
       addcourse(){
-          this.form_op='add'
-          this.empty_form()
+          this.form_op='add';
+          this.empty_form();
           this.dialogVisible=true
-        console.log("open")
+          console.log("open")
       },
       admin_teacher_add_course() {
               if (this.role == 'teacher') {
