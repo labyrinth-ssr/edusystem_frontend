@@ -10,7 +10,7 @@
       </el-form-item>
       <el-form-item label="开课学院" prop="department">
         <el-select v-model="form.department" placeholder="请选择" :disabled="judgeDisable">
-          <el-option v-for="item in departments" :key="item.id" :label="item.department" :value="item.department">
+          <el-option v-for="item in departments" :key="item" :label="item" :value="item">
           </el-option>
         </el-select>
       </el-form-item>
@@ -59,10 +59,11 @@
       </el-form-item>
       <el-form-item label="开课学期" prop="courseTerm">
         <el-cascader size="small" style="width:100px;margin-right:2%;"
-                     v-model="form.courseTerm"
+                     v-model="courseTerm"
                      :options="term_options"
                       :props="{ multiple:'true'}"
-                      @change="event=>{console.log(form.courseTerm)}">
+                      @change="semester_select"
+                      >
         </el-cascader>
       </el-form-item>
       <el-form-item label="上课教室" prop="classroom_id">
@@ -90,7 +91,6 @@
 //           return item;
 //           }
 //           }
-import {str} from "mockjs/src/mock/random/basic";
 
 export default {
     name: 'CourseForm',
@@ -104,14 +104,17 @@ export default {
       return this.action=='watch'
     },
     time_loop:function(){
-      this.form.class_time=[['']]
-      return this.form.point==''?1:parseInt(this.form.point)
+      // this.form.class_time=[['']]
+      return this.form.point==''?1:parseInt(this.form.classes_per_week)
     },
 
   },
     watch: {
         formdata_prop:function (newval) {
+          this.rawTime= this.format_classtime(newval)
+          this.courseTerm= this.format_semester(newval)
               this.form=newval
+              console.log(this.rawTime)
         },
         action_prop:function (newval) {
               this.form=newval
@@ -143,7 +146,11 @@ export default {
         console.log(this.classrooms)
       })
       this.$axios.get("/org/common/getorgs").then((resp)=>{
-        this.departments=resp.data
+        var departments=new Set()
+        resp.data.forEach((ele)=>{
+          departments.add(ele.department)
+        })
+        this.departments=departments
         console.log(resp.data)
       })
 
@@ -198,7 +205,7 @@ export default {
     data() {
         
         return {
-          rawTime:[['']],
+          rawTime:this.format_classtime(this.formdata_prop),
           classrooms:[],
           time_options:this.gen_time_options(),
           departments:[],
@@ -221,6 +228,8 @@ export default {
           role:this.$store.state.role,
             action:this.action_prop,
             form: this.formdata_prop,
+            courseTerm:this.format_semester(this.formdata_prop),
+            
             resp:this.resp_prop,
             rules:{
             courseTerm:[
@@ -352,6 +361,36 @@ export default {
         }
     },
     methods: {
+      format_classtime(newval){
+          var time_sel=[]
+          var period=[]
+          console.log(newval)
+            if (typeof(newval.class_time)=='undefined'|| newval.class_time=='') return [['']]
+
+          newval.class_time.split(',').forEach((ele)=>{
+            period=[]
+            period.push(+ele.split('-')[0],+ele.split('-')[1]) 
+            time_sel.push(period)
+          })
+          console.log(time_sel)
+              return time_sel
+
+      },
+      format_semester(newval){
+          var period=[]
+            var semesters=[]
+          console.log(newval)
+
+            if (typeof(newval.semester)=='undefined'|| newval.semester=='') return [['']]
+          newval.semester.split(',').forEach((ele)=>{
+            period=[]
+            period.push(ele)
+            semesters.push(period)
+          })
+          console.log(semesters)
+
+          return semesters
+      },
       course_select_enabled(){
         const temp = this.form.course_sort;
         if(temp ==='通用课程' || temp ===''){
@@ -369,12 +408,18 @@ export default {
         console.log(this.form.acceptMajor)
       },
       time_select(){
-        if(this.rawTime.length==this.form.point){
+        if(this.rawTime.length==this.form.classes_per_week){
           this.format_time()
         }
         console.log(this.rawTime)
-        this.format_time()
+        // this.format_time()
       },
+      semester_select(){
+        console.log(this.courseTerm)
+              this.form.semester = this.courseTerm.join(',')
+
+      },
+
       format_time(){
         this.form.class_time=''
         this.rawTime.forEach((ele ,i)=> {
