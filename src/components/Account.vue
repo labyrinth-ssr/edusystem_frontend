@@ -34,19 +34,10 @@ export default {
     };
   },
   created(){
-    this.$axios.get('/permission/common/current_semester').then((resp)=>{
-      this.$store.state.course_sel_stage=resp.data
-    });
+
     this.$axios.get('/userinfo/common/getuserinfo').then((resp)=>{
       this.form=resp.data
       this.form.major_department=Array.from([resp.data.department,resp.data.major])
-    })
-    this.$axios.post('/course_semester/common/get').then((resp)=>{
-      this.$store.state.currentTerm = resp.data
-      //Notice A test
-      console.log(resp.data)
-    }).catch((error)=>{
-      console.log(error)
     })
   },
   methods: {

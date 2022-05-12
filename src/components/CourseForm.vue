@@ -1,32 +1,32 @@
 <script src="../store/index.js"></script>
 <template>
-    <el-form :model="form" style="text-align: left" ref="form" :rules="rules"
+  <div>
+    <el-form :v-model="form" style="text-align: left" ref="form" :rules="rules"
              label-position="right" label-width="80px">
-        <el-form-item label="课程名" prop="name">
-            <el-input v-model="form.name" :disabled="judgeDisable2" />
-        </el-form-item>
-        <el-form-item label="课程编号" prop="number">
-            <el-input v-model="form.number" :disabled="judgeDisable" />
-        </el-form-item>
-        <el-form-item label="开课学院" prop="department">
+      <el-form-item label="课程名" prop="name">
+        <el-input v-model="form.name" :disabled="judgeDisable2" />
+      </el-form-item>
+      <el-form-item label="课程编号" prop="number">
+        <el-input v-model="form.number" :disabled="judgeDisable" />
+      </el-form-item>
+      <el-form-item label="开课学院" prop="department">
         <el-select v-model="form.department" placeholder="请选择" :disabled="judgeDisable">
-                <el-option v-for="item in departments" :key="item.id" :label="item.department" :value="item.department">
-                </el-option>
-            </el-select>
+          <el-option v-for="item in departments" :key="item.id" :label="item.department" :value="item.department">
+          </el-option>
+        </el-select>
       </el-form-item>
 
-<!--      dev可选专业信息-->
       <el-form-item label="课程类型" prop="course_sort">
         <el-select
             v-model="form.course_sort"
             :options="course_options"
             @change="course_select_enabled">
           <el-option
-          v-for="item in course_options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-          :disabled="judgeDisable"></el-option>
+              v-for="item in course_options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="judgeDisable"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item  v-if="necessary" label="开设专业" prop="acceptMajor" >
@@ -38,50 +38,53 @@
             @change="handleChange" :disabled="judgeDisable"></el-cascader>
       </el-form-item>
 
-        <el-form-item label="学时" prop="classes_per_week">
-            <el-input v-model="form.classes_per_week" :disabled="judgeDisable" />
-        </el-form-item>
-        <el-form-item label="学分" prop="point">
-            <el-input v-model="form.point" :disabled="judgeDisable" />
-        </el-form-item>
-        <el-form-item label="任课教师" v-if="this.role!='teacher'" prop="teacher_id">
-            <el-input v-model="form.teacher_id" :disabled="judgeDisable" />
-        </el-form-item>
-        <el-form-item label="课程介绍" prop="introduction">
-            <el-input v-model="form.introduction" :disabled="judgeDisable" />
-        </el-form-item>
-        <el-form-item label="上课时间" prop="class_time">
-          <el-cascader v-for="i in time_loop" :key="i" size="small" style="width:80px;margin-right:2%;"
-            :disabled="judgeDisable2"
-            v-model="rawTime[i-1]"
-            :options="time_options"
-            :props="{ expandTrigger: 'hover' }"
-            @change="time_select"></el-cascader>
-            <!-- <el-input v-model="form.class_time" :disabled="judgeDisable2" /> -->
-        </el-form-item>
-        <el-form-item label="开课学期" prop="courseTerm">
-          <el-cascader size="small" style="width:80px;margin-right:2%;"
-                       v-model="form.courseTerm"
-                       :options="term_options">
-          </el-cascader>
-        </el-form-item>
-        <el-form-item label="上课教室" prop="classroom_id">
-            <el-select v-model="form.classroom_id" placeholder="请选择" :disabled="judgeDisable2">
-                <el-option v-for="item in classrooms" :key="item.id" :label="item.id" :value="item.id">
-                </el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="选课容量" prop="max_student">
-          <el-input-number v-model="form.max_student" :disabled="judgeDisable2" :min="1"
-                           :max="typeof(form.classroom_id)=='undefined'?1: classrooms.find(function(item, index, arr){
+      <el-form-item label="学时" prop="classes_per_week">
+        <el-input v-model="form.classes_per_week" :disabled="judgeDisable" />
+      </el-form-item>
+      <el-form-item label="学分" prop="point">
+        <el-input v-model="form.point" :disabled="judgeDisable" />
+      </el-form-item>
+      <el-form-item label="任课教师" v-if="this.role!='teacher'" prop="teacher_id">
+        <el-input v-model="form.teacher_id" :disabled="judgeDisable" />
+      </el-form-item>
+      <el-form-item label="课程介绍" prop="introduction">
+        <el-input v-model="form.introduction" :disabled="judgeDisable" />
+      </el-form-item>
+      <el-form-item label="上课时间" prop="class_time">
+        <el-cascader v-for="i in time_loop" :key="i" size="small" style="width:80px;margin-right:2%;"
+                     :disabled="judgeDisable2"
+                     v-model="rawTime[i-1]"
+                     :options="time_options"
+                     :props="{ expandTrigger: 'hover' }"
+                     @change="time_select"></el-cascader>
+        <!-- <el-input v-model="form.class_time" :disabled="judgeDisable2" /> -->
+      </el-form-item>
+      <el-form-item label="开课学期" prop="courseTerm">
+        <el-cascader size="small" style="width:80px;margin-right:2%;"
+                     v-model="form.courseTerm"
+                     :options="term_options">
+        </el-cascader>
+      </el-form-item>
+      <el-form-item label="上课教室" prop="classroom_id">
+        <el-select v-model="form.classroom_id" placeholder="请选择" :disabled="judgeDisable2">
+          <el-option v-for="item in classrooms" :key="item.id" :label="item.id" :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="选课容量" prop="max_student">
+        <el-input-number v-model="form.max_student" :disabled="judgeDisable2" :min="1"
+                         :max="typeof(form.classroom_id)=='undefined'?1: classrooms.find(function(item, index, arr){
           if(item.id === form.classroom_id){
           return item;
           }
           },classrooms).space"
-          ></el-input-number>
-<!--            <el-input v-model="form.max_student" :disabled="judgeDisable" text="number" max="100"/>-->
-        </el-form-item>
+        ></el-input-number>
+        <!--            <el-input v-model="form.max_student" :disabled="judgeDisable" text="number" max="100"/>-->
+      </el-form-item>
     </el-form>
+
+  </div>
+
 </template>
 <script>
 import {str} from "mockjs/src/mock/random/basic";

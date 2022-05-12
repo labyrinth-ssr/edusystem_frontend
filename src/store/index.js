@@ -13,15 +13,6 @@ function hasPermission(role, route) {
     return true
   }
 }
-
-// export const constantRouterMap = [
-//   {
-//     path: '/login',
-//     component: Login,
-//     name:'登录'
-//   },
-// ]
-
 export default new Vuex.Store({
   state: {
     routers: constantRouterMap,

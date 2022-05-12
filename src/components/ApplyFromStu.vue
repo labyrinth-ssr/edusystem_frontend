@@ -45,7 +45,7 @@ export default {
   },
   data() {
     return{
-      applyPermit: this.$store.state.course_sel_stage ==2,
+      applyPermit: this.$store.state.course_sel_stage !=0,
       amIStu:this.$store.state.role ==='student',
       applyList:[],
       form: {
