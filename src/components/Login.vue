@@ -55,6 +55,10 @@ export default {
         if (success_login) {
           this.$store.commit("login", this.loginForm.user_id)
           this.$store.commit("role",response.data.role)
+          this.$axios.get('/permission/common/current_semester').then((resp)=>{
+            this.$store.state.currentTerm=resp.data
+            console.log("学期:"+ resp.data)
+          });
           this.$store.dispatch('GenerateRoutes', this.$store.state.role).then(() => { // 生成可访问的路由表
           console.log('role',this.$store.state.role)
             this.$store.state.addRouters.forEach((route)=>{

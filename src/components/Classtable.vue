@@ -2,21 +2,14 @@
     <div style="display:flex;">
         <div id="classroom_sontainer" class="container">
             <el-form>
-                <!-- <el-dropdown @command="select_sec">
-            <span class="el-dropdown-link" >
-                {{section==0?'节次选择':section}}<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="index in classNum" :key="index" :command="index">{{index+1}}</el-dropdown-item>
-            </el-dropdown-menu>
-        </el-dropdown> -->
-                <el-form-item>
-                    <el-input v-model="classroom_add" placeholder="请输入新增教室名" style="width:180px"></el-input>
+                <el-form-item :rule="class_rule">
+                    <el-input v-model="classroom_add" placeholder="新增教室名" style="width:90px">
+                    </el-input><el-input v-model="space" placeholder="教室容量" style="width:90px"></el-input>
                     <el-button type="primary" @click="add_classroom">
                         增加教室
                     </el-button>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item :rule="class_edit_rule">
                     <el-input v-model="classroom_edit.oldname" placeholder="待修改教室" style="width:110px"></el-input>
                     <el-input v-model="classroom_edit.newname" placeholder="修改为" style="width:110px"></el-input>
                     <el-button type="primary" @click="edit_classroom">
@@ -30,20 +23,13 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-table :data="classroomList" style="width: 130px">
-            <el-table-column prop="id" label="教室" width="130">
-            </el-table-column>
+                <el-table :data="classroomList" style="width: 200px">
+                  <el-table-column prop="id" label="教室" width="100px">
+                    </el-table-column>
+                  <el-table-column prop="space" label="容量" width="100px">
+                    </el-table-column>
             
-        </el-table>
-                    <!-- <el-dropdown>
-                        <span class="el-dropdown-link">
-                            教室列表<i class="el-icon-arrow-down el-icon--right"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for="item in classroomList" :key="item.id">{{item.id}}
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown> -->
+                  </el-table>
                 </el-form-item>
             </el-form>
         </div>
@@ -92,12 +78,49 @@ export default {
         classroomList:[/* {id:'H4101'},{id:'H4102'},{id:'H4103'} */],
         section:13,
         classroom_add:'',
+        space:'',
         tabledata:[],
         classroom_edit:{
             oldname:'',
             newname:''
         },
-        classroom_delete:''
+        classroom_delete:'',
+        class_rule:{
+          space:[
+            {
+              required: true,
+              validator: (rule, value, callback)=>{
+                parseInt(this.space)>0?callback():callback(new Error("容量错误！"));
+              },
+              trigger: "blur"
+            }
+          ],
+          classroom_add:[
+            {
+              required: true,
+              validator: (rule, value, callback)=>{
+                /^\[A-Z]d{4}$/.test(this.classroom_add)?callback():callback(new Error("教师格式错误！"));
+              },
+              trigger: "blur",
+            }
+          ]
+        },
+        class_edit_rule:{
+          oldname:[
+            {
+              required: true
+            }
+          ],
+          newname:[
+            {
+              required: true,
+              validator: (rule, value, callback)=>{
+                /^\[A-Z]d{4}$/.test(this.classroom_edit.newname)?callback():callback(new Error("教师格式错误！"));
+              },
+              trigger: "blur",
+            }
+          ]
+        }
       }
     },
     created(){
@@ -141,7 +164,8 @@ export default {
         this.endTime= []
         },
         clear_classroom(){
-            this.classroom_add=''
+          this.classroom_add=''
+          this.space =''
         },
         update_info(){
         },
@@ -161,16 +185,18 @@ export default {
           })
         },
       add_classroom(){
-          this.$axios.get('/classroom/admin/addclassroom/',{params:{classroom:this.classroom_add}}).then((resp)=>{
+          this.$axios.get('/classroom/admin/addclassroom/',{params:{classroom:this.classroom_add,space:this.space}}).then((resp)=>{
           console.log(resp)
           if (resp.data) {
-          this.$message("添加成功")
+          this.$message({
+            type:"success",message:"添加成功"})
           this.clear_classroom()
           this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classroomList=resp.data
           })
           } else {
-          this.$message("添加失败")
+          this.$message({
+            type:"error",message:"添加失败"})
           }
           })
       },

@@ -236,13 +236,13 @@ export default {
           department: this.form.department
         })
         .then((resp) => {
-
+          console.log(resp.data)
           this.resp=resp.data.registerFormat
           if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY") {
             this.$router.replace("/login")
             this.$message("您不具有此权限");
           }
-          else if (resp.data.isOk) {
+          else if (resp.data.ok) {
             this.$message("注册成功");
           } else {
             this.$message("提交失败，请检查表单内容");

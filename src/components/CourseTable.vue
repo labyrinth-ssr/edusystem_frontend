@@ -118,7 +118,7 @@
 
 <script>
 
-import CourseForm from './CourseForm.vue'
+import CourseForm from '@/components/CourseForm.vue'
 import ElQuarterPicker from './ElQuarterPicker.vue'
 export default {
   components: { CourseForm ,ElQuarterPicker},
@@ -131,16 +131,8 @@ mounted (){
     this.classrooms=resp.data
     console.log(resp.data)
   })
-    this.$axios.get('/permission/common/check_choose_course').then((resp)=>{
-        console.log(resp.data)
-              if(!resp.data){
-                  this.authorized=false
-                  this.$message('没有选课权限')
-              }
-              else {
-                  this.get_table()
-              }
-            })
+  this.get_table()
+
     let res = []
     let res2 =[]
     for (let i = 0; i < 13; i++){
@@ -238,31 +230,12 @@ data() {
             return this.role=='admin'||(this.role=='teacher'&&row.teacher_id==this.$store.state.user_id)
         },
         get_table() {
-            if (this.role == 'student') {
-                this.$axios.get('/userinfo/common/getuserinfo').then((resp) => {
-                    console.log(resp.data)
-                    const department = resp.data.department
-                    this.$axios({
-                        method: 'get',
-                        url: '/course/common/view/by_department',
-                        params: {
-                            'department': department
-                        }
-                    }).then((resp) => {
-                        this.tableData = resp.data
-                        this.course_sort_f()
-
-                    })
-                })
-
-            } else {
                 this.$axios.get('/course/common/view/all')
                     .then((resp) => {
                       this.tableData = resp.data
                       console.log(resp.data)
                       this.course_sort_f()
                     })
-            }
         },
         course_sort_f(){
 
@@ -361,6 +334,7 @@ data() {
           this.form_op='add'
           this.empty_form()
           this.dialogVisible=true
+        console.log("open")
       },
       admin_teacher_add_course() {
               if (this.role == 'teacher') {
