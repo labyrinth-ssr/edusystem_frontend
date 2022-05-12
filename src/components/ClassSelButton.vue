@@ -25,7 +25,7 @@ export default {
   name: 'ClassSelButton',
   data() {
     return {
-      term:'',
+      term:this.$store.state.currentTerm,
       class_sel_permit: this.$store.state.course_sel_stage
     }
   },
@@ -45,12 +45,20 @@ export default {
           'stage': this.class_sel_permit,
         }
       }).then((resp) => {
-            this.$message({
-              type:'success',
-              message:"修改成功！"
-            })
-            this.$store.state.course_sel_stage = this.class_sel_permit;
-            console.log(resp.data)
+        console.log(resp.data)
+        if(resp.data){
+          this.$message({
+            type:'success',
+            message:"修改成功！"
+          })
+          this.$store.state.course_sel_stage = this.class_sel_permit;
+        }else {
+          this.$message({
+            type:'error',
+            message:"修改失败！"
+          })
+        }
+
           }).catch((error)=>{
             console.log(error)
       })
