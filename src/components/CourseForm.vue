@@ -56,7 +56,6 @@
                      :options="time_options"
                      :props="{ expandTrigger: 'hover' }"
                      @change="time_select"></el-cascader>
-        <!-- <el-input v-model="form.class_time" :disabled="judgeDisable2" /> -->
       </el-form-item>
       <el-form-item label="开课学期" prop="courseTerm">
         <el-cascader size="small" style="width:80px;margin-right:2%;"
@@ -76,7 +75,6 @@
                            x.id==form.classroom_id))=='undefined'?1: classrooms.find(x=>
                            x.id==form.classroom_id).space"
         ></el-input-number>
-        <!--            <el-input v-model="form.max_student" :disabled="judgeDisable" text="number" max="100"/>-->
       </el-form-item>
     </el-form>
 
@@ -193,7 +191,7 @@ export default {
           value: temp1.toString() +'.'+temp0.toString()
         })
       }
-      this.time_options = temp_term;
+      this.term_options = temp_term;
     },
     data() {
         
