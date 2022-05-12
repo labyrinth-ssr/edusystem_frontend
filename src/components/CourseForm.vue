@@ -71,11 +71,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选课容量" prop="max_student">
-              <template slot-scope="scope">
-
         <el-input-number v-model="form.max_student" :disabled="judgeDisable2" :min="1"
-                         :max="typeof(form.classroom_id)=='undefined'?1: classrooms.find(x=>x.id==scope.row.classroom_id).space"
-        ></el-input-number></template>
+                         :max="typeof(form.classroom_id)=='undefined'||typeof(classrooms.find(x=>
+                           x.id==form.classroom_id))=='undefined'?1: classrooms.find(x=>
+                           x.id==form.classroom_id).space"
+        ></el-input-number>
         <!--            <el-input v-model="form.max_student" :disabled="judgeDisable" text="number" max="100"/>-->
       </el-form-item>
     </el-form>
