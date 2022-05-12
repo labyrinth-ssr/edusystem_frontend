@@ -71,13 +71,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选课容量" prop="max_student">
+              <template slot-scope="scope">
+
         <el-input-number v-model="form.max_student" :disabled="judgeDisable2" :min="1"
-                         :max="typeof(form.classroom_id)=='undefined'?1: classrooms.find(function(item, index, arr){
-          if(item.id === form.classroom_id){
-          return item;
-          }
-          },classrooms).space"
-        ></el-input-number>
+                         :max="typeof(form.classroom_id)=='undefined'?1: classrooms.find(x=>x.id==scope.row.classroom_id).space"
+        ></el-input-number></template>
         <!--            <el-input v-model="form.max_student" :disabled="judgeDisable" text="number" max="100"/>-->
       </el-form-item>
     </el-form>
@@ -86,6 +84,12 @@
 
 </template>
 <script>
+// function(item, index, arr){
+//           if(item.id === form.classroom_id){
+//             console.log(item)
+//           return item;
+//           }
+//           }
 import {str} from "mockjs/src/mock/random/basic";
 
 export default {
@@ -183,10 +187,10 @@ export default {
           temp0 = temp0 - this.$store.state.termsPerY;
           temp1 ++;
         }
-        console.log(temp1,temp0)
+        console.log(temp1,temp0,temp_term)
         temp_term.push({
-          label: str(temp1) +'.'+str(temp0),
-          value: str(temp1) +'.'+str(temp0)
+          label: temp1.toString() +'.'+temp0.toString(),
+          value: temp1.toString() +'.'+temp0.toString()
         })
       }
       this.time_options = temp_term;
