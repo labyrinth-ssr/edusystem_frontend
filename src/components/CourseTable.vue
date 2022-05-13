@@ -40,9 +40,9 @@
 
         <el-table @row-click="courseView" :data="tableData.filter(data => (!search || data.name.toLowerCase().includes(search.toLowerCase())||
         data.id.toLowerCase().includes(search.toLowerCase())||
-        data.teacher_id.toLowerCase().includes(search.toLowerCase()))
+        data.teacher_id.toLowerCase().includes(search.toLowerCase())
         && (!classroom_id || data.classroom_id.toLowerCase().includes(classroom_id.toLowerCase()))
-        &&(!filterTime || data.class_time.toLowerCase().includes(filterTime.toLowerCase())))" height="572" style="width: 100%"
+        &&(!filterTime || data.class_time.toLowerCase().includes(filterTime.toLowerCase()))))" height="572" style="width: 100%"
         >
             <el-table-column prop="id" label="课程代码" width="80"  >
             </el-table-column>
@@ -190,16 +190,19 @@ data() {
     },
     methods: {
         term_change(){
-         console.log(this.value)
-          let temp = this.value.split('-');
-          temp = temp[0] +'.' + parseInt(temp[1]).toString();
-          console.log(temp)
-          this.$axios.post('/course_sel/common/get_course/by_course_sel', {semester:temp})
-              .then((resp1)=>{
-                this.tableData = resp1.data;
-              }).catch((error)=>{
-                console.log(error)
-          })
+          let temp=''
+          if( isNaN(parseInt(this.value))) {
+            this.get_table()
+          }else {
+            temp = this.value.split('-');
+            temp = temp[0] +'.' + (parseInt(temp[1])-1).toString();
+            this.$axios.post('/course_sel/common/get_course/by_course_sel', {semester:temp})
+                .then((resp1)=>{
+                  this.tableData = resp1.data;
+                }).catch((error)=>{
+                  console.log(error)
+            })
+          }
         },
         changeT(){
             let res='';
