@@ -4,6 +4,7 @@
         :data="table.data"
         style="width: 100%"
         :stripe = "true"
+        :span-method="bindRow"
         border
         flex="left">
       <template v-for="col in table.head">
@@ -96,8 +97,8 @@ export default {
   data(){
     return{
       table: {
+        bind_arr:[],
         'data':[
-
         ],
         'head':[
           {prop:"department",label:"院系",width:"250"},
@@ -133,12 +134,57 @@ export default {
     }
   },
   methods: {
-    clear(){
-      this.$axios.get("/org/common/getorgs",{})
-          .then((response) => {
-            console.log(response.data)
-            this.$data.table.data = response.data
-          }).catch((error) => {console.log(error)});
+    bindRow({ row, column, rowIndex, columnIndex }){
+      var find_val=this.bind_arr.find(x=>x.dep==row.department)
+      if (columnIndex === 0) {
+          if (rowIndex === find_val.start) {
+            return {
+              rowspan: find_val.span,
+              colspan: 1
+            };
+          } else {
+            return {
+              rowspan: 0,
+              colspan: 0
+            };
+          }
+        }
+    },
+    clear() {
+      this.$axios.get("/org/common/getorgs", {})
+        .then((response) => {
+          console.log(response.data)
+          var data = response.data
+          data.sort(function (a, b) {
+            if (a.department < b.department) {
+              return -1;
+            }
+            if (a.department > b.department) {
+              return 1;
+            }
+            return 0;
+          });
+          var bind_arr=[]
+            var start_track=0
+          data.forEach(ele=> {
+            var index=bind_arr.findIndex(x=>x.dep==ele.department)
+            console.log(index)
+            if(index==-1){
+              bind_arr.push({dep:ele.department,start:start_track,span:1})
+              start_track+=1
+            }
+            else{
+              bind_arr[index].span+=1
+              start_track+=1
+            }
+          });
+          console.log(bind_arr)
+          this.bind_arr=bind_arr
+          console.log(data)
+          this.$data.table.data = data
+        }).catch((error) => {
+          console.log(error)
+        });
     },
     department_edit(data)
     {
