@@ -2,19 +2,82 @@
 <template>
   <div>
     <el-table
-        :data="table.data"
+        :data="table.data.filter(ele=>(
+          (!search_id|| ele.user_id.toLowerCase().includes(search_id.toLowerCase()))
+          &&(!search_name|| ele.username.toLowerCase().includes(search_name.toLowerCase()))
+          &&(!search_major|| ele.major.toLowerCase().includes(search_major.toLowerCase()))
+          &&(!search_department || ele.department.toLowerCase().includes(search_department.toLowerCase()))
+          &&(!search_role|| ele.role.toLowerCase().includes(search_role.toLowerCase()))
+        ))"
         style="width: 100%"
         :stripe = "true"
         border
         flex="left">
-      <template v-for="col in table.head">
-        <el-table-column :key="col.prop"
-                         :prop="col.prop"
-                         :label="col.label"
-                         :fixed="col.fix"
-                         :width="col.width">
-        </el-table-column>
-      </template>
+      <el-table-column prop="user_id" key="user_id" label="学号/工号" fix="left" width="150px">
+        <template slot="header" slot-scope="scope">
+          <el-input
+              v-model="search_id"
+              size="medium"
+              clearable
+              placeholder="学号/工号"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="username" key="username" label="名字" width="120px">
+
+        <template slot="header" slot-scope="scope">
+          <el-input
+              v-model="search_name"
+              size="medium"
+              clearable
+              placeholder="名字"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="role" key="role" label="身份" width="120px">
+        <template slot="header" slot-scope="scope">
+
+          <el-select v-model="search_role" size="medium" clearable placeholder="身份">
+            <el-option
+                key="teacher"
+                label="教师"
+                value="teacher">
+            </el-option>
+            <el-option
+                key="student"
+                label="学生"
+                value="student">
+            </el-option>
+            <el-option
+                key="admin"
+                label="管理员"
+                value="admin">
+            </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column prop="id_number" key="id_number" label="身份证号" width="200px"></el-table-column>
+      <el-table-column prop="register_year" key="register_year" label="注册年份"  width="100px"></el-table-column>
+      <el-table-column prop="phone_number" key="phone_number" label="手机号码"  width="100px"></el-table-column>
+      <el-table-column prop="department" key="department" label="学院" width="120px">
+        <template slot="header" slot-scope="scope">
+          <el-input
+              v-model="search_department"
+              size="medium"
+              clearable
+              placeholder="学院"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="major" key="major" label="专业"  width="120px">
+        <template slot="header" slot-scope="scope">
+          <el-input
+              v-model="search_major"
+              size="medium"
+              clearable
+              placeholder="专业"/>
+        </template>
+      </el-table-column>
+      </el-table-column>
+      <el-table-column prop="status" key="status" label="状态"  width="120px"></el-table-column>
+      <el-table-column prop="email" key="email"  label="邮箱" width="120px"></el-table-column>
       <el-table-column
           align="right"
           :width=table.navWidth
@@ -76,6 +139,11 @@ export default {
   },
   data(){
     return{
+      search_id:'',
+      search_name:'',
+      search_role:'',
+      search_major:'',
+      search_department:'',
       form_op:"add",
       dialogVisible:false,
       form:{
@@ -101,19 +169,7 @@ export default {
         department: ""
       },
       table:{
-        'data': [
-        ],
-        'head':[
-          {prop:"user_id",label:"学号/工号",fix:"left",width:"120"},
-          {prop:"username",label:"名字",width: "120"},
-          {prop:"role",label:"身份",width: "120"},
-          {prop: "id_number",label: "身份证号",width: "200"},
-          {prop: "register_year",label: "注册年份",width: "100"},
-          {prop: "phone_number",label: "手机号码",width: "100"},
-          {prop: "department",label: "学院",width: "150"},
-          {prop: "major",label: "专业",width: "150"},
-          {prop: "status",label: "状态",width: "100"},
-          {prop: "email",label: "邮箱",width: "150"}
+        data: [
         ],
         navWidth:180,
         navList:[
@@ -138,6 +194,7 @@ export default {
         text:"",
         del:this.myHandleDelete
       },
+
 
     }
   },
