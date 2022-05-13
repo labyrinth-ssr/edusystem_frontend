@@ -59,7 +59,7 @@
       </el-form-item>
       <el-form-item label="开课学期" prop="courseTerm">
         <el-cascader size="small" style="width:100px;margin-right:2%;"
-                     v-model="courseTerm"
+                     v-model="form.courseTerm"
                      :options="term_options"
                       :props="{ multiple:'true'}"
                       @change="semester_select"
@@ -112,12 +112,18 @@ export default {
     watch: {
         formdata_prop:function (newval) {
           this.rawTime= this.format_classtime(newval)
-          this.courseTerm= this.format_semester(newval)
+          this.form.courseTerm= this.format_semester(newval)
+
               this.form=newval
               console.log(this.rawTime)
+          this.format_major();
+
         },
         action_prop:function (newval) {
-              this.form=newval
+          this.action = newval
+          if(this.action=='add'){
+            this.flush()
+          }
         },
         resp_prop:function (newval) {
               this.resp=newval
@@ -155,11 +161,13 @@ export default {
       })
 
       this.form=this.formdata_prop
+      this.form.courseTerm=this.format_semester(this.formdata_prop),
       this.time_options=this.gen_time_options()
       this.$axios.get("/org/common/getorgs",{})
           .then(response => {
 
             console.log(response.data)
+            this.majorList = response.data
             var res = {}
             var res2 = []
             response.data.forEach(element => {
@@ -188,10 +196,11 @@ export default {
       console.log(this.$store.state.currentTerm.toString())
       let temp0 = (this.$store.state.currentTerm.toString()).split('.')[1]-1;
       let temp1 = (this.$store.state.currentTerm.toString()).split('.')[0];
-      for(let i = 0; i < 3;i++){
-        temp0 ++;
-        if( temp0 > this.$store.state.termsPerY){
-          temp0 = temp0 - this.$store.state.termsPerY;
+      for(let i = 0; i < 4;i++){
+
+        temp0++;
+        if( temp0 >= this.$store.state.termsPerY){
+          temp0 = 0;
           temp1 ++;
         }
         console.log(temp1,temp0,temp_term)
@@ -205,6 +214,7 @@ export default {
     data() {
         
         return {
+          majorList:[],
           rawTime:this.format_classtime(this.formdata_prop),
           classrooms:[],
           time_options:this.gen_time_options(),
@@ -228,17 +238,8 @@ export default {
           role:this.$store.state.role,
             action:this.action_prop,
             form: this.formdata_prop,
-            courseTerm:this.format_semester(this.formdata_prop),
-            
             resp:this.resp_prop,
             rules:{
-            courseTerm:[
-              {
-                required: true,
-                type: String,
-                trigger: "blur"
-              }
-            ],
             name:[
               {
                 required: true,
@@ -277,6 +278,10 @@ export default {
             ],
             acceptMajor:[
             ],
+              courseTerm:[
+                {required: true,
+                trigger: "blur",}
+              ],
             classes_per_week:[
               { required: true,
                 validator: (rule, value, callback)=>{
@@ -391,6 +396,30 @@ export default {
 
           return semesters
       },
+      format_major(newval){
+        console.log(this.format_major.name)
+        console.log(this.majorList)
+        this.necessary = this.form.course_sort !="通用课程";
+        this.course_multiple = this.form.course_sort =="面向部分专业课"
+        if(typeof(this.form.allowed_major)!='undefined' ){
+          if(this.course_multiple){
+            this.form.acceptMajor = this.form.allowed_major.toString().split(',').map(ele=>{
+               let temp= this.majorList.find(item=>item.id ==ele)
+              let res=[]
+              res.push(temp.department)
+              res.push(temp.id)
+              return res
+            })
+          }else {
+            let temp= this.majorList.find(item=>item.id ==this.form.allowed_major)
+            let res=[]
+            res.push(temp.department)
+            res.push(temp.id)
+            this.form.allowed_major = res
+          }
+          console.log(this.form.acceptMajor)
+        }
+      },
       course_select_enabled(){
         const temp = this.form.course_sort;
         if(temp ==='通用课程' || temp ===''){
@@ -406,6 +435,7 @@ export default {
       },
       handleChange(value){
         console.log(this.form.acceptMajor)
+
       },
       time_select(){
         if(this.rawTime.length==this.form.classes_per_week){
@@ -450,6 +480,9 @@ export default {
           ret.push(res)
         }
         return ret;
+      },
+      flush(){
+        this.form=[]
       }
     }
 }

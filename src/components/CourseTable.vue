@@ -287,6 +287,7 @@ data() {
             department: "",
             class_time:'',
             classroom_id:'',
+            semester:'',
         }
         },
       handleEdit(index, row) {
@@ -344,12 +345,12 @@ data() {
               }
               console.log(this.form.class_time)
               this.form.allowed_major = str;
-              console.log(this.courseTerm)
+              console.log(this.form.courseTerm)
 
               //NOTICE :A bad insert!!
 
               // this.form.class_time='2-3'
-              this.form.semester = this.courseTerm.join(',')
+              this.form.semester = this.form.courseTerm.join(',')
               console.log(this.form)
               this.$axios.post('/course/admin_teacher/add', {
                   requester_id: this.$store.state.user_id,

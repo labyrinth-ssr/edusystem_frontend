@@ -2,14 +2,14 @@
 <div>
   <h3>当前学期</h3>
   <h4>{{currentTerm }}</h4>
-  <el-form>
-    <el-form-item label="选择学期">
-      <el-quarter-picker size="small" v-model="term_value" placeholder="选择学期" @change ="term_change"/>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" size="small" @click="termEdit">修改学期</el-button>
-    </el-form-item>
-  </el-form>
+<!--  <el-form>-->
+<!--    <el-form-item label="选择学期">-->
+<!--      <el-quarter-picker size="small" v-model="term_value" placeholder="选择学期" @change ="term_change"/>-->
+<!--    </el-form-item>-->
+<!--    <el-form-item>-->
+<!--      <el-button type="primary" size="small" @click="termEdit">修改学期</el-button>-->
+<!--    </el-form-item>-->
+<!--  </el-form>-->
   <el-button @click="termGo">学期向前进</el-button>
   <el-button @click="termBack">学期向后退</el-button>
   <h3>学生选课</h3>
@@ -39,6 +39,9 @@ export default {
     this.$axios.get("/permission/common/current_semester")
         .then((resp)=>{
           this.currentTerm = resp.data.toString()
+          if(this.currentTerm.length==4){
+            this.currentTerm +='.0'
+          }
           console.log(this.currentTerm)
 
           this.term_value=this.currentTerm.split('.')[0]+'-0'+
@@ -54,6 +57,9 @@ export default {
       this.$axios.get("/permission/common/current_semester")
           .then((resp)=>{
             this.currentTerm = resp.data.toString()
+            if(this.currentTerm.length == 4){
+              this.currentTerm = this.currentTerm + '.0';
+            }
             this.term_value=this.currentTerm.split('.')[0]+'-0'+
                 this.currentTerm.split('.')[1]
             console.log(this.term_value)
@@ -97,10 +103,16 @@ export default {
       })
     },
     termGo(){
-      let temp1 = Number(this.currentTerm) + 0.1
-      if(parseInt(temp1.toString().split('.')[1]) > this.$store.state.termsPerY){
-        temp1 += 0.6;
+
+      let temp1 = this.currentTerm.split('.')
+      console.log("temp1:"+temp1)
+      if(parseInt(temp1[1] )+1>= this.$store.state.termsPerY){
+        temp1 = (parseInt(temp1[0])+1).toString()+'.0';
+      }else {
+        temp1 = temp1[0]+'.'+(parseInt(temp1[1])+1)
       }
+      console.log("current:"+ this.currentTerm)
+      console.log("temp1:"+temp1)
       this.$axios.post("/permission/admin/set_semester?semester="+temp1.toString()).then((resp)=>{
         console.log(resp.data)
         if(resp.data){
@@ -112,10 +124,15 @@ export default {
         this.flush();
       })
     },termBack(){
-      let temp1 = Number(this.currentTerm) - 0.1
-      if(parseInt(temp1.toString().split('.')[1]) == 0){
-        temp1 -= 0.6;
+
+      let temp1 = this.currentTerm.split('.')
+      if(parseInt(temp1[1]) == 0){
+        temp1 = (parseInt(temp1[0])-1).toString() + '.'+(this.$store.state.termsPerY-1)
+      }else {
+        temp1 = temp1[0]+'.'+(parseInt(temp1[1])-1).toString()
       }
+      console.log("current:"+ this.currentTerm)
+      console.log("temp1:"+temp1)
       this.$axios.post("/permission/admin/set_semester?semester="+temp1.toString()).then((resp)=>{
         console.log(resp.data)
         if(resp.data){
@@ -127,9 +144,9 @@ export default {
         this.flush()
       })
     },
-    termEdit(){
-
-    },
+    // termEdit(){
+    //
+    // },
     term_change() {
       console.log(this.$store.state.currentTerm)
       console.log(this.term_value)

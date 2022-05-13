@@ -25,7 +25,7 @@ export default new Vuex.Store({
       window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]')),
     courseInfo:{},
     currentTerm:window.localStorage.getItem('term' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('term' || '[]')),
-    termsPerY: 3,
+    termsPerY: 4,
     course_sel_stage:0
   },
   mutations: {
