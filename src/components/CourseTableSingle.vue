@@ -58,7 +58,7 @@ export default {
             course_id:'',
             course_name:'',
             course_teacher:'',
-            user_department:'',
+            user_major:'',
             display_data:[],
             componentKey:0,
             semester_list:this.format_semester(this.tableData)
@@ -94,9 +94,15 @@ export default {
         //多选时间段后，只要部分匹配即可
         this.format_time(this.classroom_list,this.tableData)
         this.$axios.get('/userinfo/common/getuserinfo').then((resp) => {
-                    this.user_department = resp.data.department
-                })
+                    // this.user_major = resp.data.major
+                    this.$axios.get('/org/common/getorgs').then((resp2)=>{
+                        console.log(resp2.data.find(x=>x.major==resp.data.major))
+            this.user_major =resp2.data.find(x=>x.major==resp.data.major).id
+            console.log(this.user_major)
+        })
 
+                })
+        
     },
     methods:{
         selectCourse(row){
@@ -167,15 +173,23 @@ export default {
                     noconflict=false;
                 }
             })
-            if(row.department!=this.user_department) row.message='专业受限'
+            var major_limit=false
+            if (typeof(row.majors)!='undefined'&& row.majors.length!=0&&typeof(row.majors.find(x=>x==this.user_major))=='undefined') {
+                major_limit=true
+            }
+            if(major_limit) row.message='专业受限'
             else if(Array.from(this.selected_data,x=>x.number).indexOf(row.number)!=-1) row.message='已选同编号课程'
             else if(!noconflict) row.message='时间冲突'
             else if(this.stage==2&&row.selected_num>=row.max_student) row.message='人数受限'
 
-            return (row.department==this.user_department)&&( Array.from(this.selected_data,x=>x.number).indexOf(row.number)==-1)&&noconflict&&(!(this.stage==2&&row.selected_num>=row.max_student))
+            return (!major_limit)&&( Array.from(this.selected_data,x=>x.number).indexOf(row.number)==-1)&&noconflict&&(!(this.stage==2&&row.selected_num>=row.max_student))
         },
         row_search(){
+            this.tableData.forEach((ele)=>{
+                ele.majors=this.format_major(ele.allowed_major)
+            })
             console.log(this.tableData)
+
             return this.tableData.filter(data =>( !this.course_id || data.id.toLowerCase().includes(this.course_id.toLowerCase()) )&&
             ( !this.course_name || data.name.toLowerCase().includes(this.course_name.toLowerCase()) )&&
             ( !this.course_teacher || data.teacher_name.toLowerCase().includes(this.course_teacher.toLowerCase()) ))
@@ -202,6 +216,11 @@ export default {
             });
             console.log(table_hightlight)
             this.$emit('click_row',table_hightlight);
+        },
+        format_major(majorstr){
+            if (majorstr=='') return []
+            console.log(majorstr.split(',').map(x=>parseInt(x)))
+            return majorstr.split(',').map(x=>parseInt(x))
         }
     },
     props:['status','tableData','selected_data','learned_data','semester','student_id','stage']

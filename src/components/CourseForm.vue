@@ -98,7 +98,8 @@ export default {
     },
     time_loop:function(){
       // this.form.class_time=[['']]
-      return this.form.point==''?1:parseInt(this.form.classes_per_week)
+      console.log(this.form)
+      return this.form.classes_per_week==''?1:parseInt(this.form.classes_per_week);
     },
 
   },
@@ -108,14 +109,15 @@ export default {
           this.rawTime= this.format_classtime(newval)
           this.form.courseTerm= this.format_semester(newval)
               this.form=newval
-              console.log(this.rawTime)
+          console.log(this.form)
+
           this.format_major();
 
         },
         action_prop:function (newval) {
           this.action = newval
           if(this.action=='add'){
-            this.flush()
+            // this.flush()
           }
         },
         resp_prop:function (newval) {
@@ -153,7 +155,7 @@ export default {
         console.log(resp.data)
       })
 
-      this.form=this.formdata_prop
+      // this.form=this.formdata_prop
       this.form.courseTerm=this.format_semester(this.formdata_prop),
       this.time_options=this.gen_time_options()
       this.$axios.get("/org/common/getorgs",{})
