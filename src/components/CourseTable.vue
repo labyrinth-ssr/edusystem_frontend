@@ -191,14 +191,17 @@ data() {
     methods: {
         term_change(){
           let temp=''
+
           if( isNaN(parseInt(this.value))) {
             this.get_table()
           }else {
             temp = this.value.split('-');
             temp = temp[0] +'.' + (parseInt(temp[1])-1).toString();
+            console.log(temp)
             this.$axios.post('/course_sel/common/get_course/by_course_sel', {semester:temp})
                 .then((resp1)=>{
                   this.tableData = resp1.data;
+                  console.log(resp1)
                 }).catch((error)=>{
                   console.log(error)
             })
@@ -232,11 +235,10 @@ data() {
                     })
         },
         course_sort_f(){
-
           var that = this;
           for(let i = 0; i <this.tableData.length; i++){
-
-            if(this.tableData[i].allowed_major ===null){
+            console.log(typeof(this.tableData[i].allowed_major))
+            if(this.tableData[i].allowed_major.length ==0){
               this.tableData[i].course_sort = "通用课程"
               this.tableData[i].acceptMajor ="不限专业"
               this.tableData[i].acceptMajor_dis ="不限专业"
@@ -467,6 +469,7 @@ data() {
       close(){
           console.log('close')
           this.resp={}
+        this.get_table()
       }
     }
 }
