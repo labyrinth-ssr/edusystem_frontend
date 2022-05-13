@@ -41,11 +41,6 @@
                 label="学生"
                 value="student">
             </el-option>
-            <el-option
-                key="admin"
-                label="管理员"
-                value="admin">
-            </el-option>
           </el-select>
         </template>
       </el-table-column>
@@ -55,6 +50,8 @@
           <el-date-picker
           v-model="search_year"
           type="year"
+          format="yyyy"
+          value-format="yyyy"
           clearable
           :style="{width:'120px'}"
           placeholder="注册年份">
@@ -203,13 +200,15 @@ export default {
   },
   methods: {
     filter(ele){
-console.log(ele.user_id)
+          console.log(this.search_year)
+      console.log(ele.register_year)
+          console.log(ele.user_id)
           return  (!this.search_id|| ele.user_id.toLowerCase().includes(this.search_id.toLowerCase()))
           &&(!this.search_name|| ele.username.toLowerCase().includes(this.search_name.toLowerCase()))
           &&(!this.search_major|| ele.major.toLowerCase().includes(this.search_major.toLowerCase()))
           &&(!this.search_department || ele.department.includes(this.search_department))
           &&(!this.search_role|| ele.role.toLowerCase().includes(this.search_role.toLowerCase()))
-          &&(!this.search_year||ele.register_year.toLowerCase().includes(this.search_year.toLowerCase()))
+          &&(!this.search_year||ele.register_year==this.search_year)
     },
     clear(){
       this.$axios.post("/userinfo/admin/getusers",{})
