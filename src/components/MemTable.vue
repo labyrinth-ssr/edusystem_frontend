@@ -2,13 +2,14 @@
 <template>
   <div>
     <el-table
-        :data="table.data.filter(ele=>(
+        :data="table.data.filter(ele=>
           (!search_id|| ele.user_id.toLowerCase().includes(search_id.toLowerCase()))
           &&(!search_name|| ele.username.toLowerCase().includes(search_name.toLowerCase()))
           &&(!search_major|| ele.major.toLowerCase().includes(search_major.toLowerCase()))
           &&(!search_department || ele.department.toLowerCase().includes(search_department.toLowerCase()))
           &&(!search_role|| ele.role.toLowerCase().includes(search_role.toLowerCase()))
-        ))"
+          &&(!search_year||ele.register_year.toLowerCase().includes(search_year.toLowerCase()))
+        )"
         style="width: 100%"
         :stripe = "true"
         border
@@ -55,7 +56,17 @@
         </template>
       </el-table-column>
       <el-table-column prop="id_number" key="id_number" label="身份证号" width="200px"></el-table-column>
-      <el-table-column prop="register_year" key="register_year" label="注册年份"  width="100px"></el-table-column>
+      <el-table-column prop="register_year" key="register_year" label="注册年份"  width="150px">
+        <template slot="header" slot-scope="scope">
+          <el-date-picker
+          v-model="search_year"
+          type="year"
+          clearable
+          :style="{width:'120px'}"
+          placeholder="注册年份">
+          </el-date-picker>
+        </template>
+      </el-table-column>
       <el-table-column prop="phone_number" key="phone_number" label="手机号码"  width="100px"></el-table-column>
       <el-table-column prop="department" key="department" label="学院" width="120px">
         <template slot="header" slot-scope="scope">
@@ -143,6 +154,7 @@ export default {
       search_role:'',
       search_major:'',
       search_department:'',
+      search_year:'',
       form_op:"add",
       dialogVisible:false,
       form:{
