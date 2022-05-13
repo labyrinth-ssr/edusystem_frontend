@@ -2,14 +2,6 @@
 <div>
   <h3>当前学期</h3>
   <h4>{{currentTerm }}</h4>
-<!--  <el-form>-->
-<!--    <el-form-item label="选择学期">-->
-<!--      <el-quarter-picker size="small" v-model="term_value" placeholder="选择学期" @change ="term_change"/>-->
-<!--    </el-form-item>-->
-<!--    <el-form-item>-->
-<!--      <el-button type="primary" size="small" @click="termEdit">修改学期</el-button>-->
-<!--    </el-form-item>-->
-<!--  </el-form>-->
   <el-button @click="termGo">学期向前进</el-button>
   <el-button @click="termBack">学期向后退</el-button>
   <h3>学生选课</h3>

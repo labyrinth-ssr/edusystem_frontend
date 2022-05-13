@@ -254,14 +254,5 @@ export default {
     flex: 0 0 30%;
 
 }
-/* #button_container{
-    text-align: right;
-} */
-/* .el-table{
-    flex: 0 0 260px;
-}
-.el-form{
-    flex:0 0 60%;
-} */
 
 </style>

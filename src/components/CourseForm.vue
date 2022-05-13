@@ -85,13 +85,6 @@
 
 </template>
 <script>
-// function(item, index, arr){
-//           if(item.id === form.classroom_id){
-//             console.log(item)
-//           return item;
-//           }
-//           }
-
 export default {
     name: 'CourseForm',
     props: ['formdata_prop', 'action_prop','resp_prop','trigger_prop'],
