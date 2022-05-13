@@ -75,7 +75,6 @@
               placeholder="专业"/>
         </template>
       </el-table-column>
-      </el-table-column>
       <el-table-column prop="status" key="status" label="状态"  width="120px"></el-table-column>
       <el-table-column prop="email" key="email"  label="邮箱" width="120px"></el-table-column>
       <el-table-column
@@ -194,8 +193,6 @@ export default {
         text:"",
         del:this.myHandleDelete
       },
-
-
     }
   },
   methods: {
