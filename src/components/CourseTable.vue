@@ -125,7 +125,6 @@ mounted (){
     console.log(resp.data)
   })
   this.get_table()
-
     let res = []
     let res2 =[]
     for (let i = 0; i < 13; i++){
@@ -205,6 +204,7 @@ data() {
                 }).catch((error)=>{
                   console.log(error)
             })
+            this.course_sort_f();
           }
         },
         changeT(){
@@ -233,6 +233,7 @@ data() {
                       console.log(resp.data)
                       this.course_sort_f()
                     })
+          this.course_sort_f()
         },
         course_sort_f(){
           var that = this;
