@@ -197,14 +197,18 @@ data() {
             temp = this.value.split('-');
             temp = temp[0] +'.' + (parseInt(temp[1])-1).toString();
             console.log(temp)
-            this.$axios.post('/course_sel/common/get_course/by_course_sel', {semester:temp})
-                .then((resp1)=>{
+            let a = new FormData()
+
+            a.append('semester_id','temp')
+            this.$axios.get('/course/common/view/by_semester',
+                {params:{ 'semester_id': temp}}).then((resp1)=>{
                   this.tableData = resp1.data;
-                  console.log(resp1)
+                  console.log(resp1.data)
+                  this.course_sort_f();
                 }).catch((error)=>{
                   console.log(error)
             })
-            this.course_sort_f();
+
           }
         },
         changeT(){

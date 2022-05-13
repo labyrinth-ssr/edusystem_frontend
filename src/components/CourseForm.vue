@@ -74,10 +74,14 @@
       </el-form-item>
       <el-form-item label="选课容量" prop="max_student">
         <el-input-number v-model="form.max_student" :disabled="judgeDisable2" :min="1"
+                         :placeholder="(typeof(form.classroom_id)=='undefined'||typeof(classrooms.find(x=>
+                           x.id==form.classroom_id))=='undefined'?1: classrooms.find(x=>
+                           x.id==form.classroom_id).space).toString()"
                          :max="typeof(form.classroom_id)=='undefined'||typeof(classrooms.find(x=>
                            x.id==form.classroom_id))=='undefined'?1: classrooms.find(x=>
                            x.id==form.classroom_id).space"
         ></el-input-number>
+        <template slot="append">max</template>
       </el-form-item>
     </el-form>
 
@@ -203,6 +207,7 @@ export default {
         })
       }
       this.term_options = temp_term;
+      this.course_select_enabled()
     },
     data() {
         
@@ -390,6 +395,13 @@ export default {
           return semesters
       },
       format_major(newval){
+        if(this.form.allowed_major.length ==0){
+          this.form.course_sort = "通用课程"
+        }else if(this.form.allowed_major.toLowerCase().includes(",".toLowerCase())){
+          this.form.course_sort = "面向部分专业课"
+        }else {
+          this.form.course_sort = "专业课"
+        }
         console.log(this.format_major.name)
         console.log(this.majorList)
         this.necessary = this.form.course_sort !="通用课程";
@@ -410,6 +422,7 @@ export default {
             res.push(temp.id)
             this.form.allowed_major = res
           }
+          console.log(this.form.course_sort)
           console.log(this.form.acceptMajor)
         }
       },
