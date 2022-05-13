@@ -2,13 +2,7 @@
 <template>
   <div>
     <el-table
-        :data="table.data.filter(ele=>
-          (!search_id|| ele.user_id.toLowerCase().includes(search_id.toLowerCase()))
-          &&(!search_name|| ele.username.toLowerCase().includes(search_name.toLowerCase()))
-          &&(!search_major|| ele.major.toLowerCase().includes(search_major.toLowerCase()))
-          &&(!search_department || ele.department.toLowerCase().includes(search_department.toLowerCase()))
-          &&(!search_role|| ele.role.toLowerCase().includes(search_role.toLowerCase()))
-          &&(!search_year||ele.register_year.toLowerCase().includes(search_year.toLowerCase()))
+        :data="table.data.filter(filter
         )"
         style="width: 100%"
         :stripe = "true"
@@ -95,7 +89,7 @@
         <template slot="header" >
           <el-menu :default-active="'/index'" router mode="horizontal" background-color="white" text-color="#222"
                    active-text-color="red" style="min-width: 1300px">
-            <el-submenu>
+            <el-submenu index>
               <template slot="title"
                         style="padding-left:10px">
                 <i class="el-icon-menu"></i>
@@ -208,11 +202,20 @@ export default {
     }
   },
   methods: {
+    filter(ele){
+console.log(ele.user_id)
+          return  (!this.search_id|| ele.user_id.toLowerCase().includes(this.search_id.toLowerCase()))
+          &&(!this.search_name|| ele.username.toLowerCase().includes(this.search_name.toLowerCase()))
+          &&(!this.search_major|| ele.major.toLowerCase().includes(this.search_major.toLowerCase()))
+          &&(!this.search_department || ele.department.includes(this.search_department))
+          &&(!this.search_role|| ele.role.toLowerCase().includes(this.search_role.toLowerCase()))
+          &&(!this.search_year||ele.register_year.toLowerCase().includes(this.search_year.toLowerCase()))
+    },
     clear(){
       this.$axios.post("/userinfo/admin/getusers",{})
           .then((response) => {
             console.log(response.data)
-            this.$data.table.data = response.data
+            this.table.data = response.data.filter((ele)=>ele.user_id!='root')
           }).catch((failResponse)=>{console.log(failResponse)});
     },
     myEditable(rows) {
