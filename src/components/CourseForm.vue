@@ -111,9 +111,9 @@ export default {
   },
     watch: {
         formdata_prop:function (newval) {
+          console.log('change')
           this.rawTime= this.format_classtime(newval)
           this.form.courseTerm= this.format_semester(newval)
-
               this.form=newval
               console.log(this.rawTime)
           this.format_major();
