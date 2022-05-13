@@ -38,9 +38,9 @@
         </span>
       </div>
 
-        <el-table @row-click="courseView" :data="tableData.filter(data => (!search || data.name.toLowerCase().includes(search.toLowerCase())||
+        <el-table @row-click="courseView" :data="tableData.filter(data => ((!search || data.name.toLowerCase().includes(search.toLowerCase())||
         data.id.toLowerCase().includes(search.toLowerCase())||
-        data.teacher_id.toLowerCase().includes(search.toLowerCase())
+        data.teacher_id.toLowerCase().includes(search.toLowerCase()))
         && (!classroom_id || data.classroom_id.toLowerCase().includes(classroom_id.toLowerCase()))
         &&(!filterTime || data.class_time.toLowerCase().includes(filterTime.toLowerCase()))))" height="572" style="width: 100%"
         >
