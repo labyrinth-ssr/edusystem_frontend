@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import form from "element-ui/packages/form";
 
 export default {
   name: "ApplyFromStu",

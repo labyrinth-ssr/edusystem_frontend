@@ -14,7 +14,6 @@ import AddUserForm from '@/components/AddUserForm'
 import FileUpload from '@/components/FileUpload'
 import DepartmentForm from "@/components/DepartmentForm"
 import CourseSelect from "@/components/CourseSelect"
-import  MyCourseSelect from "@/components/MyCourse"
 import MyCourse from "@/components/MyCourse";
 import OneCourse from "@/components/OneCourse";
 import ApplyFromStu from "@/components/ApplyFromStu"

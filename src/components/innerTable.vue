@@ -35,7 +35,6 @@
 
 <script>
 import InnerMenu from './innerMenu.vue'
-import row from "element-ui/packages/row";
 
 export default {
   name: "InnerTable",

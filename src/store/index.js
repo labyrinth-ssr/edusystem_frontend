@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { asyncRouterMap, constantRouterMap } from '../router/index.js';
-import current from "element-ui/packages/table/src/store/current";
 
 
 Vue.use(Vuex)
