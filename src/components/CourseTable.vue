@@ -349,12 +349,18 @@ data() {
         this.get_table()
       },
       addcourse(){
+        this.$message({
+          type: "info",
+          message:"请提前根据课程列表的筛选功能确定时间无冲突！",
+          customClass:'info-message'
+        })
           this.form_op='add';
           this.empty_form();
           this.dialogVisible=true
           console.log("open")
       },
       admin_teacher_add_course() {
+
               if (this.role == 'teacher') {
                   this.form.teacher_id = this.$store.state.user_id
               }
@@ -498,6 +504,9 @@ data() {
 </script>
 
 <style>
+.info-message{
+  z-index:3000 !important;
+}
 .filter{
   vertical-align: middle;
   position: sticky;
