@@ -46,7 +46,7 @@ export default {
   mounted () {
     this.$axios.get("/permission/common/check_choose_course")
         .then((resp)=>{
-          this.applyPermit= resp.data!=0
+          this.applyPermit= resp.data==2
         }).catch((error)=>{
       console.log(error)
     })

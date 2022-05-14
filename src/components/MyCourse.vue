@@ -4,7 +4,7 @@
       <el-card style="{ padding: 0;margin: 5px;border-radius: 10px;}" :body-style = "{padding:'0px'}">
         <span class="image">&nbsp;</span>
         <div style="padding: 0px;">
-          <el-link type="primary">{{item.id +"-"+ item.name + "-"+item.teacher_name}}</el-link>
+<!--          <el-link type="primary">{{item.id +"-"+ item.name + "-"+item.teacher_name}}</el-link>-->
           <el-button type="text" class="button" @click="myCourseView($event)">{{item.id +"-"+ item.name + "-"+item.teacher_name}}</el-button>
           <br>
           <div class="bottom">
@@ -23,10 +23,7 @@ export default {
     let form = {};
 
     if(this.$store.state.role ==='teacher'){
-      form['teacherId'] = this.$store.state.user_id;}
-    else if(this.$store.state.role ==="student"){
-      form['studentId'] = this.$store.state.user_id;
-    }
+      form['teacherId'] = this.$store.state.user_id;
       this.$axios.post("/course_sel/common/get_course/by_course_sel",form).then((response) =>{
         this.myCourseList = response.data;
         console.log(response.data)
@@ -34,6 +31,19 @@ export default {
         this.myCourseList = [];
         console.log(error)
       })
+    }
+    else if(this.$store.state.role ==="student"){
+      form['studentId'] = this.$store.state.user_id;
+      this.$axios.post('course_sel/student/get_course_sel/by_student',{"studentId":"this.$store.state.user_id"})
+      .then((response)=>{
+        console.log(response.data)
+        this.myCourseList = response.data
+      }).catch((error) =>{
+        this.myCourseList =[]
+      })
+
+    }
+
 
     console.log(this.myCourseList)
   },

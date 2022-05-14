@@ -110,6 +110,16 @@ export default {
   created() {
     this.courseInfo = this.$store.state.courseInfo;
     let temp ={};
+    const my_id = this.courseInfo.teacher_id.toString()
+    if(this.$store.state.role!='student'){
+      this.$axios.get(`userinfo/admin_teacher/getUserInfoById/${my_id}`)
+      .then((resp)=>{
+        this.courseInfo.teacher_name = resp.data
+      }).catch((error)=>{
+        this.courseInfo.teacher_name ="佚名"
+        console.log(error)
+      })
+    }
     temp['courseId'] = this.$store.state.courseInfo.id;
     if (this.$store.state.role ==='teacher'){
       temp['teacherId'] = this.$store.state.user_id
