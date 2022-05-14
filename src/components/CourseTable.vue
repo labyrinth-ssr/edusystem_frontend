@@ -88,16 +88,16 @@
             <el-table :data="tableData.filter(ele=>(
                 (watch_union1(form.class_time.split(','),ele.class_time.split(',')))&&
                 (watch_union(form.courseTerm, ele.semester.split(','))))
-          &&( form.classroom_id==ele.classroom_id))" style="width: 100%;height: 100px" >
+          &&( form.classroom_id==ele.classroom_id))" style="width: 100%;height: 120px" >
               <el-table-column prop="id" label="课程代码" width="100px"  >
               </el-table-column>
               <el-table-column prop="name" label="课程名" width="80px">
               </el-table-column>
               <el-table-column prop="teacher_id" label="任课教师id" width="100px">
               </el-table-column>
-              <el-table-column prop="semester" label="开课学期" width="180px">
+              <el-table-column prop="semester" label="开课学期" width="150px">
               </el-table-column>
-              <el-table-column prop="class_time" label="上课时间" width="180px">
+              <el-table-column prop="class_time" label="上课时间" width="150px">
               </el-table-column>
               <el-table-column prop="classroom_id" label="上课地点" width="80px">
               </el-table-column>
