@@ -1,7 +1,7 @@
 <template>
     <div class="app-container" style="text-align:center;">
         <el-table :data="tableData" height="620" style="width:90%;">
-            <el-table-column prop="requester_id" label="请求教师id" >
+            <el-table-column prop="requester_id" label="请求id" >
             </el-table-column>
             <el-table-column prop="request_class" label="请求类型" >
               <template slot-scope="scope">
@@ -30,6 +30,20 @@
         <el-dialog :visible.sync="requestDialogVis">
           <course-form :formdata_prop="request_data" action_prop="watch"/>
         </el-dialog>
+      <el-dialog :visible.sync="requestDialogVisStu">
+        <el-form  style="text-align: left"
+                 label-position="right" label-width="80px">
+          <el-form-item label="学生id">
+            <el-input v-model="request_data.studentId" disabled />
+          </el-form-item>
+          <el-form-item label="课程id">
+            <el-input v-model="request_data.courseId" disabled />
+          </el-form-item>
+          <el-form-item label="申请理由">
+            <el-input v-model="request_data.reason" type="textarea" disabled />
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
 </template>
 
@@ -47,7 +61,8 @@ data() {
         tableData: [],
         request_data:{},
         requestDialogVis:false,
-        processed:false
+        processed:false,
+        requestDialogVisStu:false,
       }
     },
     methods: {
@@ -74,32 +89,20 @@ data() {
         }
       },
       get_request_type(val){
-return val.split(/(?=[A-Z])/)[0]
+        return val.split(/(?=[A-Z])/)[0]
       },
       get_table(){
-this.$axios.get('/requests/courses/admin/view/all')
-      .then((resp)=>{
-        console.log(resp.data)
-        if(resp.data.handle_result=='processing'){
-          this.processed=false
-        }else{
-          this.processed=true
-        }
-          this.tableData=resp.data.reverse()
-          this.course_sort_f();
-      })
-      },
-      course_sort_f(){
-        for(let i = 0; i <this.tableData.length; i++){
-          if(this.tableData[i].allowed_major ===null){
-            this.tableData[i].course_sort = "通用课程"
-          }else if(this.tableData[i].allowed_major.toLowerCase().includes(",".toLowerCase())){
-            this.tableData[i].course_sort = "面向部分专业课"
-          }else {
-            this.tableData[i].course_sort = "专业课"
+        this.$axios.get('/requests/courses/admin/view/all')
+        .then((resp)=>{
+          console.log(resp.data)
+          if(resp.data.handle_result=='processing'){
+            this.processed=false
+          }else{
+            this.processed=true
           }
-        }
-
+            this.tableData=resp.data.reverse()
+            console.log(this.tableData)
+        })
       },
       handleApprove(index, row) {
         this.$axios.post('/requests/courses/admin/permit',{
@@ -138,8 +141,16 @@ this.$axios.get('/requests/courses/admin/view/all')
         })
       },
       requestDetail(info){
-        this.request_data=info
-        this.requestDialogVis=true
+        if(typeof (info.studentId)=='undefined'){
+          this.request_data=null
+          this.request_data=info
+          this.requestDialogVis=true
+
+        }else {
+          this.request_data=info
+          this.requestDialogVisStu = true;
+        }
+
       }
     }
 }

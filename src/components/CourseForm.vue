@@ -112,10 +112,9 @@ export default {
           console.log('change')
           this.rawTime= this.format_classtime(newval)
           this.form.courseTerm= this.format_semester(newval)
-              this.form=newval
+          this.form=newval
+          this.format_major(newval);
           console.log(this.form)
-
-          this.format_major();
 
         },
         action_prop:function (newval) {
@@ -162,6 +161,7 @@ export default {
       // this.form=this.formdata_prop
       this.form.courseTerm=this.format_semester(this.formdata_prop),
       this.time_options=this.gen_time_options()
+      this.format_major()
       this.$axios.get("/org/common/getorgs",{})
           .then(response => {
 
@@ -405,10 +405,9 @@ export default {
           this.form.course_sort = "专业课"
         }
         console.log(this.format_major.name)
-        console.log(this.majorList)
         this.necessary = this.form.course_sort !="通用课程";
         this.course_multiple = this.form.course_sort =="面向部分专业课"
-        if(typeof(this.form.allowed_major)!='undefined' ){
+        if(this.necessary){
           if(this.course_multiple){
             this.form.acceptMajor = this.form.allowed_major.toString().split(',').map(ele=>{
                let temp= this.majorList.find(item=>item.id ==ele)
