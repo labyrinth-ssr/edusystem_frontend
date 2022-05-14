@@ -40,7 +40,7 @@
         <i class="el-icon-date"></i>
         上课时间
       </template>
-      {{courseInfo.semester+"\\"+ courseInfo.class_time }}
+      {{courseInfo.this_semester+"\\"+ courseInfo.class_time }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
@@ -109,9 +109,10 @@ export default {
 
   created() {
     this.courseInfo = this.$store.state.courseInfo;
+    console.log(this.courseInfo)
     let temp ={};
     const my_id = this.courseInfo.teacher_id.toString()
-    if(this.$store.state.role!='student'){
+    if(this.$store.state.role=='admin'){
       this.$axios.get(`userinfo/admin_teacher/getUserInfoById/${my_id}`)
       .then((resp)=>{
         this.courseInfo.teacher_name = resp.data
@@ -126,6 +127,8 @@ export default {
     }else if(this.$store.state.role ==='student'){
       temp['studentId'] = this.$store.state.user_id;
     }
+    temp['semester'] = this.courseInfo.semester
+    console.log(temp)
     console.log(this.$store.state.courseInfo.id)
     this.$axios.post("/course_sel/common/get_course_sel/by_all",
     temp).then((response)=>{
@@ -135,8 +138,10 @@ export default {
       console.log(error)
     })
     let temp2 = new FormData();
-    temp2.append('courseId', "this.courseInfo.id")
-    temp2.append('semester',"this.course_list[0].semester")
+    const t1 = this.courseInfo.id
+    const t2 = this.courseInfo.semester
+    temp2.append('courseId', `${this.courseInfo.id}`)
+    temp2.append('semester',`${this.courseInfo.this_semester}`)
     this.$axios.post("/course_sel/common/count/by_course_id_and_semester",temp2)
     .then((response) =>{
       console.log(response.data)
