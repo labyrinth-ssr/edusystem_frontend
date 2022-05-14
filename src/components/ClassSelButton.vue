@@ -67,6 +67,14 @@ export default {
     },
     changeSel() {
       const temp = new FormData()
+      if(this.class_sel_permit==2){
+        this.$axios.get('/course_sel/admin/filter_in_first_stage')
+        .then((resp)=>{
+          console.log(resp)
+        }).catch((error)=>{
+          console.log(error)
+        })
+      }
       temp.append("stage",`${this.class_sel_permit}`)
       //NOTICE: It is test!!
       this.$axios.post('/permission/test/choose_course',temp)
