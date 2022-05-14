@@ -66,36 +66,29 @@ export default {
       })
     },
     changeSel() {
-      console.log(this.class_sel_permit)
-      this.$axios({
-        method: 'post',
-        url: '/permission/admin/choose_course',
-        params: {
-          stage: this.class_sel_permit,
-        }
-      }).then((resp) => {
-        console.log(resp.data)
-        if(resp.data){
-          this.$message({
-            type:'success',
-            message:"修改成功！"
-          })
-          this.flush();
-        }else {
-          this.$message({
-            type:'error',
-            message:"修改失败！"
-          })
-        }
-      }).catch((error)=>{
-            console.log(error)
-      })
-      this.$axios.get("/permission/common/check_choose_course").then((response)=>{
-        console.log("选课阶段:"+response.data)
+      const temp = new FormData()
+      temp.append("stage",`${this.class_sel_permit}`)
+      //NOTICE: It is test!!
+      this.$axios.post('/permission/test/choose_course',temp)
+          .then((resp) => {
+            console.log(resp.data)
+            if(resp.data){
+              this.$message({
+                type:'success',
+                message:"修改成功！"
+              })
+              this.flush();
+            }else {
+              this.$message({
+                type:'error',
+                message:"修改失败！"
+              })
+            }
+          }).catch((error)=>{
+        console.log(error)
       })
     },
     termGo(){
-
       let temp1 = this.currentTerm.split('.')
       console.log("temp1:"+temp1)
       if(parseInt(temp1[1] )+1>= this.$store.state.termsPerY){
@@ -105,7 +98,9 @@ export default {
       }
       console.log("current:"+ this.currentTerm)
       console.log("temp1:"+temp1)
-      this.$axios.post("/permission/admin/set_semester?semester="+temp1.toString()).then((resp)=>{
+      //NOTICE: The TEST!!
+      this.$axios.post("/permission/test/set_semester?semester="+temp1.toString()).then((resp)=>{
+      // this.$axios.post("/permission/admin/set_semester?semester="+temp1.toString()).then((resp)=>{
         console.log(resp.data)
         if(resp.data){
           this.$axios.get('/permission/common/current_semester').then((resp)=>{
@@ -125,7 +120,9 @@ export default {
       }
       console.log("current:"+ this.currentTerm)
       console.log("temp1:"+temp1)
-      this.$axios.post("/permission/admin/set_semester?semester="+temp1.toString()).then((resp)=>{
+      //NOTICE: The TEST!!
+      this.$axios.post("/permission/test/set_semester?semester="+temp1.toString()).then((resp)=>{
+      // this.$axios.post("/permission/admin/set_semester?semester="+temp1.toString()).then((resp)=>{
         console.log(resp.data)
         if(resp.data){
           this.$axios.get('/permission/common/current_semester').then((resp)=>{

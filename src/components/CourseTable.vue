@@ -44,35 +44,35 @@
         && (!classroom_id || data.classroom_id.toLowerCase().includes(classroom_id.toLowerCase()))
         &&(!filterTime || data.class_time.toLowerCase().includes(filterTime.toLowerCase()))))" height="572" style="width: 100%"
         >
-            <el-table-column prop="id" label="课程代码" width="80"  >
+            <el-table-column prop="id" label="课程代码" width="100px"  >
             </el-table-column>
-            <el-table-column prop="number" label="课程编号" width="80">
+            <el-table-column prop="number" label="课程编号" width="80px">
             </el-table-column>
-            <el-table-column prop="name" label="课程名" width="80">
+            <el-table-column prop="name" label="课程名" width="80px">
             </el-table-column>
-          <el-table-column prop="course_sort" label="课程类型" width="80">
+          <el-table-column prop="course_sort" label="课程类型" width="80px">
           </el-table-column>
-            <el-table-column prop="department" label="开课院系" width="80">
+            <el-table-column prop="department" label="开课院系" width="80px">
             </el-table-column>
-          <el-table-column prop="acceptMajor_dis" label="选课专业" width="80">
+          <el-table-column prop="acceptMajor_dis" label="选课专业" width="200px">
           </el-table-column>
-            <el-table-column prop="classes_per_week" label="学时" width="80">
+            <el-table-column prop="classes_per_week" label="学时" width="80px">
             </el-table-column>
-            <el-table-column prop="point" label="学分" width="80">
+            <el-table-column prop="point" label="学分" width="80px">
             </el-table-column>
-            <el-table-column prop="teacher_id" label="任课教师id" width="100">
+            <el-table-column prop="teacher_id" label="任课教师id" width="100px">
             </el-table-column>
-            <el-table-column prop="introduction" label="课程介绍" width="180">
+            <el-table-column prop="introduction" label="课程介绍" width="180px">
             </el-table-column>
-            <el-table-column prop="semester" label="开课学期" width="180">
+            <el-table-column prop="semester" label="开课学期" width="180px">
             </el-table-column>
-            <el-table-column prop="class_time" label="上课时间" width="180">
+            <el-table-column prop="class_time" label="上课时间" width="180px">
             </el-table-column>
-            <el-table-column prop="classroom_id" label="上课地点" width="80">
+            <el-table-column prop="classroom_id" label="上课地点" width="80px">
             </el-table-column>
-            <el-table-column prop="max_student" label="任课容量" width="80">
+            <el-table-column prop="max_student" label="任课容量" width="80px">
             </el-table-column>
-            <el-table-column label="操作" width="170">
+            <el-table-column label="操作" width="170" fix="right">
                 <template slot-scope="scope">
                     <el-button size="mini" v-if="role=='student'">选课</el-button>
                     <div v-else>
@@ -84,6 +84,26 @@
         </el-table>
           <el-dialog :title="form_title" :visible.sync="dialogVisible" :close-on-click-modal='false' @close="close">
               <course-form :action_prop="form_op" :formdata_prop="form" :resp_prop="resp.data" :trigger_prop="trigger"/>
+
+            <el-table :data="tableData.filter(ele=>(
+                (watch_union1(form.class_time.split(','),ele.class_time.split(',')))&&
+                (watch_union(form.courseTerm, ele.semester.split(','))))
+          &&(form.classroom_id || form.classroom_id==ele.classroom_id))" style="width: 100%;height: 100px" >
+              <el-table-column prop="id" label="课程代码" width="100px"  >
+              </el-table-column>
+              <el-table-column prop="number" label="课程编号" width="80px">
+              </el-table-column>
+              <el-table-column prop="name" label="课程名" width="80px">
+              </el-table-column>
+              <el-table-column prop="teacher_id" label="任课教师id" width="100px">
+              </el-table-column>
+              <el-table-column prop="semester" label="开课学期" width="180px">
+              </el-table-column>
+              <el-table-column prop="class_time" label="上课时间" width="180px">
+              </el-table-column>
+              <el-table-column prop="classroom_id" label="上课地点" width="80px">
+              </el-table-column>
+            </el-table>
               <div slot="footer" class="dialog-footer">
                   <el-button @click="test">
                       取消
@@ -168,6 +188,7 @@ data() {
           resp:{},
         fileList: [],
         tableData: [],
+        tableData_conflict:[],
         form:{
             number: "",
             name: "",
@@ -190,6 +211,51 @@ data() {
       }
     },
     methods: {
+        watch_union1(obj1,obj2){
+          //交集为空，则为false
+          //有冲突，则为TRUE
+          let obj1_ = obj1
+
+          let  res = true
+          if(typeof (obj1_)=='undefined'){
+            res = true
+          } else {
+            obj1_ = JSON.stringify(obj1_)
+            obj1_ = JSON.parse(obj1_)
+            obj1_= obj1_
+            if(obj1_.length==0){
+
+              res = true
+            }else {
+              res = (obj1_.length + obj2.length)!==Array.from(new Set([...obj1_,...obj2])).length
+            }
+          }
+          return res
+        },
+      watch_union(obj1,obj2){
+        //交集为空，则为false
+        //有冲突，则为TRUE
+        let obj1_ = obj1
+
+        let  res = true
+        if(typeof (obj1_)=='undefined'){
+          res = true
+        } else {
+          obj1_ = JSON.stringify(obj1_)
+          obj1_ = JSON.parse(obj1_)
+          if(obj1_.length==0){
+            res = true
+          }else {
+            let temp=[]
+            for(let i=0;i<obj1_.length;i++){
+              temp.push(obj1_[i][0])
+            }
+            obj1_ = temp
+            res = (obj1_.length + obj2.length)!==Array.from(new Set([...obj1_,...obj2])).length
+          }
+        }
+        return res
+      },
         term_change(){
           let temp=''
           if( isNaN(parseInt(this.value))) {
@@ -314,6 +380,7 @@ data() {
             class_time:'',
             classroom_id:'',
             semester:'',
+            courseTerm:[],
         }
         },
       handleEdit(index, row) {

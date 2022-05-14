@@ -84,9 +84,9 @@ export default {
   },
   methods: {
     stuApply(){
-
-      this.$axios.post('/course_sel/student/request_course_sel',JSON.stringify(this.form))
+      this.$axios.post('/course_sel/student/request_course_sel',this.form)
       .then((resp)=>{
+        console.log(resp)
         if(resp.data.ok){
           this.$message({
             type:'success',
