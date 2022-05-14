@@ -64,6 +64,8 @@
             </el-table-column>
             <el-table-column prop="introduction" label="课程介绍" width="180">
             </el-table-column>
+            <el-table-column prop="semester" label="开课学期" width="180">
+            </el-table-column>
             <el-table-column prop="class_time" label="上课时间" width="180">
             </el-table-column>
             <el-table-column prop="classroom_id" label="上课地点" width="80">
@@ -190,7 +192,6 @@ data() {
     methods: {
         term_change(){
           let temp=''
-
           if( isNaN(parseInt(this.value))) {
             this.get_table()
           }else {
@@ -280,9 +281,24 @@ data() {
 
         },
         courseView(row, column, $event){
+          if(this.$store.state.role=='admin')
+          {
+
             console.log(row)
             this.$store.state.courseInfo = row;
+            let temp =''
+            if( isNaN(parseInt(this.value))) {
+              this.$store.state.courseInfo.this_semester =row.semester.split(',')[0]
+            }else {
+              temp= this.value.split('-');
+              temp = temp[0] +'.' + (parseInt(temp[1])-1).toString();
+              console.log(temp)
+              this.$store.state.courseInfo.this_semester = temp
+            }
+
             this.$router.push('/courses/mycourseView');
+          }
+
         },
         empty_form(){
             this.form={

@@ -51,6 +51,7 @@ export default {
         let term_index=temp.map(ele=>ele.this_semester)
         term_index = Array.from(new Set(term_index))
         term_index.sort()
+        term_index = term_index.reverse()
         this.myCourseList = []
         for(let i=0;i<term_index.length;i++){
           this.myCourseList.push([])
@@ -79,6 +80,7 @@ export default {
         // term_index.push("2032.8")
         // term_index.push("2098.9")
         term_index.sort()
+        term_index = term_index.reverse()
         console.log(term_index)
         let temp=[]
         for(let i=0;i<term_index.length;i++){

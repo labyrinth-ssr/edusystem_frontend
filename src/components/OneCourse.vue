@@ -40,7 +40,13 @@
         <i class="el-icon-date"></i>
         上课时间
       </template>
-      {{courseInfo.this_semester+"\\"+ courseInfo.class_time }}
+      <span v-if="amIadmin">
+        {{courseInfo.semester+"\\"+ courseInfo.class_time }}
+      </span>
+      <span v-else>
+        {{courseInfo.this_semester+"\\"+ courseInfo.class_time }}
+      </span>
+
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
@@ -75,7 +81,25 @@
       {{courseInfo.department}}
     </el-descriptions-item>
   </el-descriptions>
+  <template v-if="amIadmin">
+    <el-descriptions class="margin-top" title="学期筛选" :column="1"  style="{width:200px}" border>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-date"></i>
+          开课学期
+        </template>
+        <el-select v-model="term_filter" placeholder="请选择" @change="fetchInfo">
+          <el-option
+              v-for="item in term_options"
+              :key="item"
+              :label="item"
+              :value="item">
+          </el-option>
+        </el-select>
+      </el-descriptions-item>
+    </el-descriptions>
 
+  </template>
   <el-descriptions class="margin-top" title="学生信息" :column="2"  border>
     <el-descriptions-item>
       <template slot="label">
@@ -91,12 +115,12 @@
       </template>
       {{students}}
     </el-descriptions-item>
-    <el-descriptions-item v-for="item in course_list" :key="item.studentId" >
+    <el-descriptions-item v-for="item in studentsList" :key="item.userId" >
       <template slot="label">
-        <i class="el-icon-mobile-phone"></i>
-        学生id
+        <i class="el-icon-user"></i>
+        {{item.userId}}
       </template>
-      {{item.studentId}}
+      {{item.userName}}
     </el-descriptions-item>
   </el-descriptions>
 
@@ -110,9 +134,8 @@ export default {
   created() {
     this.courseInfo = this.$store.state.courseInfo;
     console.log(this.courseInfo)
-    let temp ={};
     const my_id = this.courseInfo.teacher_id.toString()
-    if(this.$store.state.role=='admin'){
+    if(this.$store.state.role =='admin'){
       this.$axios.get(`userinfo/admin_teacher/getUserInfoById/${my_id}`)
       .then((resp)=>{
         this.courseInfo.teacher_name = resp.data
@@ -121,45 +144,70 @@ export default {
         console.log(error)
       })
     }
-    temp['courseId'] = this.$store.state.courseInfo.id;
-    if (this.$store.state.role ==='teacher'){
-      temp['teacherId'] = this.$store.state.user_id
-    }else if(this.$store.state.role ==='student'){
-      temp['studentId'] = this.$store.state.user_id;
+    this.amIadmin = this.$store.state.role=='admin';
+    if(this.amIadmin){
+
+      this.term_options=this.courseInfo.semester.split(',')
+      this.term_filter = this.courseInfo.this_semester
     }
-    temp['semester'] = this.courseInfo.semester
-    console.log(temp)
-    console.log(this.$store.state.courseInfo.id)
-    this.$axios.post("/course_sel/common/get_course_sel/by_all",
-    temp).then((response)=>{
-      this.course_list = response.data
-      console.log(this.course_list[0])
-    }).catch((error)=>{
-      console.log(error)
-    })
-    let temp2 = new FormData();
-    const t1 = this.courseInfo.id
-    const t2 = this.courseInfo.semester
-    temp2.append('courseId', `${this.courseInfo.id}`)
-    temp2.append('semester',`${this.courseInfo.this_semester}`)
-    this.$axios.post("/course_sel/common/count/by_course_id_and_semester",temp2)
-    .then((response) =>{
-      console.log(response.data)
-      this.students = response.data
-    }).catch((error)=>{
-      console.log(error)
-    })
+
+    this.fetchInfo()
   },
   data(){
     return{
+      amIadmin:this.$store.state.role=='admin',
+      term_options:[],
+      term_filter: '',
       courseInfo: {},
       course_list: [],
-      students: 0
+      students: 0,
+      studentsList:[]
     }
   },
   methods:{
     handleClose(){
       this.$router.go(-1)
+    },
+    fetchInfo(){
+      let temp ={};
+      if(this.amIadmin){
+        this.courseInfo.this_semester = this.term_filter
+      }
+      temp['courseId'] = this.$store.state.courseInfo.id;
+      temp['teacherId'] = this.courseInfo.teacher_id;
+      // if (this.$store.state.role ==='teacher'){
+      //   temp['teacherId'] = this.$store.state.user_id
+      // }else if(this.$store.state.role ==='student'){
+      //   temp['studentId'] = this.$store.state.user_id;
+      // }
+      temp['semester'] = this.courseInfo.this_semester
+      console.log(temp)
+      console.log(this.$store.state.courseInfo.id)
+      this.$axios.post("/course_sel/common/get_course_sel/by_all",
+          temp).then((response)=>{
+        this.course_list = response.data
+        console.log(this.course_list)
+      }).catch((error)=>{
+        console.log(error)
+      })
+      let temp2 = new FormData();
+      const t1 = this.courseInfo.id
+      const t2 = this.courseInfo.semester
+      temp2.append('courseId', `${this.courseInfo.id}`)
+      temp2.append('semester',`${this.courseInfo.this_semester}`)
+      this.$axios.post("/course_sel/common/count/by_course_id_and_semester",temp2)
+          .then((response) =>{
+            console.log(response.data)
+            this.students = response.data
+          }).catch((error)=>{
+        console.log(error)
+      })
+      this.$axios.post("course_sel/common/getUserByCourse",temp2)
+      .then((resp)=>{
+        this.studentsList = resp.data
+      }).catch((error)=>{
+        console.log(error)
+      })
     }
   }
 }
