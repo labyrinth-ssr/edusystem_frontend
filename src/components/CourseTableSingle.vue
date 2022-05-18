@@ -112,7 +112,7 @@ export default {
             }
             this.$axios.post('/course_sel/student/add_course_sel',sel_data).then((resp)=>{
                 this.$message({message:resp.data.ok,type:'success'})
-            this.$emit('updatePage');
+                this.$emit('updatePage');
 
             }
             )
@@ -184,11 +184,13 @@ export default {
                 major_limit=true
             }
             if(major_limit) row.message='专业受限'
-            else if(Array.from(this.selected_data,x=>x.number).indexOf(row.number)!=-1) row.message='已选同编号课程'
+            else if(Array.from(this.selected_data,x=>x.number).indexOf(row.number)!=-1 || Array.from(this.learned_data,x=>x.number).indexOf(row.number)!=-1) row.message='已选/修同编号课程'
             else if(!noconflict) row.message='时间冲突'
             else if(this.stage==2&&row.selected_num>=row.max_student) row.message='人数受限'
 
-            return (!major_limit)&&( Array.from(this.selected_data,x=>x.number).indexOf(row.number)==-1)&&noconflict&&(!(this.stage==2&&row.selected_num>=row.max_student))
+            console.log(Array.from(this.learned_data,x=>x.number))
+
+            return (!major_limit)&&( Array.from(this.selected_data,x=>x.number).indexOf(row.number)==-1 && Array.from(this.learned_data,x=>x.number).indexOf(row.number)==-1)&&noconflict&&(!(this.stage==2&&row.selected_num>=row.max_student))
         },
         row_search(){
             
