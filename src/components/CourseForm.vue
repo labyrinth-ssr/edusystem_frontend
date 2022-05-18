@@ -144,24 +144,6 @@ export default {
         }
     },
     created() {
-      let temp_term =[];
-      console.log(this.$store.state.currentTerm.toString())
-      let temp0 = (this.$store.state.currentTerm.toString()).split('.')[1]-1;
-      let temp1 = (this.$store.state.currentTerm.toString()).split('.')[0];
-      for(let i = 0; i < 4;i++){
-
-        temp0++;
-        if( temp0 >= this.$store.state.termsPerY){
-          temp0 = 0;
-          temp1 ++;
-        }
-        console.log(temp1,temp0,temp_term)
-        temp_term.push({
-          label: temp1.toString() +'.'+temp0.toString(),
-          value: temp1.toString() +'.'+temp0.toString()
-        })
-      }
-      this.term_options = temp_term;
       console.log(this.form)
       this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classrooms=resp.data
@@ -177,12 +159,15 @@ export default {
       })
 
       // this.form=this.formdata_prop
-
+      this.form.courseTerm=this.format_semester(this.formdata_prop),
+      this.time_options=this.gen_time_options()
       this.$axios.get("/org/common/getorgs",{})
           .then(response => {
 
             console.log(response.data)
             this.majorList = response.data
+      this.format_major()
+
             var res = {}
             var res2 = []
             response.data.forEach(element => {
@@ -207,11 +192,25 @@ export default {
           }).catch((error) => {
         console.log(error)
       })
-      this.form.courseTerm=this.format_semester(this.formdata_prop),
-      this.time_options=this.gen_time_options()
-      this.format_major()
-      this.course_select_enabled()
+      let temp_term =[];
+      console.log(this.$store.state.currentTerm.toString())
+      let temp0 = (this.$store.state.currentTerm.toString()).split('.')[1]-1;
+      let temp1 = (this.$store.state.currentTerm.toString()).split('.')[0];
+      for(let i = 0; i < 4;i++){
 
+        temp0++;
+        if( temp0 >= this.$store.state.termsPerY){
+          temp0 = 0;
+          temp1 ++;
+        }
+        console.log(temp1,temp0,temp_term)
+        temp_term.push({
+          label: temp1.toString() +'.'+temp0.toString(),
+          value: temp1.toString() +'.'+temp0.toString()
+        })
+      }
+      this.term_options = temp_term;
+      this.course_select_enabled()
     },
     data() {
         
@@ -412,6 +411,8 @@ export default {
         if(this.necessary){
           if(this.course_multiple){
             this.form.acceptMajor = this.form.allowed_major.toString().split(',').map(ele=>{
+              console.log(this.majorList)
+              console.log(ele)
                let temp= this.majorList.find(item=>item.id ==ele)
               let res=[]
               res.push(temp.department)

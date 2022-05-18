@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="row_search()" style="width: 100%" @row-click="row_click" :row-style="row_style"
+    <el-table :data="row_search()" style="width: 100% " @row-click="row_click" :row-style="row_style"
         :cell-style="{padding:'0px'}" highlight-current-row>
         <el-table-column prop="id" label="课程代码" width="130" v-if="status=='unselect'">
             <template slot="header" slot-scope="scope">
@@ -23,7 +23,7 @@
             </template>
         </el-table-column>
         <el-table-column prop="teacher_name" label="任课教师" width="100" v-else />
-        <el-table-column prop="semester" label="修课学期" v-if="status=='learned'" width="130" :filters="semester_list"
+        <el-table-column prop="this_semester" label="修课学期" v-if="status=='learned'" width="130" :filters="semester_list"
             :filter-method="semesterFilterHandler" />
         <el-table-column prop="introduction" label="课程介绍" />
         <el-table-column prop="class_time" label="上课时间" :filters="classtime_list"
@@ -161,11 +161,17 @@ export default {
         format_semester(data){
         var semester_set=new Set();
         data.forEach((ele)=>{
-                semester_set.add(ele.semester)
+                semester_set.add(ele.this_semester)
         })
         return Array.from(semester_set,(ele)=>{return {text:ele,value:ele}});
         },
         canSelect(row){
+            // if (this.status!='learned') {
+                this.tableData.forEach((ele)=>{
+                ele.majors=this.format_major(ele.allowed_major)
+            })
+            // }
+            console.log(this.tableData)
             var noconflict=true;
             const row_time=row.class_time.split(',');
             row_time.forEach((time)=>{
@@ -185,10 +191,7 @@ export default {
             return (!major_limit)&&( Array.from(this.selected_data,x=>x.number).indexOf(row.number)==-1)&&noconflict&&(!(this.stage==2&&row.selected_num>=row.max_student))
         },
         row_search(){
-            this.tableData.forEach((ele)=>{
-                ele.majors=this.format_major(ele.allowed_major)
-            })
-            console.log(this.tableData)
+            
 
             return this.tableData.filter(data =>( !this.course_id || data.id.toLowerCase().includes(this.course_id.toLowerCase()) )&&
             ( !this.course_name || data.name.toLowerCase().includes(this.course_name.toLowerCase()) )&&
@@ -201,7 +204,7 @@ export default {
         return row['classroom_id'] === value;
       },
       semesterFilterHandler(value, row, column) {
-        return row['semester'] === value;
+        return row['this_semester'] === value;
       },
         row_style({row, rowIndex}){
             return { height: "0px" };
@@ -228,5 +231,8 @@ export default {
 </script>
 
 <style>
+.el-table td.el-table__cell div {
+    box-sizing: border-box;
+}
 
 </style>

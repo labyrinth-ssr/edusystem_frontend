@@ -86,10 +86,22 @@ data() {
         }
         else if(val=='AddCourseRequest'){
           return 'success'
-        }
+        }else return "info"
       },
       get_request_type(val){
-        return val.split(/(?=[A-Z])/)[0]
+        console.log(val)
+        if (val=='AddCourseSelRequest') {
+          return "选课申请"
+        }
+        else if(val=='AddCourseRequest'){
+          return "添加课程"
+        }
+        if(val=='UpdateCourseRequest'){
+          return "编辑课程"
+        }
+        else if(val=='DeleteCourseRequest'){
+          return "删除课程"
+        }
       },
       get_table(){
         this.$axios.get('/requests/courses/admin/view/all')
@@ -111,7 +123,7 @@ data() {
           approve: true 
         }).then((resp)=>{
           console.log(resp)
-          if(resp.data.isOk){
+          if(resp.data.ok){
             this.get_table()
           row.handler_id=this.$store.state.user_id
         row.handle_result='approved'
@@ -129,7 +141,7 @@ data() {
           approve: false 
         }).then((resp)=>{
           console.log(resp)
-          if(resp.data.isOk){
+          if(resp.data.ok){
             this.get_table()
           row.handler_id=this.$store.state.user_id
         row.handle_result='rejected'
