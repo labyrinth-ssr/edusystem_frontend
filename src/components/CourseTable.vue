@@ -136,10 +136,13 @@ import ElQuarterPicker from './ElQuarterPicker.vue'
 export default {
   components: { CourseForm ,ElQuarterPicker},
   name:'CourseTable',
-mounted (){
-  this.$axios.get("/org/common/getorgs").then((resp)=>{
-    this.department=resp.data
-  })
+  created() {
+    this.$axios.get("/org/common/getorgs").then((resp)=>{
+      this.department=resp.data
+    })
+  },
+  mounted (){
+
   this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
     this.classrooms=resp.data
     console.log(resp.data)
@@ -302,7 +305,6 @@ data() {
                       console.log(resp.data)
                       this.course_sort_f()
                     })
-          // this.course_sort_f()
         },
         course_sort_f(){
           var that = this;
@@ -411,7 +413,6 @@ data() {
                 this.$message("没有删除权限");
             }
         })
-        this.get_table()
       },
       addcourse(){
         this.$message({
@@ -458,9 +459,13 @@ data() {
                   console.log(this.trigger)
                   console.log(resp.data)
                   if (resp.data.submitted) {
-                              this.$message("添加成功");
+                      this.$message("添加成功");
                   } else {
-                      this.$message("提交失败，请检查表单内容");
+                    if(!resp.data.stage_suitable){
+                      this.$message("提交失败，请注意选课阶段！");
+                    }else {
+                      this.$message("提交失败，请注意表单内容！")
+                    }
                   }
               })
           },
@@ -478,7 +483,11 @@ data() {
                           this.$message("申请修改成功");
                               this.dialogVisible = false
                   } else {
-                      this.$message("提交失败，请检查表单内容");
+                    if(!resp.data.stage_suitable){
+                      this.$message("提交失败，请注意选课阶段！");
+                    }else {
+                      this.$message("提交失败，请注意表单内容！")
+                    }
                   }
               })
 
