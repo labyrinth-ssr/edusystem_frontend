@@ -124,7 +124,7 @@ positiveSemester: this.semester
         }
         return {"background-color": bg_color, "padding": "0px","border": border}
       }
-      return { padding: "0px" };
+      return { 'padding': "0px" ,'text-align':'center'};
       // return {padding:'0px'}
     },
     // })
@@ -192,7 +192,7 @@ this.$axios.all([getSemester(), getStage()])
     };
     console.log(learned_condition)
     this.$axios
-      .post("/course_sel/common/get_course/by_course_sel", learned_condition)
+      .post("/course_sel/student/get_course_sel/by_student", learned_condition)
       .then((resp) => {
         this.learned_courses = resp.data;
     console.log(this.learned_courses)
@@ -240,4 +240,5 @@ positiveSemester: this.semester
 h4 {
   margin: 0px;
 }
+
 </style>

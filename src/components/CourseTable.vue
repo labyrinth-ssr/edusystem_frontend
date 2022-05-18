@@ -302,7 +302,7 @@ data() {
                       console.log(resp.data)
                       this.course_sort_f()
                     })
-          this.course_sort_f()
+          // this.course_sort_f()
         },
         course_sort_f(){
           var that = this;

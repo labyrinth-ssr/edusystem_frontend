@@ -161,12 +161,13 @@ export default {
       // this.form=this.formdata_prop
       this.form.courseTerm=this.format_semester(this.formdata_prop),
       this.time_options=this.gen_time_options()
-      this.format_major()
       this.$axios.get("/org/common/getorgs",{})
           .then(response => {
 
             console.log(response.data)
             this.majorList = response.data
+      this.format_major()
+
             var res = {}
             var res2 = []
             response.data.forEach(element => {
@@ -410,6 +411,8 @@ export default {
         if(this.necessary){
           if(this.course_multiple){
             this.form.acceptMajor = this.form.allowed_major.toString().split(',').map(ele=>{
+              console.log(this.majorList)
+              console.log(ele)
                let temp= this.majorList.find(item=>item.id ==ele)
               let res=[]
               res.push(temp.department)
