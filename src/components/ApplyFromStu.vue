@@ -1,6 +1,6 @@
 <template>
   <div v-if ="applyPermit">
-    <el-form :v-model="form" v-if ='amIStu' style="text-align: left" ref="form" :rules="rules"
+    <el-form :v-model="form" style="text-align: left" ref="form" :rules="rules"
              label-position="right" label-width="100px">
       <el-form-item label="申请人 :" prop="studentId">
         <el-input v-model="form.studentId" disabled style="width:180px"></el-input>
@@ -14,24 +14,28 @@
       <el-button @click="stuApply" size="small" type="primary">提交</el-button>
     </el-form-item>
     </el-form>
-    <el-table
-        :data="applyList.filter(data=>(!amIStu || data.studentId === form.studentId))">
-      <el-table-column
-          prop="studentId"
-          label="申请人"
-          width="100px">
-      </el-table-column>
-      <el-table-column
-          prop=""
-          label="申请课程id"
-          width="100px">
-      </el-table-column>
-      <el-table-column
-          prop=""
-          label="申请理由"
-          width="300px">
-      </el-table-column>
-    </el-table>
+    <div class="app-container" style="text-align:center;">
+      <el-table :data="tableData" height="620" style="width:90%;">
+        <el-table-column prop="requester_id" label="请求id" >
+        </el-table-column>
+        <el-table-column prop="request_class" label="请求类型" >
+          <template slot-scope="scope">
+            <el-tag size="medium" :type="tag_color_reqtype(scope.row.request_class)" effect="plain">{{ get_request_type(scope.row.request_class) }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="request_content.courseId" label="请求课程" >
+        </el-table-column>
+        <el-table-column prop="request_content.reason" label="申请理由" >
+        </el-table-column>
+        <el-table-column prop="handler_id" label="处理人" >
+        </el-table-column>
+        <el-table-column prop="point" label="状态" >
+          <template slot-scope="scope">
+            <el-tag size="medium" :type="tag_color(scope.row.handle_result)">{{ scope.row.handle_result }}</el-tag>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
   <div v-else>
     <h5>当前选课申请未开放！</h5>
@@ -47,16 +51,19 @@ export default {
     this.$axios.get("/permission/common/check_choose_course")
         .then((resp)=>{
           this.applyPermit= resp.data==2
+          // this.applyPermit= true
         }).catch((error)=>{
       console.log(error)
     })
-     this.form.studentId=this.$store.state.user_id;
+
+    this.form.studentId=this.$store.state.user_id;
+    this.get_table()
+
   },
   data() {
     return{
       applyPermit: false,
-      amIStu:this.$store.state.role ==='student',
-      applyList:[],
+      tableData:[],
       form: {
         studentId: '',
         courseId: '',
@@ -83,6 +90,37 @@ export default {
     }
   },
   methods: {
+    tag_color(val){
+      if(val=='processing'){
+        return 'primary'
+      }
+      else if(val=='rejected'){
+        return 'danger'
+      }
+      else if(val=='approved'){
+        return 'success'
+      }
+    },
+    tag_color_reqtype(val){
+      if(val=='UpdateCourseRequest'){
+        return 'primary'
+      }
+      else if(val=='DeleteCourseRequest'){
+        return 'danger'
+      }
+      else if(val=='AddCourseRequest'){
+        return 'success'
+      }else return "info"
+    },
+    get_table(){
+      this.$axios.get('/requests/courses/user/view/by_requester',{params:{"requester_id":this.form.studentId}})
+          .then((resp)=>{
+            console.log(resp.data)
+            this.tableData = resp.data;
+          }).catch((error)=>{
+        console.log(error)
+      })
+    },
     stuApply(){
       this.$axios.post('/course_sel/student/request_course_sel',this.form)
       .then((resp)=>{
@@ -99,7 +137,22 @@ export default {
           })
         }
       })
-    }
+    },
+    get_request_type(val){
+      console.log(val)
+      if (val=='AddCourseSelRequest') {
+        return "选课申请"
+      }
+      else if(val=='AddCourseRequest'){
+        return "添加课程"
+      }
+      if(val=='UpdateCourseRequest'){
+        return "编辑课程"
+      }
+      else if(val=='DeleteCourseRequest'){
+        return "删除课程"
+      }
+    },
   }
 }
 </script>
