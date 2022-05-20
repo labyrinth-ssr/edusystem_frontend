@@ -157,7 +157,7 @@ export const asyncRouterMap = [
                 name: '学生选课申请',
                 component: ApplyFromStu,
                 meta: {
-                    role: ['student','admin']
+                    role: ['student']
                 }
             }
         ]

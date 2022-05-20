@@ -110,6 +110,7 @@ export default {
     watch: {
         formdata_prop:function (newval) {
           console.log('change')
+          console.log(newval.allowed_major)
           this.rawTime= this.format_classtime(newval)
           this.form.courseTerm= this.format_semester(newval)
           this.form=newval
@@ -166,7 +167,6 @@ export default {
 
             console.log(response.data)
             this.majorList = response.data
-      this.format_major()
 
             var res = {}
             var res2 = []
@@ -188,6 +188,7 @@ export default {
             })
             console.log(res2)
             this.major_department_options = res2
+            this.format_major()
 
           }).catch((error) => {
         console.log(error)
@@ -400,11 +401,14 @@ export default {
       format_major(newval){
         if(this.form.allowed_major.length ==0){
           this.form.course_sort = "通用课程"
-        }else if(this.form.allowed_major.toLowerCase().includes(",".toLowerCase())){
+        }else if(this.form.allowed_major.toString().toLowerCase().includes(",".toLowerCase())){
+          console.log(this.form.allowed_major)
           this.form.course_sort = "面向部分专业课"
+          console.log("面向部分专业课")
         }else {
           this.form.course_sort = "专业课"
         }
+        console.log(this.major_department_options)
         console.log(this.format_major.name)
         this.necessary = this.form.course_sort !="通用课程";
         this.course_multiple = this.form.course_sort =="面向部分专业课"
@@ -422,11 +426,12 @@ export default {
           }else {
             let temp= this.majorList.find(item=>item.id ==this.form.allowed_major)
             let res=[]
+            console.log(temp)
             res.push(temp.department)
             res.push(temp.id)
-            this.form.allowed_major = res
+            this.form.acceptMajor = res
           }
-          console.log(this.form.course_sort)
+          console.log(this.major_department_options)
           console.log(this.form.acceptMajor)
         }
       },

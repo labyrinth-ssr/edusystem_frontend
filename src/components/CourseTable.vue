@@ -461,11 +461,17 @@ data() {
                   if (resp.data.submitted) {
                       this.$message("添加成功");
                   } else {
-                    if(!resp.data.stage_suitable){
-                      this.$message("提交失败，请注意选课阶段！");
-                    }else {
+                    let text='提交失败！'
+                      if(resp.data.courseInfoFormat.teacher_id==false){
+                        text+='教师不存在。'
+                      }else if(resp.data.courseInfoFormat.teacher_feasible==false){
+                        text+='教师课程冲突！'
+                      }
+                      if(resp.data.courseInfoFormat.semester==false){
+                        text+='请检查开课学期填写！'
+                      }
                       this.$message("提交失败，请注意表单内容！")
-                    }
+
                   }
               })
           },

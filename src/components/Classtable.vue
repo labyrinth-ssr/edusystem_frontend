@@ -10,8 +10,9 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item :rule="class_edit_rule">
-                    <el-input v-model="classroom_edit.oldname" placeholder="待修改教室" style="width:110px"></el-input>
-                    <el-input v-model="classroom_edit.newname" placeholder="修改为" style="width:110px"></el-input>
+                    <el-input v-model="classroom_edit.old_name" size="small"  placeholder="待修改教室" style="width:110px"></el-input>
+                    <el-input v-model="classroom_edit.new_name" size="small"  placeholder="修改为" style="width:110px"></el-input>
+                    <el-input v-model="classroom_edit.new_space" size="small" placeholder="教室容量" type="number" min="10" style="width:110px"></el-input>
                     <el-button type="primary" @click="edit_classroom">
                         修改教室
                     </el-button>
@@ -81,8 +82,9 @@ export default {
         space:'',
         tabledata:[],
         classroom_edit:{
-            oldname:'',
-            newname:''
+            old_name:'',
+            new_name:'',
+            new_space:''
         },
         classroom_delete:'',
         class_rule:{
@@ -106,18 +108,24 @@ export default {
           ]
         },
         class_edit_rule:{
-          oldname:[
+          old_name:[
             {
               required: true
             }
           ],
-          newname:[
+          new_name:[
             {
               required: true,
               validator: (rule, value, callback)=>{
                 /^\[A-Z]d{4}$/.test(this.classroom_edit.newname)?callback():callback(new Error("教师格式错误！"));
               },
               trigger: "blur",
+            }
+          ],
+          new_space: [
+            {
+              required: true,
+              trigger:"blur"
             }
           ]
         }
@@ -141,22 +149,27 @@ export default {
     methods:{
         edit_classroom() {
             const formData = new FormData()
-            formData.append('old_name', this.classroom_edit.oldname)
-            formData.append('new_name', this.classroom_edit.newname)
+            formData.append('old_name', this.classroom_edit.old_name)
+            formData.append('new_name', this.classroom_edit.new_name)
+            formData.append('new_space', this.classroom_edit.new_space)
             this.$axios.put('/classroom/admin/altclassroom', formData).then((resp) => {
                 if (resp.data) {this.$message({
                     message: '修改成功',
                     type: 'success'
                 });
                 this.classroom_edit={
-            oldname:'',
-            newname:''
-        }
-        this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
-          this.classroomList=resp.data
-          })
+                  old_name:'',
+                  new_name:'',
+                  new_space:''
+
+                  }
+               this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
+                this.classroomList=resp.data
+                 })
                 }
                 else this.$message.error('修改失败');
+              }).catch((error)=>{
+                console.log(error)
             })
         },
         clear_class(){
