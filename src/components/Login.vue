@@ -55,6 +55,16 @@ export default {
         if (success_login) {
           this.$store.commit("login", this.loginForm.user_id)
           this.$store.commit("role",response.data.role)
+          this.$axios.get('/permission/common/current_semester').then((resp)=>{
+            this.$store.state.currentTerm=resp.data
+          this.$store.commit("login", {user_id:this.loginForm.user_id,term:resp.data})
+
+            console.log("学期:"+ resp.data)
+          });
+          this.$axios.get("/permission/common/check_choose_course").then((response)=>{
+            this.$store.state.course_sel_stage = response.data
+            console.log("选课阶段:"+this.$store.state.course_sel_stage)
+          })
           this.$store.dispatch('GenerateRoutes', this.$store.state.role).then(() => { // 生成可访问的路由表
           console.log('role',this.$store.state.role)
             this.$store.state.addRouters.forEach((route)=>{

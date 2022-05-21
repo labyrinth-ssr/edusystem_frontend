@@ -1,5 +1,7 @@
 <template>
-  <div>
+<div >
+  <div v-if="stage!=0">
+    <h4>当前选课阶段：{{stage}}；学期：{{real_semester}}</h4>
     <el-table border :data="selected_table" style="width: 100%" :cell-style="getCellStyle" :row-style="row_style">
       <el-table-column prop="sectionId" label="节次" width="80">
       </el-table-column>
@@ -24,6 +26,10 @@
       </el-tab-pane>
     </el-tabs>
   </div>
+    <div v-else>
+    <h4>当前选课未开放！</h4>
+  </div>
+  </div>
 </template>
 
 <script>
@@ -33,22 +39,34 @@ export default {
   name: "CourseSelect",
   data() {
     return {
+      real_semester:'',
       day_num: 7,
       can_select_courses: [],
       selected_courses: [],
       learned_courses: [],
       semester: "",
-      stage: 1,
-      studentId: this.$store.state.user_id,
-      selected_table: [],
       section_num: 13,
-      highlight_selected: [],
       highlight_toselect: [],
     };
   },
   methods: {
+    next_semester(semester){
+      var arr=semester.toFixed(1).split('.')
+      console.log(arr)
+      var pre,su;
+      if (parseInt(arr[1])==3){
+        pre=(parseInt(arr[0])+1).toString()
+        su='0'
+      }
+      else{
+        pre=arr[0]
+        su=(parseInt(arr[1])+1).toString()
+      }
+      console.log(Number(pre+'.'+su))
+      return Number(pre+'.'+su)
+    },
     updatePage(){
-          const selected_condition = {
+      const selected_condition = {
       studentId: this.studentId,
       semester: this.semester,
       status: this.stage-1,//stage1 预选（0）stage2 已选（1）
@@ -63,7 +81,7 @@ export default {
       const can_select_condition = {
       getCourseSelRequest: {
 studentId: this.studentId
-}, 
+},
 positiveSemester: this.semester
     };
     this.$axios
@@ -105,9 +123,9 @@ positiveSemester: this.semester
             border="solid #96e27d"
           } 
         }
-        return {"background-color": bg_color, "padding": "0px","border": border}
+        return {"background-color": bg_color, "padding": "0px","border": border,'text-align':'center'}
       }
-      return { padding: "0px" };
+      return { 'padding': "0px" ,'text-align':'center'};
       // return {padding:'0px'}
     },
     // })
@@ -151,7 +169,10 @@ var getStage=()=> {
 
 this.$axios.all([getSemester(), getStage()])
   .then(this.$axios.spread((semester, stage) => {
-      this.semester=semester.data;
+    console.log(semester.data)
+      this.real_semester=semester.data.toFixed(1)
+      this.semester=this.next_semester(semester.data);
+      console.log(this.semester)
       this.stage=stage.data;
 
     const selected_condition = {
@@ -162,6 +183,7 @@ this.$axios.all([getSemester(), getStage()])
     this.$axios
       .post("/course_sel/common/get_course/by_course_sel", selected_condition)
       .then((resp) => {
+        console.log(resp.data)
 
         this.selected_courses = resp.data;
         this.formattable();
@@ -172,7 +194,7 @@ this.$axios.all([getSemester(), getStage()])
     };
     console.log(learned_condition)
     this.$axios
-      .post("/course_sel/common/get_course/by_course_sel", learned_condition)
+      .post("/course_sel/student/get_course_sel/by_student", learned_condition)
       .then((resp) => {
         this.learned_courses = resp.data;
     console.log(this.learned_courses)
@@ -183,6 +205,7 @@ this.$axios.all([getSemester(), getStage()])
 studentId: this.studentId
 }, 
 positiveSemester: this.semester
+
     };
     this.$axios
       .post(
@@ -212,8 +235,12 @@ positiveSemester: this.semester
 };
 </script>
 
-<style>
+<style scoped>
 .subpage{
     margin-top: 10px;
 }
+h4 {
+  margin: 0px;
+}
+
 </style>

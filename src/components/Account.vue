@@ -34,6 +34,7 @@ export default {
     };
   },
   created(){
+
     this.$axios.get('/userinfo/common/getuserinfo').then((resp)=>{
       this.form=resp.data
       this.form.major_department=Array.from([resp.data.department,resp.data.major])

@@ -12,15 +12,6 @@ function hasPermission(role, route) {
     return true
   }
 }
-
-// export const constantRouterMap = [
-//   {
-//     path: '/login',
-//     component: Login,
-//     name:'登录'
-//   },
-// ]
-
 export default new Vuex.Store({
   state: {
     routers: constantRouterMap,
@@ -30,16 +21,23 @@ export default new Vuex.Store({
       window.localStorage.getItem('user_id' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user_id' || '[]')),
     role:
     // 'student'
-      window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]'))
+      window.localStorage.getItem('role' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('role' || '[]')),
+    courseInfo:{},
+    currentTerm:window.localStorage.getItem('term' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('term' || '[]')),
+    termsPerY: 4,
+    course_sel_stage:0
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers;
       state.routers = constantRouterMap.concat(routers);
     },
-    login(state, user_id) {
+    login(state, {user_id,term}) {
       state.user_id = user_id
+      state.currentTerm=term
       window.localStorage.setItem('user_id', JSON.stringify(user_id))
+      window.localStorage.setItem('term', JSON.stringify(term))
+
     },
     role(state, role) {
       state.role = role

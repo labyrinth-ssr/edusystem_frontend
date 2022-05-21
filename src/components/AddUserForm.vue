@@ -71,21 +71,6 @@ export default {
             })
           })
           console.log(res2)
-          // const list = Array.from(response.data).map(item1 =>({
-          //     value: item1.department,
-          //     label: item1.department,
-          //     children:
-          //     Array.from(response.data).map((item)=> {
-          //         if(item.department === item1.department)
-          //         {
-          //           return({
-          //             value: item.major,
-          //             label: item.major
-          //           })
-          //         }
-          //       })
-          // }));
-          // console.log(list)
           this.major_department_options = res2
 
         }).catch((error) => {
@@ -209,34 +194,7 @@ export default {
       formLabelWidth: "120px",
       resp: {
       },
-      major_department_options:[/* {
-        value: 'zhinan',
-        label: '指南',
-        children: [{
-          value: 'shejiyuanze',
-          label: '设计原则'
-        }, {
-          value: 'daohang',
-          label: '导航'},
-          {
-            value: 'dingbudaohang',
-            label: '顶部导航'
-          }]
-      },
-         {
-        value: 'ziyuan',
-        label: '资源',
-        children: [{
-          value: 'axure',
-          label: 'Axure Components'
-        }, {
-          value: 'sketch',
-          label: 'Sketch Templates'
-        }, {
-          value: 'jiaohu',
-          label: '组件交互文档'
-        }]
-      } */],
+      major_department_options:[],
     };
   },
   methods: {
@@ -278,13 +236,13 @@ export default {
           department: this.form.department
         })
         .then((resp) => {
-
+          console.log(resp.data)
           this.resp=resp.data.registerFormat
           if(resp.data === "NO_LOGIN"||resp.data==="NO_AUTHORITY") {
             this.$router.replace("/login")
             this.$message("您不具有此权限");
           }
-          else if (resp.data.isOk) {
+          else if (resp.data.ok) {
             this.$message("注册成功");
           } else {
             this.$message("提交失败，请检查表单内容");
@@ -306,5 +264,4 @@ export default {
 
 </style>
 <style >
-
 </style>

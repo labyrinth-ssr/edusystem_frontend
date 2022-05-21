@@ -2,19 +2,83 @@
 <template>
   <div>
     <el-table
-        :data="table.data"
+        :data="table.data.filter(filter
+        )"
         style="width: 100%"
         :stripe = "true"
         border
         flex="left">
-      <template v-for="col in table.head">
-        <el-table-column :key="col.prop"
-                         :prop="col.prop"
-                         :label="col.label"
-                         :fixed="col.fix"
-                         :width="col.width">
-        </el-table-column>
-      </template>
+      <el-table-column prop="user_id" key="user_id" label="学号/工号" fix="left" width="150px">
+        <template slot="header" slot-scope="scope">
+          <el-input
+              v-model="search_id"
+              size="medium"
+              clearable
+              placeholder="学号/工号"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="username" key="username" label="名字" width="120px">
+
+        <template slot="header" slot-scope="scope">
+          <el-input
+              v-model="search_name"
+              size="medium"
+              clearable
+              placeholder="名字"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="role" key="role" label="身份" width="120px">
+        <template slot="header" slot-scope="scope">
+
+          <el-select v-model="search_role" size="medium" clearable placeholder="身份">
+            <el-option
+                key="teacher"
+                label="教师"
+                value="teacher">
+            </el-option>
+            <el-option
+                key="student"
+                label="学生"
+                value="student">
+            </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column prop="id_number" key="id_number" label="身份证号" width="200px"></el-table-column>
+      <el-table-column prop="register_year" key="register_year" label="注册年份"  width="150px">
+        <template slot="header" slot-scope="scope">
+          <el-date-picker
+          v-model="search_year"
+          type="year"
+          format="yyyy"
+          value-format="yyyy"
+          clearable
+          :style="{width:'120px'}"
+          placeholder="注册年份">
+          </el-date-picker>
+        </template>
+      </el-table-column>
+      <el-table-column prop="phone_number" key="phone_number" label="手机号码"  width="100px"></el-table-column>
+      <el-table-column prop="department" key="department" label="学院" width="120px">
+        <template slot="header" slot-scope="scope">
+          <el-input
+              v-model="search_department"
+              size="medium"
+              clearable
+              placeholder="学院"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="major" key="major" label="专业"  width="120px">
+        <template slot="header" slot-scope="scope">
+          <el-input
+              v-model="search_major"
+              size="medium"
+              clearable
+              placeholder="专业"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" key="status" label="状态"  width="120px"></el-table-column>
+      <el-table-column prop="email" key="email"  label="邮箱" width="120px"></el-table-column>
       <el-table-column
           align="right"
           :width=table.navWidth
@@ -22,7 +86,7 @@
         <template slot="header" >
           <el-menu :default-active="'/index'" router mode="horizontal" background-color="white" text-color="#222"
                    active-text-color="red" style="min-width: 1300px">
-            <el-submenu>
+            <el-submenu index>
               <template slot="title"
                         style="padding-left:10px">
                 <i class="el-icon-menu"></i>
@@ -76,6 +140,12 @@ export default {
   },
   data(){
     return{
+      search_id:'',
+      search_name:'',
+      search_role:'',
+      search_major:'',
+      search_department:'',
+      search_year:'',
       form_op:"add",
       dialogVisible:false,
       form:{
@@ -101,52 +171,50 @@ export default {
         department: ""
       },
       table:{
-        'data': [
-        ],
-        'head':[
-          {prop:"user_id",label:"学号/工号",fix:"left",width:"120"},
-          {prop:"username",label:"名字",width: "120"},
-          {prop:"role",label:"身份",width: "120"},
-          {prop: "id_number",label: "身份证号",width: "200"},
-          {prop: "register_year",label: "注册年份",width: "100"},
-          {prop: "phone_number",label: "手机号码",width: "100"},
-          {prop: "department",label: "学院",width: "150"},
-          {prop: "major",label: "专业",width: "150"},
-          {prop: "status",label: "状态",width: "100"},
-          {prop: "email",label: "邮箱",width: "150"}
+        data: [
         ],
         navWidth:180,
         navList:[
-                {
-                  path:'/users/adduserform',
-                  icon:null,
-                  name:'单次添加'
-                },
-                {
-                  path: '/users/addusercsv',
-                  icon: null,
-                  name: '批量添加'
-                }
+          {
+            path:'/users/adduserform',
+            icon:null,
+            name:'单次添加'
+          },
+          {
+            path: '/users/addusercsv',
+            icon: null,
+            name: '批量添加'
+          }
         ]
       },
       handel1:{
         text:"编辑",
         edit: this.myEditable
-        },
+      },
       handel2:{
         visible:false,
         text:"",
         del:this.myHandleDelete
       },
-
     }
   },
   methods: {
+    filter(ele){
+          console.log(this.search_year)
+      console.log(ele.register_year)
+          console.log(ele.user_id)
+          return  (!this.search_id|| ele.user_id.toLowerCase().includes(this.search_id.toLowerCase()))
+          &&(!this.search_name|| ele.username.toLowerCase().includes(this.search_name.toLowerCase()))
+          &&(!this.search_major|| ele.major.toLowerCase().includes(this.search_major.toLowerCase()))
+          &&(!this.search_department || ele.department.includes(this.search_department))
+          &&(!this.search_role|| ele.role.toLowerCase().includes(this.search_role.toLowerCase()))
+          &&(!this.search_year||ele.register_year==this.search_year)
+    },
     clear(){
       this.$axios.post("/userinfo/admin/getusers",{})
           .then((response) => {
             console.log(response.data)
-            this.$data.table.data = response.data
+            this.table.data = response.data.filter((ele)=>ele.user_id!='root')
           }).catch((failResponse)=>{console.log(failResponse)});
     },
     myEditable(rows) {
@@ -166,17 +234,17 @@ export default {
             console.log(response.data)
             this.clear()
           }).catch((err)=>{
-            console.log(err.data)
+        console.log(err.data)
       })
 
       return undefined;
     },
-      handleClick(row){
-        this.handel1.edit(row)
-      },
-      handleDelete(row){
-        this.handel2.del(row)
-      },
+    handleClick(row){
+      this.handel1.edit(row)
+    },
+    handleDelete(row){
+      this.handel2.del(row)
+    },
     SubmitAdd() {
       this.$axios.put("userinfo/admin/altuser", this.$data.form)
           .then((response) => {

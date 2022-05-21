@@ -14,9 +14,9 @@ import AddUserForm from '@/components/AddUserForm'
 import FileUpload from '@/components/FileUpload'
 import DepartmentForm from "@/components/DepartmentForm"
 import CourseSelect from "@/components/CourseSelect"
-
-
-
+import MyCourse from "@/components/MyCourse";
+import OneCourse from "@/components/OneCourse";
+import ApplyFromStu from "@/components/ApplyFromStu"
 
 Vue.use(VueRouter)
 
@@ -113,7 +113,24 @@ export const asyncRouterMap = [
         meta: {
           role: ['admin','teacher','student']
         },
-        children: [{
+        children: [
+            {
+            path: '/courses/mycourse',
+            name: '我的课程',
+            component:MyCourse,
+            meta: {
+                role: ['teacher','student']
+                }
+            },
+            {
+                path: '/courses/mycourseView',
+                name: '',
+                component:OneCourse,
+                meta: {
+                    role: ['teacher','student','admin'],
+                }
+            },
+            {
             path: '/courses/table',
             name: '课程列表',
             component: CourseTable,
@@ -135,7 +152,14 @@ export const asyncRouterMap = [
             meta: {
               role: ['student']
             }
-          }
+          },{
+                path: '/courses/ApplyFormStu',
+                name: '学生选课申请',
+                component: ApplyFromStu,
+                meta: {
+                    role: ['student']
+                }
+            }
         ]
       }, 
       {
@@ -151,12 +175,6 @@ export const asyncRouterMap = [
                 path: '/academic/classroomtable',
                 name: '教务列表',
                 component: ClassroomTable
-              }
-              ,
-          {
-            path: '/academic/classselbutton',
-            name: '权限开关',
-            component: ClassSelbutton,
           },
           {
             path: '/academic/classroomtable0',

@@ -7,7 +7,7 @@
         border
         flex="left">
       <template v-for="col in table.head">
-        <el-table-column :key="col.prop"
+        <el-table-column
             :prop="col.prop"
             :label="col.label"
             :fixed="col.fix"
@@ -18,7 +18,7 @@
             align="right"
             :width=table.navWidth
             fixed = "right">
-          <template slot="header" >
+          <template slot="header" slot-scope="scope">
             <el-menu :default-active="'/index'" router mode="horizontal" background-color="white" text-color="#222"
                      active-text-color="red" style="min-width: 1300px">
               <inner-menu :navList="table.navList"></inner-menu>
@@ -26,7 +26,7 @@
           </template>
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" size="middle">{{handel1.text}}</el-button>
-            <el-button :style="{display:handel2.visible}" size="middle" @click="handleDelete(scope.row)">{{handel2.text}}</el-button>
+            <el-button size="middle" @click="handleDelete(scope.row)">{{handel2.text}}</el-button>
           </template>
         </el-table-column>
     </el-table>
@@ -47,7 +47,6 @@ export default {
       }
     },
     handel2: {
-      visible:'none',
       text: '',
       del: {
         type: Function
@@ -67,7 +66,7 @@ export default {
     },
     handleDelete(row){
       this.handel2.del(row)
-    }
+}
   }
 
 
