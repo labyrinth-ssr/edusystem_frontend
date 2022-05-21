@@ -196,15 +196,35 @@ export default {
             console.log(error)
           })
         },
-        changeSel() {
-          console.log(this.class_sel_permit)
-        },
         next_stage(){
+          console.log(this.class_sel_permit)
           if(this.class_sel_permit==1){
             this.$axios.get('/course_sel/admin/filter_in_first_stage')
                 .then((resp)=>{
                   console.log(resp)
+                  if (resp.data){
+                    console.log("stage_filter")
+                  }
                 }).catch((error)=>{
+              console.log(error)
+            })
+          }else if(this.class_sel_permit==2){
+            let tem = new FormData()
+            tem.append('semester',`${this.currentTerm}`)
+            console.log(tem)
+            this.$axios.get('/course_sel/admin/filter_in_semester_change',{params:tem})
+            .then((resp)=>{
+              console.log(resp.data)
+              console.log("flush")
+              if(resp.data){
+                this.$message({
+                  type:'success',
+                  message:'学期已切换！'
+                })
+              }else {
+                console.log(resp.data)
+              }
+            }).catch((error)=>{
               console.log(error)
             })
           }
