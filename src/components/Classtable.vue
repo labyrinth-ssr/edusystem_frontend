@@ -212,7 +212,7 @@ export default {
             let tem = new FormData()
             tem.append('semester',`${this.currentTerm}`)
             console.log(tem)
-            this.$axios.get('/course_sel/admin/filter_in_semester_change',{params:tem})
+            this.$axios.get('/course_sel/admin/filter_in_semester_change',{params:{'semester':this.currentTerm}})
             .then((resp)=>{
               console.log(resp.data)
               console.log("flush")
