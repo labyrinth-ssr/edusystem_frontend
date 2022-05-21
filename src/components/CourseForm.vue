@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :v-model="form" style="text-align: left" ref="form" :rules="rules"
+    <el-form :model="form" style="text-align: left" ref="form" :rules="rules"
              label-position="right" label-width="80px">
       <el-form-item label="课程名" prop="name">
         <el-input v-model="form.name" :disabled="judgeDisable2" />
@@ -128,7 +128,7 @@ export default {
               this.resp=newval
                 console.log(this.resp)
                 this.$refs["form"].validate((valid) => {
-            if (!valid) {
+                  if (!valid) {
               return false;
             }
           });
@@ -329,11 +329,7 @@ export default {
                 required: true,
                 validator:(rule, value, callback)=>{
                   const _this =this;
-                  typeof(this.form.classroom_id)=="undefined"||this.form.max_student<= this.classrooms.find(function(item, index, arr){
-                    if(item.id === _this.form.classroom_id){
-                      return item;
-                    }
-                  },this.classrooms).space?callback() : callback(new Error("教室容量不足！"))
+                  typeof(this.form.classroom_id)=="undefined"|| typeof(this.classrooms.find(x=>x.id==this.form.classroom_id))=='undefined' ||this.form.max_student<= this.classrooms.find(x=>x.id==this.form.classroom_id).space?callback() : callback(new Error("教室容量不足！"))
                 },
                 trigger: "blur",
               }

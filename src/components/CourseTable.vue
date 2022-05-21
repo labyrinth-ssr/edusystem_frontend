@@ -83,7 +83,7 @@
             </el-table-column>
         </el-table>
           <el-dialog :title="form_title" :visible.sync="dialogVisible" :close-on-click-modal='false' @close="close">
-              <course-form :action_prop="form_op" :formdata_prop="form" :resp_prop="resp.data" :trigger_prop="trigger"/>
+              <course-form :action_prop="form_op" :formdata_prop="form" :resp_prop="resp" :trigger_prop="trigger"/>
 
             <el-table :data="tableData.filter(ele=>(
                 (watch_union1(form.class_time.split(','),ele.class_time.split(',')))&&
@@ -454,7 +454,7 @@ data() {
                   requester_id: this.$store.state.user_id,
                   courseInfo: this.form
               }).then((resp) => {
-                  this.resp=resp.data.courseInfoFormat
+                  this.resp=resp.data.courseInfoFormat.integrity
                   this.trigger+=1;
                   console.log(this.trigger)
                   console.log(resp.data)

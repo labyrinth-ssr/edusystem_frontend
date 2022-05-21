@@ -1,5 +1,6 @@
 <template>
-  <div>
+<div >
+  <div v-if="stage!=0">
     <h4>当前选课阶段：{{stage}}；学期：{{real_semester}}</h4>
     <el-table border :data="selected_table" style="width: 100%" :cell-style="getCellStyle" :row-style="row_style">
       <el-table-column prop="sectionId" label="节次" width="80">
@@ -25,6 +26,10 @@
       </el-tab-pane>
     </el-tabs>
   </div>
+    <div v-else>
+    <h4>当前选课未开放！</h4>
+  </div>
+  </div>
 </template>
 
 <script>
@@ -40,7 +45,7 @@ export default {
       selected_courses: [],
       learned_courses: [],
       semester: "",
-      stage: 1,
+      stage: '',
       studentId: this.$store.state.user_id,
       selected_table: [],
       section_num: 13,
@@ -122,7 +127,7 @@ positiveSemester: this.semester
             border="solid #96e27d"
           } 
         }
-        return {"background-color": bg_color, "padding": "0px","border": border}
+        return {"background-color": bg_color, "padding": "0px","border": border,'text-align':'center'}
       }
       return { 'padding': "0px" ,'text-align':'center'};
       // return {padding:'0px'}
