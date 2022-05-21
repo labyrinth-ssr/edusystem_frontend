@@ -175,12 +175,6 @@ export const asyncRouterMap = [
                 path: '/academic/classroomtable',
                 name: '教务列表',
                 component: ClassroomTable
-              }
-              ,
-          {
-            path: '/academic/classselbutton',
-            name: '权限开关',
-            component: ClassSelbutton,
           },
           {
             path: '/academic/classroomtable0',

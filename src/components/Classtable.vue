@@ -1,6 +1,17 @@
 <template>
     <div style="display:flex;">
         <div id="classroom_sontainer" class="container">
+            <span>
+              <el-tag>{{currentTerm }}</el-tag>
+            </span>
+            <span >
+            <el-tag v-if="class_sel_permit==0">禁止选课</el-tag>
+            <el-tag v-else-if="class_sel_permit==1">第一轮选课</el-tag>
+            <el-tag v-else-if="class_sel_permit==2">第二轮选课</el-tag>
+            </span>
+            <el-button @click="next_stage" type="primary" size="mini" >进入下一阶段</el-button>
+          <br>
+          <br>
             <el-form>
                 <el-form-item :rule="class_rule">
                     <el-input v-model="classroom_add" placeholder="新增教室名" style="width:90px">
@@ -37,19 +48,19 @@
         <div id="time_input_container" class="container">
             <div v-for="item in section" :key="item">
                 <el-time-select placeholder="开始时间" v-model="startTime[item-1]" :picker-options="{
-      start: '08:30',
-      step: '00:15',
-      end: '22:00',
-      minTime: endTime[item-2]
+                    start: '08:30',
+                    step: '00:15',
+                    end: '22:00',
+                    minTime: endTime[item-2]
 
-    }" >
+                  }" >
                 </el-time-select>
                 <el-time-select placeholder="结束时间" v-model="endTime[item-1]" :picker-options="{
-      start: '08:30',
-      step: '00:15',
-      end: '22:00',
-      minTime: startTime[item-1]
-    }" >
+                    start: '08:30',
+                    step: '00:15',
+                    end: '22:00',
+                    minTime: startTime[item-1]
+                  }" >
                 </el-time-select>
             </div>
             <div id="button_container">
@@ -74,6 +85,9 @@ export default {
     name:'ClassroomTable',
     data() {
       return{
+        term_value:'' ,
+        currentTerm :'',
+        class_sel_permit: '',
         startTime: [],
         endTime: [],
         classroomList:[/* {id:'H4101'},{id:'H4102'},{id:'H4103'} */],
@@ -132,6 +146,21 @@ export default {
       }
     },
     created(){
+      this.$axios.get("/permission/common/current_semester")
+          .then((resp)=>{
+            this.currentTerm = resp.data.toString()
+            if(this.currentTerm.length==4){
+              this.currentTerm +='.0'
+            }
+            console.log(this.currentTerm)
+
+            this.term_value=this.currentTerm.split('.')[0]+'-0'+
+                this.currentTerm.split('.')[1]
+            console.log(this.term_value)
+          }).catch((error)=>{
+        console.log(error)
+      })
+      this.flush();
       this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classroomList=resp.data
       })
@@ -147,6 +176,56 @@ export default {
       })
     },
     methods:{
+        flush(){
+          this.$axios.get("/permission/common/current_semester")
+              .then((resp)=>{
+                this.currentTerm = resp.data.toString()
+                if(this.currentTerm.length == 4){
+                  this.currentTerm = this.currentTerm + '.0';
+                }
+                this.term_value=this.currentTerm.split('.')[0]+'-0'+
+                    this.currentTerm.split('.')[1]
+                console.log(this.term_value)
+              }).catch((error)=>{
+            console.log(error)
+          })
+          this.$axios.get("/permission/common/check_choose_course")
+              .then((resp)=>{
+                this.class_sel_permit= resp.data
+              }).catch((error)=>{
+            console.log(error)
+          })
+        },
+        changeSel() {
+          console.log(this.class_sel_permit)
+        },
+        next_stage(){
+          if(this.class_sel_permit==1){
+            this.$axios.get('/course_sel/admin/filter_in_first_stage')
+                .then((resp)=>{
+                  console.log(resp)
+                }).catch((error)=>{
+              console.log(error)
+            })
+          }
+          this.$axios.post('/permission/admin/next_stage',{stage:1})
+              .then((resp)=>{
+                if(resp.data){
+                  this.$message({
+                    type:'success',
+                    message:"操作成功！"
+                  })
+                  this.flush()
+                }else {
+                  this.$message({
+                    type:'warning',
+                    message:"操作失败！"
+                  })
+                }
+              }).catch((error)=>{
+            console.log(error)
+          })
+        },
         edit_classroom() {
             const formData = new FormData()
             formData.append('old_name', this.classroom_edit.old_name)
