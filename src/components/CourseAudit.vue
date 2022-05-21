@@ -44,6 +44,17 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+      <el-dialog :visible.sync="requestDialogVisDel">
+        <el-form  style="text-align: left"
+                  label-position="right" label-width="80px">
+          <el-form-item label="申请id">
+            <el-input v-model="request_data.requester_id" disabled />
+          </el-form-item>
+          <el-form-item label="课程id">
+            <el-input v-model="request_data.number" disabled />
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
 </template>
 
@@ -63,6 +74,7 @@ data() {
         requestDialogVis:false,
         processed:false,
         requestDialogVisStu:false,
+        requestDialogVisDel:false
       }
     },
     methods: {
@@ -153,10 +165,18 @@ data() {
         })
       },
       requestDetail(info){
+        console.log(info)
         if(typeof (info.studentId)=='undefined'){
-          this.request_data=null
-          this.request_data=info
-          this.requestDialogVis=true
+          if(info.point >0){
+            this.request_data=null
+            this.request_data=info
+            this.requestDialogVis=true
+          }else {
+            this.request_data = null;
+            this.request_data = info
+            this.requestDialogVisDel = true
+
+          }
 
         }else {
           this.request_data=info

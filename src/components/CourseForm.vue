@@ -145,6 +145,24 @@ export default {
         }
     },
     created() {
+      let temp_term =[];
+      console.log(this.$store.state.currentTerm.toString())
+      let temp0 = (this.$store.state.currentTerm.toString()).split('.')[1]-1;
+      let temp1 = (this.$store.state.currentTerm.toString()).split('.')[0];
+      for(let i = 0; i < 4;i++){
+
+        temp0++;
+        if( temp0 >= this.$store.state.termsPerY){
+          temp0 = 0;
+          temp1 ++;
+        }
+        console.log(temp1,temp0,temp_term)
+        temp_term.push({
+          label: temp1.toString() +'.'+temp0.toString(),
+          value: temp1.toString() +'.'+temp0.toString()
+        })
+      }
+      this.term_options = temp_term;
       console.log(this.form)
       this.$axios.get('/classroom/common/getclassrooms').then((resp)=>{
           this.classrooms=resp.data
@@ -193,24 +211,7 @@ export default {
           }).catch((error) => {
         console.log(error)
       })
-      let temp_term =[];
-      console.log(this.$store.state.currentTerm.toString())
-      let temp0 = (this.$store.state.currentTerm.toString()).split('.')[1]-1;
-      let temp1 = (this.$store.state.currentTerm.toString()).split('.')[0];
-      for(let i = 0; i < 4;i++){
 
-        temp0++;
-        if( temp0 >= this.$store.state.termsPerY){
-          temp0 = 0;
-          temp1 ++;
-        }
-        console.log(temp1,temp0,temp_term)
-        temp_term.push({
-          label: temp1.toString() +'.'+temp0.toString(),
-          value: temp1.toString() +'.'+temp0.toString()
-        })
-      }
-      this.term_options = temp_term;
       this.course_select_enabled()
     },
     data() {
