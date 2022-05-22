@@ -67,7 +67,7 @@ export default {
         su=(parseInt(arr[1])+1).toString()
       }
       console.log(Number(pre+'.'+su))
-      return Number(pre+'.'+su)
+      return pre+'.'+su
     },
     updatePage(){
       const selected_condition = {
