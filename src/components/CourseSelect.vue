@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     next_semester(semester){
-      var arr=semester.toString().split('.')
+      var arr=semester.toFixed(1).split('.')
       console.log(arr)
       var pre,su;
       if (parseInt(arr[1])==3){
@@ -173,7 +173,8 @@ var getStage=()=> {
 
 this.$axios.all([getSemester(), getStage()])
   .then(this.$axios.spread((semester, stage) => {
-      this.real_semester=semester.data
+    console.log(semester.data)
+      this.real_semester=semester.data.toFixed(1)
       this.semester=this.next_semester(semester.data);
       console.log(this.semester)
       this.stage=stage.data;

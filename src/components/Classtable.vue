@@ -209,9 +209,9 @@ export default {
               console.log(error)
             })
           }else if(this.class_sel_permit==2){
-            let tem = new FormData()
-            tem.append('semester',`${this.currentTerm}`)
-            console.log(tem)
+            // let tem = new FormData()
+            // // tem.append('semester',`${this.currentTerm}`)
+            // console.log(tem)
             this.$axios.get('/course_sel/admin/filter_in_semester_change',{params:{'semester':this.currentTerm}})
             .then((resp)=>{
               console.log(resp.data)
